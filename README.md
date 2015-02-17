@@ -1,8 +1,5 @@
-Hapi-Mongoose-Angular Example
+CSV Generator
 ========================
-
-The purpose of this app is to show a new way to work with Hapi.js, Mongodb, Mongoose, Angular.js.
-
 
 ### Install an app
 
@@ -10,7 +7,7 @@ Run the following command in root directory of an app in command prompt.
 
 ###### *Install node packages*
 
-server/ node install
+server/ npm install
 
 ###### *Install bower components*
 
