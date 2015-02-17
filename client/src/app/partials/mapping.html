@@ -88,9 +88,9 @@
 			</div>
 
 			<div class="col-md-3">
-				<select class="mapping-select" id="property" name="properties" size="20" ng-model="prop" ng-click="selectProperty(prop)" >
+				<select class="mapping-select" id="property" name="properties" size="20" ng-model="prop"  >
 				<option value="" style="display:none">select property</option>
-				<option value="{{info.field}}" ng-repeat="info in propertyList | orderBy: 'field'" ng-class="{mapped: info.isSelect}" >{{info.field}}</option>
+				<option value="{{info}}" ng-repeat="info in propertyList | orderBy: 'field'" ng-class="{mapped: info.isSelect}" ng-click="selectProperty(info)">{{info.field}}</option>
 <!-- 						<option value="productId" class="mapped required">
 							ProductId
 						</option>
@@ -210,8 +210,8 @@
 					<tr ng-repeat="row in tableData">
 						<td ng-show="row.quotes == true">"{{row.columnName}}"</td>
 						<td ng-show="row.quotes == false">{{row.columnName}}</td>
-						<td><span ng-show="row.tableName != 'Product'">Product.</span>{{row.tableName}}<span ng-show="row.rowId > 0">({{row.rowId}})</span>.{{row.propName}}</td>
-						<td>{{row.propName}}</td>
+						<td><span ng-show="row.tableName != 'Product'">Product.</span>{{row.tableName}}<span ng-show="row.rowId > 0">({{row.rowId}})</span>.{{row.propName.field}}</td>
+						<td>{{row.propName.field}}</td>
 						<td>{{row.aIndex}}</td>
 						<td>
 							<button class="btn btn-default btn-xs" ng-click="removeRow($index)"><span class="glyphicon glyphicon-remove"></span> Remove</button>

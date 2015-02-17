@@ -86,7 +86,7 @@ app
               $scope.tableData[k].quotes = false;
               $scope.tableData[k].tableName = tableName;
               $scope.tableData[k].aIndex = 1;
-              console.log('table data', $scope.tableData);
+              // console.log('table data', $scope.tableData);
             }
           }
         }
@@ -121,7 +121,7 @@ app
                 $scope.propertyList = data.Product2ClassificationGroup;
                 break;
             }
-            console.log('propertyList:', $scope.propertyList)
+            // console.log('propertyList:', $scope.propertyList)
           } 
         })
         .error(function(){
@@ -133,7 +133,7 @@ app
       getTableData(info);
       $scope.selectedTable = info;
       $scope.rowId = rowNo+1;
-      console.log($scope.rowId);
+      // console.log($scope.rowId);
       // if($scope.selectedTable == 'Price')
       //   $scope.propertyList = $scope.tableDetails.Price;
       // else if($scope.selectedTable == 'ProductAttributeValue')
@@ -156,7 +156,7 @@ app
           $scope.propertyList[i] = modifiedList[i];
           $scope.propertyList[i].isSelect = false;  
         }
-        console.log('modified data :', $scope.propertyList);
+        // console.log('modified data :', $scope.propertyList);
       }
       
       if($scope.mapDone == true){
@@ -244,10 +244,6 @@ app
         $scope.tableData[i] = {"columnName": null, "propName": null, "isSelect":false,
                         "tableName": null, "aIndex": 0, "quotes": false , "rowId":0};
         $scope.tableData[i].columnName = $scope.selectedColumn;
-        if($scope.new){
-          console.log('asdas');
-        }
-        else
         $scope.tableData[i].propName = $scope.selectedProperty;
         $scope.tableData[i].tableName = $scope.selectedTable;
         $scope.tableData[i].rowId = $scope.rowId;
@@ -270,7 +266,7 @@ app
     }
 
     $scope.mapAttribute = function () {
-      $scope.pickedTable = "ProductAttributeValues";
+      $scope.pickedTable = "ProductAttributeValue";
       $scope.updateList();
       if($scope.selectedColumn){
         if($scope.tableData == undefined){
@@ -282,7 +278,7 @@ app
         var j = $scope.tableData.length++;
         for(var k = $scope.tableData.length ; k > 0; k--){
           if(i == k-2){
-            console.log('i value', i);
+            // console.log('i value', i);
             $scope.tableData[i] = angular.copy(dummy);
             $scope.tableData[i].columnName = $scope.selectedColumn;
             $scope.tableData[i].tableName = $scope.pickedTable;
@@ -292,27 +288,35 @@ app
               $scope.tableData[i].aIndex++;
             }
             if($scope.selectedColumn){
-              $scope.tableData[i].propName = 'attribute';
+              $scope.tableData[i].propName = {};
+              $scope.tableData[i].propName.field = 'attribute';
+              $scope.tableData[i].propName.instance= "String";
+              $scope.tableData[i].propName.reference = {};
+              $scope.tableData[i].propName.index = null;
             }
             // if($scope.selectedColumn == 'gross_price' || $scope.selectedColumn == 'retail_price'){
             //   $scope.tableData[i].propName = 'price';
             // }
           }
           if(j == k-1){
-            console.log('j value', j);
+            // console.log('j value', j);
             $scope.tableData[j] = angular.copy(dummy);
             $scope.tableData[j].columnName = $scope.selectedColumn;
             $scope.tableData[j].tableName = $scope.pickedTable;
             $scope.tableData[j].rowId = angular.copy($scope.rowId);
             if($scope.selectedColumn){
-              $scope.tableData[j].propName = 'value';
+              $scope.tableData[j].propName = {};
+              $scope.tableData[j].propName.field = 'value';
+              $scope.tableData[j].propName.instance= "String";
+              $scope.tableData[j].propName.reference = {};
+              $scope.tableData[j].propName.index = null;
             }
             if($scope.tableData[j].tableName == $scope.pickedTable){
               $scope.tableData[j].aIndex = $scope.tableData[j].aIndex+2;
             }
           }
         }
-        console.log($scope.tableData);
+        // console.log($scope.tableData);
         $scope.defaultVal.val = '';
         $scope.selectedColumn = undefined;
         $scope.selectedTable = undefined;
@@ -378,7 +382,7 @@ app
 
     var processData = function (allText) {
       // $scope.secondStep(); 
-      console.log('pd',$scope.badge.step);
+      // console.log('pd',$scope.badge.step);
       var result=allText.srcElement.result;
       var allTextLines = result.split('+/\r\n|\n/+');
       var headers = allTextLines[0].split("\n")[0];
@@ -391,14 +395,12 @@ app
           k++;
         }
       };
-      console.log('dumpTable', dumpTable);
+      // console.log('dumpTable', dumpTable);
       $scope.columnList = headers.split(",");
       $scope.importedData = tableData;
       $scope.importedDatar1 = dumpTable[1].split(",");
       $scope.importedDatar2 = dumpTable[2].split(",");
 
-      console.log('data',$scope.importedData);
-      console.log('headers', $scope.columnList);
       // $scope.secondStep(); 
       var selectedColumns = [];
       for (var i = 0; i < $scope.columnList.length; i++) {
@@ -410,6 +412,15 @@ app
       $scope.secondStep(); 
     }
 
+    //save maaping
+    var saveMapping = function (map){
+        $http.post('/createMapping', map)
+          .success(function(data){
+            console.log('mapping created');
+          })
+          .error(function(){
+          });
+    }
 
     //Steps involved
     $scope.firstStep = function (){
@@ -426,14 +437,26 @@ app
       // console.log(info);
     }
 
-    $scope.fourthStep = function (mapInfo, tableInfo) {
-      if(mapInfo){
+    $scope.fourthStep = function (map, tableInfo) {
+      if(map){
         $scope.submitted = false;
         $scope.badge.step = "four";
-        $scope.map = {};
-        $scope.map.details = mapInfo;
-        $scope.map.tableData = [];
-        $scope.map.tableData = tableInfo;
+        // $scope.map = {};
+        // $scope.map.details = mapInfo;
+        // $scope.map.tableData = [];
+        // $scope.map.tableData = tableInfo;
+        var mappingDetails = {};
+        mappingDetails.tenantId = 1;
+        mappingDetails.mappingName = map.name;
+        mappingDetails.mappingInfo = [];
+        for (var i = 0; i < tableInfo.length; i++) {
+          mappingDetails.mappingInfo[i] = {
+            "userFieldName": tableInfo[i].columnName,
+            "collectionName": tableInfo[i].tableName,
+            "fieldDetail": tableInfo[i].propName
+          };
+        };
+        saveMapping(mappingDetails);
       } else {
         $scope.submitted = true;
       }
