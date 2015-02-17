@@ -50,14 +50,13 @@ exports.getAll = {
       var data = {};
       data.field = path;
       data.index = schemaPath[path]._index;
-      if(schemaPath[path].options.ref != undefined) data.ref = schemaPath[path].options.ref
+      data.reference = {};
+      if(schemaPath[path].options.ref != undefined) data.reference.ref = schemaPath[path].options.ref
       if(schemaPath[path].instance != undefined) data.instance = schemaPath[path].instance
       if(schemaPath[path].caster != undefined){
-        data.caster = [];
-        data.caster[0] = {};
-        data.caster[0].instance = schemaPath[path].caster.instance;
-        data.caster[0].ref = schemaPath[path].caster.options.ref;
-
+        data.instance = schemaPath[path].caster.instance;
+        data.reference.ref = schemaPath[path].caster.options.ref;
+        data.reference.isArray = "true";
       }
       obj[collectionName].push(data);
       
