@@ -1,0 +1,628 @@
+footer {
+	margin: 0;
+	padding-top: 1em;
+	display: block;
+	color: #666;
+}
+
+footer.sticky {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+}
+
+footer .copyright {
+	border-top: 1px solid #ccc;
+	padding: 1em 0;
+}
+
+.nav > li > a > .user-image {
+	height: 100%;
+	width: 3em;
+	background: red;
+	display: inline-block;
+	margin-right: .25em;
+}
+
+.nav > li > a > .user-image img {
+	height: 3em;
+	margin-top: -1em;
+	margin-bottom: -1em;
+}
+
+.btn-2rows {
+	font-size: 1em;
+	padding-top: .25em;
+	padding-bottom: .25em;
+	text-align: left;
+}
+
+li a.icon-nav-item {
+	font-size: 1.5em;
+	border-right: 1px solid #e7e7e7;
+	padding-left: .8em;
+	padding-right: .8em;
+	padding-top: .65em;
+	padding-bottom: .65em;
+} 
+
+li a.icon-nav-item .badge {
+	font-size: .5em;
+	position: absolute;
+	top: .25em;
+	right: .25em;
+	padding: .1em .5em .2em;
+	background: #428bca;
+}
+
+li a.icon-nav-item .caret {
+	position: relative;
+	bottom: 4px;
+}
+
+a.icon-nav-item {
+	font-size: 1.5em;
+	border-left: 1px solid #e7e7e7;
+} 
+
+
+ul.nav li:first-child a.icon-nav-item {
+	font-size: 1.5em;
+	border-left: 1px solid #e7e7e7;	
+}
+
+ul.nav li:last-child a.icon-nav-item {
+	font-size: 1.5em;
+	border-right: 0px;
+}
+
+.navbar-sellside ul.nav li a.icon-nav-item {
+	border: 0;
+}
+
+span.price {
+	display: block;
+	font-size: 1.5em;
+	padding: 0em 0em .5em 0em;
+}
+
+#searchbar {
+	margin-bottom: 20px;
+}
+
+dl {
+	margin-bottom: 0;
+	margin-top: 0;
+	width: auto;
+	display: inline-block;
+}
+
+dl dt {
+	display: inline;
+	padding-right: .5em;
+}
+
+dl dd {
+	display: inline;
+}
+
+.search-results .img-responsive {
+	max-height: 150px;
+}
+
+.search-results .product-detail-link {
+	outline: 0;
+	text-decoration: none;
+	color: inherit;
+	display: block;
+	width: 100%;
+	height: 100%;
+
+}
+
+.search-results .product-detail-link.product-image {
+	max-width: 100px;
+	max-height: 100px;
+	overflow: hidden;
+	float: right;
+}
+
+.search-results .kit-item .product-detail-link.product-image {
+	max-width: 50px;
+	max-height: 50px;
+}
+
+.search-results p,
+.search-results dl
+{
+	color: #666;
+}
+
+.navbar.navbar-sm {
+	font-size: 12px;
+	min-height: 38px;
+	border-radius: 0px;
+}
+
+.navbar.navbar-sm .navbar-collapse {
+	padding-left: 3px;
+	padding-right: 3px;
+}
+
+.navbar.navbar-sm .navbar-form {
+	margin: 3px 10px;
+}
+
+.navbar.navbar-sm .navbar-form.navbar-right {
+	margin-right: 0px;
+	padding-right: 0px;
+}
+
+.navbar.navbar-sm .navbar-form.navbar-left {
+	margin-left: 0px;
+	padding-left: 0px;
+}
+
+.navbar.navbar-sm ul li a {
+	padding: 8px 10px;
+}
+
+
+
+
+
+
+
+.row.no-gutters .col-xs-1, .row.no-gutters .col-sm-1, .row.no-gutters .col-md-1, .row.no-gutters .col-lg-1, .row.no-gutters .col-xs-2, .row.no-gutters .col-sm-2, .row.no-gutters .col-md-2, .row.no-gutters .col-lg-2, .row.no-gutters .col-xs-3, .row.no-gutters .col-sm-3, .row.no-gutters .col-md-3, .row.no-gutters .col-lg-3, .row.no-gutters .col-xs-4, .row.no-gutters .col-sm-4, .row.no-gutters .col-md-4, .row.no-gutters .col-lg-4, .row.no-gutters .col-xs-5, .row.no-gutters .col-sm-5, .row.no-gutters .col-md-5, .row.no-gutters .col-lg-5, .row.no-gutters .col-xs-6, .row.no-gutters .col-sm-6, .row.no-gutters .col-md-6, .row.no-gutters .col-lg-6, .row.no-gutters .col-xs-7, .row.no-gutters .col-sm-7, .row.no-gutters .col-md-7, .row.no-gutters .col-lg-7, .row.no-gutters .col-xs-8, .row.no-gutters .col-sm-8, .row.no-gutters .col-md-8, .row.no-gutters .col-lg-8, .row.no-gutters .col-xs-9, .row.no-gutters .col-sm-9, .row.no-gutters .col-md-9, .row.no-gutters .col-lg-9, .row.no-gutters .col-xs-10, .row.no-gutters .col-sm-10, .row.no-gutters .col-md-10, .row.no-gutters .col-lg-10, .row.no-gutters .col-xs-11, .row.no-gutters .col-sm-11, .row.no-gutters .col-md-11, .row.no-gutters .col-lg-11, .row.no-gutters .col-xs-12, .row.no-gutters .col-sm-12, .row.no-gutters .col-md-12, .row.no-gutters .col-lg-12
+ {
+	padding-left: 0;
+	padding-right: 0;
+}
+
+.list-group.list-group-sm {
+	font-size: 12px;
+	line-height: 1.5;
+	border-radius: 3px;
+}
+
+.list-group.list-group-sm .list-group-item {
+	padding: 5px 10px;
+}
+
+
+/*
+ * Callouts
+ *
+ * Not quite alerts, but custom and helpful notes for folks reading the docs.
+ * Requires a base and modifier class.
+ */
+
+/* Common styles for all types */
+.bs-callout {
+  margin: 20px 0;
+  padding: 20px;
+  border-left: 3px solid #eee;
+}
+.bs-callout h4 {
+  margin-top: 0;
+  margin-bottom: 5px;
+}
+.bs-callout p:last-child {
+  margin-bottom: 0;
+}
+
+/* Variations */
+.bs-callout-danger {
+  background-color: #fdf7f7;
+  border-color: #eed3d7;
+}
+.bs-callout-danger h4 {
+  color: #b94a48;
+}
+.bs-callout-warning {
+  background-color: #faf8f0;
+  border-color: #faebcc;
+}
+.bs-callout-warning h4 {
+  color: #c09853;
+}
+.bs-callout-info {
+  background-color: #f4f8fa;
+  border-color: #bce8f1;
+}
+.bs-callout-info h4 {
+  color: #3a87ad;
+}
+
+div.price {
+	margin-bottom: .5em;
+	overflow: hidden;
+	text-align: right;
+}
+
+div.price h4 {
+	display: inline-block;
+	position: relative;
+}
+
+div.price form.form-inline {
+	display: inline;
+}
+
+div.price form input[type="text"],
+div.price form input[type="number"] {
+	width: 5.5em;
+	text-align: right;
+	padding-right: 4px;
+	padding-left: 4px;
+}
+
+div.price h4.item-price {
+	font-weight: normal;
+	top: 2px;
+	padding-right: .5em;
+	text-align: left;
+}
+
+div.price h4.position-price {
+	top: 2px;
+	padding-left: 1em;
+	width: 6em;
+}
+
+table.table.search-results label.checkbox {
+	padding: 15px 12px;
+	display: block;
+	position: relative;
+}
+
+table.table.search-results label.checkbox input[type="checkbox"] {
+	position: absolute;
+	top: 0px;
+	left: 20px;
+}
+
+table.table-dl td,
+table.table.table-dl td {
+	border: 0;
+	padding: 0px 8px;
+	font-size: .9em;
+}
+
+table.table-dl td.dt,
+table.table.table-dl td.dt {
+	font-weight: bold;
+	padding-left: 16px;
+	color: #999;
+
+}
+
+table.table-dl td:first-child,
+table.table.table-dl td:first-child,
+table.table-dl td.dt:first-child,
+table.table.table-dl td.dt:first-child {
+	padding-left: 0;
+}
+
+table.table-dl td:last-child,
+table.table.table-dl td:last-child {
+	padding-right: 0;
+}
+
+table.table.search-results h4 {
+	margin-top: 0px;
+}
+
+table.table.search-results > tbody > tr.kit-item td {
+	border-top-style: dotted;
+	border-top-color: #eee;
+}
+
+table.table.search-results > tbody > tr > td.no-border {
+	border-top: 1px solid transparent !important;
+}
+
+.navbar.navbar-sellside {
+	border-bottom: 1px solid #E7E7E7;
+	background: transparent;
+	min-height: 10px;
+}
+
+.navbar.navbar-sellside ul.nav li a {
+	padding-bottom: 4px;
+	padding-top: 7px;
+}
+
+.search-bar {
+	margin-bottom: 1em;
+}
+
+.class-nav-sellside .navbar-collapse {
+	padding: 0;
+}
+
+.class-nav-sellside .navbar-collapse > ul > li > a {
+	margin: 0px 5px 5px 0px;
+/*
+	background: #2e6b99;
+	color: #fff;
+*/
+	border: 1px solid #ccc;
+	background: transparent;
+	color: #2e6b99;
+	padding: 5px 10px;
+	font-size: 1.4em;
+	text-align: center;
+}
+
+td.indent-1 {
+	padding-left: 1.5em !important;
+}
+
+.dropdown-menu.dropdown-menu-wide {
+	width: 750px;
+}
+
+.dropdown-menu.dropdown-menu-wide > li.wide {
+	padding: 0;
+}
+
+.dropdown-menu.dropdown-menu-wide > li.wide > .row {
+	border-top: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
+	margin: .35em 0;
+}
+
+
+.dropdown-menu.dropdown-menu-wide > li.wide ul li a {
+	display: block;
+	padding: 3px 5px;
+	clear: both;
+	font-weight: normal;
+	line-height: 1.428571429;
+	color: #333;
+}
+
+.dropdown-menu.dropdown-menu-wide > li.wide ul li:hover a {
+	background: #f5f5f5;
+	text-decoration: none;
+}
+
+ul.classifications {
+	
+}
+
+ul.classifications ul {
+	margin-left: .75em;
+}
+
+ul.classifications > li > ul {
+	margin-bottom: .75em;
+}
+
+ul.classifications li a {
+	padding: .25em;
+	display: block;
+}
+
+ul.classifications > li >a {
+	font-weight: bold;
+	color: #000;
+}
+
+ul.classifications .badge {
+	background: #eee;
+	color: #666;
+	font-weight: normal;
+	float: right;
+}
+
+.well hr {
+	border-top: 1px solid #ddd;
+}
+
+td.check {
+	
+}
+
+td.check.checked {
+	background: #c2d7e8;
+}
+
+.well.product-list-well {
+	padding-bottom: 0;
+	padding-right: 0;
+	margin-bottom: 0;
+	position: relative;
+	top: -21px;
+	border-radius: 0;
+	height: 185px;
+}
+
+.well.product-list-well .thumbnail {
+	width: 15%;
+	float: left;
+	margin: 0 1em 1em 0;
+	padding: 1.5em .5em .5em;
+	height: 150px;
+	position: relative;
+}
+
+.well.product-list-well .thumbnail button {
+	position: absolute;
+	top: 0px;
+	right: 0px;
+}
+
+
+
+.well.product-list-well .control {
+	background: #fff;
+	width: 20%;
+	margin: -14px 5px;
+	padding: .5em;
+	height: 173px;
+	border: 1px solid #e3e3e3;
+}
+
+.list-group.list-group-sm .list-group-item.list-indent-1 { padding-left: 15px; }
+.list-group.list-group-sm .list-group-item.list-indent-2 { padding-left: 20px; }
+.list-group.list-group-sm .list-group-item.list-indent-3 { padding-left: 25px; }
+.list-group.list-group-sm .list-group-item.list-indent-4 { padding-left: 30px; }
+.list-group.list-group-sm .list-group-item.list-indent-5 { padding-left: 35px; }
+.list-group.list-group-sm .list-group-item.list-indent-6 { padding-left: 40px; }
+.list-group.list-group-sm .list-group-item.list-indent-7 { padding-left: 45px; }
+.list-group.list-group-sm .list-group-item.list-indent-8 { padding-left: 50px; }
+.list-group.list-group-sm .list-group-item.list-indent-9 { padding-left: 55px; }
+.list-group.list-group-sm .list-group-item.list-indent-10 { padding-left: 60px; }
+
+
+button.btn[disabled="disabled"] {
+	background: transparent;
+	box-shadow: inset 0px 1px 2px rgba(0,0,0,.1);
+	color: #999;
+}
+
+.no-right-margin { margin-right: 0 !important; }
+.no-left-margin { margin-left: 0 !important; }
+.no-lr-margin { margin-right: 0 !important; margin-left: 0 !important; }
+.no-right-padding { padding-right: 0 !important; }
+.no-left-padding { padding-left: 0 !important; }
+.no-lr-padding { padding-left: 0 !important; padding-right: 0 !important; }
+
+.navbar.navbar-default.navbar-sm .nav.nav-tabs {
+	position: relative;
+	bottom: -2px;
+}
+
+.btn-group-wizard {
+	border: 1px solid #ccc;
+}
+
+.btn-group-wizard .btn-wizard {
+	padding-top: 15px;
+	border: 0;
+	border-left: 1px solid #ccc;
+	text-align: left;
+	border-top: 5px solid transparent;
+	border-bottom: 5px solid transparent;
+}
+
+.btn-group-wizard .btn-wizard:first-child {
+	border-left: 0;
+}
+
+.btn-group-wizard .btn-wizard.active {
+	/*background: #f9f9f9;*/
+	box-shadow: none;
+	color: #333;
+	border-bottom: 5px solid #428bca;
+}
+
+.btn-group-wizard .btn-wizard .badge {
+	background: transparent;
+	color: #000;
+	font-size: 2em;
+	font-weight: normal;
+	border: 1px solid #ccc;
+	vertical-align: middle;
+	margin-right: .25em;
+	float: left;
+	margin-top: -6px;
+	
+}
+
+/* #### CUSTOM STYLES FOR PIMX ########################################################################### */
+
+/* deprecated */
+select.mapping-select {
+	border: 1px solid #ccc;
+	width: 100%;
+	visibility: visible;
+}
+
+select.mapping-select option {
+	color: #333;
+}
+
+select.mapping-select option.mapped {
+	color: green;
+}
+
+select.mapping-select option.required {
+	color: #428bca;
+}
+
+select.mapping-select option.required.mapped {
+	color: green;
+}
+/* end: deprecated */
+
+
+.row.no-gap > div {
+	padding: 0!important;
+}
+
+.mapping-editor {
+	border: 1px solid #ccc;
+}
+
+.mapping-editor > div {
+	height: 500px;
+	overflow: auto;
+}
+
+
+.mapping-editor  > div.indicator-right {
+	border-right: 5px solid #ccc;
+}
+
+.mapping-editor  > div.indicator-right-active {
+	border-right: 5px solid #428bca;
+}
+
+.mapping-editor .list-group .list-group-item {
+	border-radius: 0;
+	border: 0;
+	border-top: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
+}
+
+.mapping-editor .list-group .list-group-item:first-child {
+	border-top: 0;
+	
+}
+
+.mapping-editor .list-group .list-group-item h3,
+.mapping-editor .list-group .list-group-item h4,
+.mapping-editor .list-group .list-group-item h5,
+.mapping-editor .list-group .list-group-item h6
+{
+	margin: 3px 0 2px;
+}
+
+.mapping-editor .list-group .list-group-item.indent-1 {
+	padding-left: 2em;
+	
+}
+
+.mapping-editor .list-group .list-group-item.required {
+	color: #428bca;
+}
+
+.form-horizontal .control-label {
+	text-align: left;
+	color: #888;
+}
+
+h1 {
+	font-size: 2em;
+}
+
+h2 {
+	margin-top: 2em;
+	font-size: 1.5em;
+}
+
+/* #### END: CUSTOM STYLES FOR PIMX ########################################################################### */
