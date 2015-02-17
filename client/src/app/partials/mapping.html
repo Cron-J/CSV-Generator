@@ -1,0 +1,310 @@
+	<form class="form-horizontal" role="form" name="mapForm">
+			<div class="form-group">
+				<label for="x" class="col-sm-2 control-label">Mapping Name</label>
+				<div class="col-sm-3">
+					<input name="jobId" class="form-control" placeholder="Choose Mapping Name" id="x" type="text" ng-model="map.name" required>
+					<span style="color:red" ng-show="form-mapForm.$invalid && submitted">please enter mapping name</span>
+				</div>
+			</div>
+		</form>
+		<hr><!-- mapping editor -->
+		<div class="bs-callout bs-callout-info">
+			<p><span style="color:#428bca"><b>Required properties</b> are displayed in blue.</span><br>
+			<span style="color:green"><b>Mapped properties</b> are marked with green color.</span></p>
+		</div>
+		<div class="row">
+			<div class="col-md-3">
+				<h4><a href="#">Columns from input file</a> <a class="btn btn-default"><span class="glyphicon glyphicon-question-sign"></span></a></h4>
+			</div>
+			<div class="col-md-4 col-md-offset-2">
+				<h4>Tables <a class="btn btn-default"><span class="glyphicon glyphicon-question-sign"></span></a></h4>
+			</div>
+			<div class="col-md-3">
+				<h4><a href="#">Properties</a></h4>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-3">
+				<select class="mapping-select" id="columns1" name="columns" ng-model="column" size="20" ng-click="selectColumn(column)">
+				<option value="" style="display:none">select option</option>
+				<option ng-repeat="col in columnShowList" ng-class="{mapped: col.isSelect}">{{col.colName}}</option>
+				</select>
+			</div>
+			<div class="col-md-2">
+				<div class="btn-group btn-group-justified">
+					<a href="" class="btn btn-default" ng-click="mapping();">Map <span class="glyphicon glyphicon-chevron-right"></span></a>
+				</div><br>
+				<div class="btn-group btn-group-justified">
+					<a class="btn btn-default" ng-click="mapAttribute()">Map Attribute <span class="glyphicon glyphicon-chevron-right"></span></a>
+				</div><br>
+				<div class="btn-group btn-group-justified">
+					<a class="btn btn-default" ng-click="automaticMap()">Automatic Mapping</a>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<select class="mapping-select" id="classes" ng-model="table" name="classes" size="20" >
+				<option value="" style="display:none">select Table</option>
+				<!-- <option value="{{table}}" ng-repeat="table in tableNames">{{table}}</option> -->
+<!-- 					<option value="Price">Price</option>
+					<option value="ProductAttributeValue">ProductAttributeValue</option>
+					<option value="Product2ClassificationGroup">Product2ClassificationGroup</option>
+					<option value="ProductDocAssociation">ProductDocAssociation</option>
+					<option value="ProductRelation">ProductRelation</option> -->
+					<option value="Product" ng-click="selectTable('Product')">Product</option>
+					<!-- <option style="font-weight:bold;padding-left:0px;font-family: Verdana, Arial;" id="com.jcatalog.product.Product:0" selected="selected">Product</option> -->
+						<optgroup style="font-style: normal;" label="Prices">
+									<option value="{{pa}}" id="com.jcatalog.product.ProductAttributeValue:0" ng-repeat="pa in PricesList" ng-click="selectTable('Prices', $index)">
+										{{pa}}
+									</option>
+						</optgroup>
+						<optgroup style="font-style: normal;" label="ProductAttributeValues">
+									<option value="{{pa}}" id="com.jcatalog.product.ProductAttributeValue:0" ng-repeat="pa in ProductAttributeValuesList" ng-click="selectTable('ProductAttributeValues', $index)">
+										{{pa}}
+									</option>
+							</optgroup>
+							<optgroup style="font-style: normal;" label="ClassificationAssignment">
+									<option value="{{pa}}" id="com.jcatalog.product.ProductAttributeValue:0" ng-repeat="pa in ClassificationAssignmentsList" ng-click="selectTable('Product2ClassificationGroup', $index)">
+										{{pa}}
+									</option>
+							</optgroup>
+							<optgroup style="font-style: normal;" label="ProductRelations">
+									<option value="{{pa}}" id="com.jcatalog.product.ProductAttributeValue:0" ng-repeat="pa in ProductRelationsList" ng-click="selectTable('ProductRelations', $index)">
+										{{pa}}
+									</option>
+							</optgroup>
+							<!-- <optgroup style="font-style: normal;" label="ContractedProduct">
+									<option value="{{pa}}" id="com.jcatalog.product.ProductAttributeValue:0" ng-repeat="pa in ContractedProductList" ng-click="selectTable(pa)">
+										{{pa}} 
+									</option>
+							</optgroup> -->
+							<optgroup style="font-style: normal;" label="ContractedProduct">
+									<option value="{{pa}}" id="com.jcatalog.product.ProductAttributeValue:0" ng-repeat="pa in ContractedProductList" ng-click="selectTable('ContractedProduct', $index)">
+										{{pa}}
+									</option>
+							</optgroup>
+
+
+				</select>
+			</div>
+
+			<div class="col-md-3">
+				<select class="mapping-select" id="property" name="properties" size="20" ng-model="prop" ng-click="selectProperty(prop)" >
+				<option value="" style="display:none">select property</option>
+				<option value="{{info.field}}" ng-repeat="info in propertyList | orderBy: 'field'" ng-class="{mapped: info.isSelect}" >{{info.field}}</option>
+<!-- 						<option value="productId" class="mapped required">
+							ProductId
+						</option>
+						<option value="catalogId" class=" required">
+							CatalogId
+						</option>
+						<option value="ean" class=" ">
+							EAN
+						</option>
+						<option value="extProductId" class=" ">
+							ExtProductId
+						</option>
+						<option value="isMainProdLine" class=" ">
+							IsMainProdLine
+						</option>
+						<option value="keywords" class=" ">
+							Keywords
+						</option>
+						<option value="mfgProductId" class=" ">
+							MfgProductId
+						</option>
+						<option value="productIdExtension" class=" ">
+							ProductIdExtension
+						</option>
+						<option value="validFrom" class=" ">
+							ValidFrom
+						</option>
+						<option value="validTo" class=" ">
+							ValidTo
+						</option>
+						<option value="isConfigurable" class=" ">
+							IsConfigurable
+						</option>
+						<option value="isPunchout" class=" ">
+							IsPunchout
+						</option>
+						<option value="manufacturerId" class=" ">
+							ManufacturerId
+						</option>
+						<option value="salesUnitOfMeasureId" class=" ">
+							SalesUnitOfMeasureId
+						</option>
+						<option value="statusId" class=" ">
+							StatusId
+						</option>
+						<option value="supplierId" class=" required">
+							SupplierId
+						</option>
+						<option value="unitOfMeasureId" class=" ">
+							UnitOfMeasureId
+						</option> -->
+				</select>
+			</div>
+		</div>
+		<br>
+		<div class="row">
+			<div class="col-md-3">
+				<div class="btn-group">
+					<button type="button" class="btn btn-default" ng-class="{active: defaultVal.val}" data-toggle="button">Default value</button>
+					<a class="btn btn-default"><span class="glyphicon glyphicon-question-sign"></span></a>
+				</div>
+				<form role="form" style="padding-top: 10px;">
+					<div class="form-group">
+						<!--<label for="exampleInputEmail1">???</label>-->
+						<input type="text" ng-model="defaultVal.val" class="form-control" ng-change="enteredDefaultVal(defaultVal.val)"  placeholder="???">
+					</div>
+				</form>
+			</div>
+			<div class="col-md-4 col-md-offset-2">
+				<!-- <select class="form-control" ng-model="newPropTable" ng-click="selectnewPropTable(newPropTable)">
+					<option value="">Select</option>
+					<option value="Price">Price</option>
+					<option value="ProductAttributeValue">ProductAttributeValue</option>
+					<option value="Product2ClassificationGroup">Product2ClassificationGroup</option>
+					<option value="ProductDocAssociation">ProductDocAssociation</option>
+					<option value="ProductRelation">ProductRelation</option>
+					<option value="Product">Product</option>
+				</select> -->
+				<div class="btn-group">
+					<div class="btn-group">
+						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+							<span ng-show="pickedTable">{{pickedTable}}</span>
+							<span ng-hide="pickedTable">Select</span>
+							<span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu" role="menu">
+							<li><a ng-click="selectnewPropTable('Price')">Price</a></li>
+							<li><a ng-click="selectnewPropTable('ProductAttributeValue')">ProductAttributeValue</a></li>
+							<li><a ng-click="selectnewPropTable('ClassificationAssignment')">ClassificationAssignment</a></li>
+							<li><a ng-click="selectnewPropTable('ProductRelation')">ProductRelation</a></li>
+							<!-- <li><a ng-click="selectnewPropTable('ContractedProducts')">ContractedProduct</a></li> -->
+							<li><a ng-click="selectnewPropTable('ContractedProduct')">ContractedProduct</a></li>
+						</ul>
+					</div>
+					<a class="btn btn-default" ng-click="updateList()"><span class="glyphicon glyphicon-plus"></span></a>
+				</div>
+			</div>
+			<div class="col-md-3">
+			</div>
+		</div>
+		<hr><!-- /mapping editor -->
+		<div ng-show="tableData.length == 0">
+			No mapped details
+		</div>
+		<div ng-show="tableData.length > 0">
+			<table class="table" cellspacing="0">
+				<thead>
+					<tr>
+						<th>Column from import file</th>
+						<th>Property name</th>
+						<th>Property description</th>
+						<th>Index</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="row in tableData">
+						<td ng-show="row.quotes == true">"{{row.columnName}}"</td>
+						<td ng-show="row.quotes == false">{{row.columnName}}</td>
+						<td><span ng-show="row.tableName != 'Product'">Product.</span>{{row.tableName}}<span ng-show="row.rowId > 0">({{row.rowId}})</span>.{{row.propName}}</td>
+						<td>{{row.propName}}</td>
+						<td>{{row.aIndex}}</td>
+						<td>
+							<button class="btn btn-default btn-xs" ng-click="removeRow($index)"><span class="glyphicon glyphicon-remove"></span> Remove</button>
+						</td>
+					</tr>
+						<!-- <tr class="">
+							<td>
+									productId
+							</td>
+							<td>
+								Product.productId
+							</td>
+							<td>
+								ProductId
+							</td>
+							<td align="center">
+								1
+							</td>
+							<td>
+								<button type="button" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-remove"></span> Remove</button>
+								
+							</td>
+						</tr>
+						<tr class="">
+							<td>
+									"	color"
+							</td>
+							<td>
+								ProductAttributeValue.attributeId
+							</td>
+							<td>
+								attributeId
+							</td>
+							<td align="center">
+								1
+							</td>
+							<td>
+								<button type="button" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-remove"></span> Remove</button>
+
+								
+							</td>
+						</tr>
+
+
+
+
+
+						<tr class="">
+							<td>
+
+										color
+
+							</td>
+							<td>
+								ProductAttributeValue.value
+							</td>
+							<td>
+								Value
+							</td>
+							<td align="center">
+								1
+							</td>
+							<td>
+								<button type="button" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-remove"></span> Remove</button>
+
+							</td>
+						</tr> -->
+
+				</tbody>
+
+			</table>
+		</div>
+		
+		<hr>
+		<div class="pull-right">
+			<button class="btn btn-primary "  ng-click="secondStep()">Back</button>
+      <button class="btn btn-primary"  ng-click="fourthStep(map, tableData)">Next</button>
+		</div>
+
+
+		
+		<!-- #### Dev Notes ########################################################## -->
+<!--
+		<div class="bs-callout">
+			<h4>ClassGrp Select Box populated with eClass L1 Grps</h4>
+			<p>This is for demo purposes, and obviously breaks the layout. &rarr; If select box is populated with more than xx options, display centered popup window instead of dropdown list.</p>
+		</div>
+		<div class="bs-callout">
+			<h4>Catalog /Browse Categories, /Browse Contracts, /Supplier Directory</h4>
+			<p>Shortened to "Categories", "Contracts", "Suppliers"</p>
+		</div>
+		<div class="bs-callout bs-callout-warning">
+			<h4>No Extended Search Yet!</h4>
+		</div>
+-->
+		<!-- #### /Dev Notes ########################################################## -->
