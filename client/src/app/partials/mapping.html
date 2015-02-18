@@ -134,6 +134,7 @@
 					<tr ng-repeat="row in tableData">
 						<td ng-show="row.quotes == true">"{{row.columnName}}"</td>
 						<td ng-show="row.quotes == false">{{row.columnName}}</td>
+						<td><dropdown-multiselect pre-selected="member.roles" model="selected_items" options="roles"></dropdown-multiselect></td>
 						<td><span ng-show="row.tableName != 'Product'">Product.</span>{{row.tableName}}<span ng-show="row.rowId > 0">({{row.rowId}})</span>.{{row.propName.field}}</td>
 						<td>{{row.propName.field}}</td>
 						<td>{{row.aIndex}}</td>

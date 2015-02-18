@@ -18,6 +18,23 @@ app
       // $scope.tableDetails = staticFactory.tableListFn();
 		}
 
+
+
+
+  $scope.member = {roles: []};
+  $scope.selected_items = [];
+  $scope.roles= [ {id:  "Lower Case"}, 
+                  {id: "Upper Case"}, 
+                  {id: "Remove Whitespace"}, 
+                  {id: "Remove Delimiter"},
+                  {id: "Regexp(regExpr,nthOccurence)"},
+                  {id: "First(noOfChars)"},
+                  {id: "Last(noOfChars)"},
+                  {id: "Append(String)"},
+                  {id: "Prepend(String)"} ];
+
+
+
     //mapping
     $scope.selectColumn = function (info) {
       $scope.selectedColumn = info;
@@ -612,3 +629,56 @@ app.factory("XLSXReaderService", ['$q', '$rootScope',
 ]);
 
 
+app.directive('dropdownMultiselect', function(){
+   return {
+       restrict: 'E',
+       scope:{           
+            model: '=',
+            options: '=',
+            pre_selected: '=preSelected'
+       },
+       template: "<div class='btn-group' data-ng-class='{open: open}'>"+
+        "<button class='btn btn-default'>Select</button>"+
+                "<button class='btn btn-default dropdown-toggle' data-ng-click='open=!open;openDropdown()'><span class='caret'></span></button>"+
+                "<ul class='dropdown-menu' aria-labelledby='dropdownMenu'>" + 
+                    "<li><a data-ng-click='selectAll()'><i class='glyphicon glyphicon-ok-circle'></i>  Check All</a></li>" +
+                    "<li><a data-ng-click='deselectAll();'><i class='glyphicon glyphicon-remove-circle'></i>  Uncheck All</a></li>" +                    
+                    "<li class='divider'></li>" +
+                    "<li data-ng-repeat='option in options'> <a data-ng-click='setSelectedItem()'>{{option.id}}<span data-ng-class='isChecked(option.id)','pull-right'></span></a></li>" +                                        
+                "</ul>" +
+            "</div>" ,
+       controller: function($scope){
+           
+           $scope.openDropdown = function(){        
+                    $scope.selected_items = [];
+                    for(var i=0; i<$scope.pre_selected.length; i++){                        $scope.selected_items.push($scope.pre_selected[i].id);
+                    }                                        
+            };
+           
+            $scope.selectAll = function () {
+                $scope.model = _.pluck($scope.options, 'id');
+                console.log($scope.model);
+            };            
+            $scope.deselectAll = function() {
+                $scope.model=[];
+                console.log($scope.model);
+            };
+            $scope.setSelectedItem = function(){
+                var id = this.option.id;
+                if (_.contains($scope.model, id)) {
+                    $scope.model = _.without($scope.model, id);
+                } else {
+                    $scope.model.push(id);
+                }
+                console.log($scope.model);
+                return false;
+            };
+            $scope.isChecked = function (id) {                 
+                if (_.contains($scope.model, id)) {
+                    return 'glyphicon glyphicon-ok pull-right';
+                }
+                return false;
+            };                                 
+       }
+   } 
+});
