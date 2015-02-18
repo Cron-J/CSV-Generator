@@ -412,6 +412,30 @@ app
       $scope.secondStep(); 
     }
 
+    //check required fields mapping is done or not
+    var checkMapping = function (tableInfo) {
+      var reqFieldList = [];
+      var k = 0;
+      for (var i = 0; i < $scope.propertyList.length; i++) {
+        if($scope.propertyList[i].isRequired){
+          reqFieldList.length++;
+          reqFieldList[k] = $scope.propertyList[i].field;
+        }
+      };
+      var clength = 0;
+      for (var i = 0; i < tableInfo.length; i++) {
+        for (var j = 0; j < reqFieldList.length; j++) {
+          if(tableInfo[i].propName.field == reqFieldList[j]){
+            clength++;
+          }
+        }
+      };
+      if(clength == reqFieldList.length)
+        return true;
+      else 
+        return false;
+    }
+
     //save maaping
     var saveMapping = function (map){
         $http.post('/createMapping', map)
@@ -445,18 +469,24 @@ app
         // $scope.map.details = mapInfo;
         // $scope.map.tableData = [];
         // $scope.map.tableData = tableInfo;
-        var mappingDetails = {};
-        mappingDetails.tenantId = 1;
-        mappingDetails.mappingName = map.name;
-        mappingDetails.mappingInfo = [];
-        for (var i = 0; i < tableInfo.length; i++) {
-          mappingDetails.mappingInfo[i] = {
-            "userFieldName": tableInfo[i].columnName,
-            "collectionName": tableInfo[i].tableName,
-            "fieldDetail": tableInfo[i].propName
+        var valid = checkMapping(tableInfo);
+        if(valid == true){
+          var mappingDetails = {};
+          mappingDetails.tenantId = 1;
+          mappingDetails.mappingName = map.name;
+          mappingDetails.mappingInfo = [];
+          for (var i = 0; i < tableInfo.length; i++) {
+            mappingDetails.mappingInfo[i] = {
+              "userFieldName": tableInfo[i].columnName,
+              "collectionName": tableInfo[i].tableName,
+              "fieldDetail": tableInfo[i].propName
+            };
           };
-        };
-        saveMapping(mappingDetails);
+          saveMapping(mappingDetails);
+        } else {
+          console.log('invalid mapping');
+        }
+        
       } else {
         $scope.submitted = true;
       }
