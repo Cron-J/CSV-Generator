@@ -19,7 +19,7 @@ var ProductSchema = new Schema({
   /**
    * Identifier of Product's Tenant this product is listed in.
    */
-  tenantId : {type: String, index: true, required: true},
+  tenantId : {type: String, index: true},
 
   /**
    * Identifier of the Supplier who own the product.
@@ -34,7 +34,7 @@ var ProductSchema = new Schema({
   /**
    * Manufacturer article identifier.
    */
-  mfgProductId : {type: String, required: true},
+  mfgProductId : {type: String},
 
   /**
    * Manufacturer article name. (WARN: in PIM this is same fields means <code>manufacturerName</code> because <code>mfgProductName</code> doesn't exist in PIM)
