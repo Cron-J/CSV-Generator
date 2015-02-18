@@ -4,8 +4,8 @@
 
 app
 	.controller('mainCtrl',['$scope', '$http','$location','$timeout', 
-     '$filter','$upload',
-		function($scope, $http, $location,$timeout,$filter,$upload){
+     '$filter','$upload', 'XLSXReaderService',
+		function($scope, $http, $location,$timeout,$filter,$upload, XLSXReaderService){
 		var _scope = {};
     $scope.badge={}
 		_scope.init = function(){
@@ -45,7 +45,7 @@ app
       //       if($scope.propertyList[i].propName == $scope.columnShowList[j].colName){
       //         $scope.tableData[k] = {};
       //         $scope.tableData[k].columnName = $scope.columnShowList[j].colName;
-      //         $scope.tableData[k].propName = $scope.propertyList[i].propName;
+      //         $scope.tableData[k].propName.field = $scope.propertyList[i].propName;
       //         if($scope.selectedTable)
       //           $scope.tableData[k].tableName = $scope.selectedTable;
       //         else
@@ -56,17 +56,17 @@ app
       // };
     
 
-      var list= $scope.tableDetails.Price;
-      addRows(list, 'Price');
-      list= $scope.tableDetails.ProductAttributeValue;
-      addRows(list, 'ProductAttributeValue');
-      list= $scope.tableDetails.ProductAttributeValue;
-      addRows(list, 'ClassificationAssignment');
-      list= $scope.tableDetails.ClassificationAssignment;
-      addRows(list, 'DocumentAssociation');
-      list= $scope.tableDetails.DocumentAssociation;
-      addRows(list, 'ProductRelation');
-      list= $scope.tableDetails.Product;
+      var list = getTableData('Prices');
+      addRows(list, 'Prices');
+      list = getTableData('ProductAttributeValues');
+      addRows(list, 'ProductAttributeValues');
+      list = getTableData('Product2ClassificationGroup');
+      addRows(list, 'Product2ClassificationGroup');
+      list = getTableData('ContractedProduct');
+      addRows(list, 'ContractedProduct');
+      list = getTableData('ProductRelations');
+      addRows(list, 'ProductRelations');
+      list = getTableData('Product');
       addRows(list, 'Product');
 
     }
@@ -120,6 +120,7 @@ app
               case 'Product2ClassificationGroup':
                 $scope.propertyList = data.Product2ClassificationGroup;
                 break;
+              return $scope.propertyList;
             }
             // console.log('propertyList:', $scope.propertyList)
           } 
@@ -367,10 +368,19 @@ app
       var file = files[0];
       if (file) {
         var name = file.name.split(".");
-        if(name[name.length - 1] == "csv" )
-           getData(file);
-        else     
-          readXls();  
+        if(name[name.length - 1] == "csv" ){
+          $scope.uploadedFileType = 'csv';
+          getData(file);
+        }
+        else if(name[name.length - 1] == "xlsx"){
+          $scope.uploadedFileType = 'xlsx';
+          $scope.fileChanged(files);
+          $scope.updateJSONString(); 
+          $scope.showPreviewChanged();
+        } 
+        else{
+          console.log('entered file type is otherthan csv or xls');
+        }
       }
     }
 
@@ -401,7 +411,11 @@ app
       $scope.importedDatar1 = dumpTable[1].split(",");
       $scope.importedDatar2 = dumpTable[2].split(",");
 
-      // $scope.secondStep(); 
+      // loading columns
+      loadingColumns();
+    }
+
+    var loadingColumns = function () {
       var selectedColumns = [];
       for (var i = 0; i < $scope.columnList.length; i++) {
         selectedColumns[i] = {"colName":null, "isSelect":null};
@@ -410,6 +424,40 @@ app
       };
       $scope.columnShowList = selectedColumns;  
       $scope.secondStep(); 
+    }
+
+    $scope.showPreview = false;
+    $scope.showJSONPreview = true;
+    $scope.json_string = "";
+
+    $scope.fileChanged = function(files) {
+        $scope.isProcessing = true;
+        $scope.sheets = [];
+        $scope.excelFile = files[0];
+        XLSXReaderService.readFile($scope.excelFile, $scope.showPreview, $scope.showJSONPreview).then(function(xlsxData) {
+            $scope.sheets = xlsxData.sheets;
+            $scope.isProcessing = false;
+        });
+    }
+
+    $scope.updateJSONString = function() {
+      $scope.showPreview = true;
+        $scope.selectedSheetName = 'Sheet1'
+        $scope.json_string = JSON.stringify($scope.sheets[$scope.selectedSheetName], null, 2);
+    $scope.secondStep();
+    }
+
+    $scope.showPreviewChanged = function() {
+        if ($scope.showPreview) {
+            $scope.showJSONPreview = false;
+            $scope.isProcessing = true;
+            XLSXReaderService.readFile($scope.excelFile, $scope.showPreview, $scope.showJSONPreview).then(function(xlsxData) {
+                $scope.sheets = xlsxData.sheets;
+                $scope.columnList = $scope.sheets.Sheet1.data[0];
+                loadingColumns();
+                $scope.isProcessing = false;
+            });
+        }
     }
 
     //check required fields mapping is done or not
@@ -542,5 +590,25 @@ app.filter('smallize', function() {
     return input.substring(0,1).toLowerCase()+input.substring(1);
   }
 });
+
+//factory
+app.factory("XLSXReaderService", ['$q', '$rootScope',
+    function($q, $rootScope) {
+        var service = function(data) {
+            angular.extend(this, data);
+        }
+        service.readFile = function(file, readCells, toJSON) {
+            var deferred = $q.defer();
+
+            XLSXReader(file, readCells, toJSON, function(data) {
+                $rootScope.$apply(function() {
+                    deferred.resolve(data);
+                });
+            });
+            return deferred.promise;
+        }
+        return service;
+    }
+]);
 
 
