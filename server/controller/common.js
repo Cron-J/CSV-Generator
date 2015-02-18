@@ -50,6 +50,7 @@ exports.getAll = {
       var data = {};
       data.field = path;
       data.index = schemaPath[path]._index;
+      if(schemaPath[path].isRequired != undefined) data.isRequired = schemaPath[path].isRequired;
       data.reference = {};
       /*
       if(schemaPath[path].options.ref != undefined) data.reference.ref = schemaPath[path].options.ref
