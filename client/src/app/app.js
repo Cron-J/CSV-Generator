@@ -2,7 +2,7 @@
 
 /* defining the app */
 var app = angular
-	.module("app", ['ngResource', 'angularFileUpload', 'ngRoute', 'ngLodash'])
+	.module("app", ['ngResource', 'angularFileUpload', 'ngRoute'])
 	.config(['$routeProvider', function($routeProvider) {
 
     $routeProvider
