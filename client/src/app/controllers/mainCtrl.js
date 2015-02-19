@@ -344,24 +344,25 @@ app
 
     }
 
-    $scope.removeRow = function (propName, index) {
+    $scope.removeRow = function (propName, colName, index) {
       $scope.tableData.splice(index, 1);
-      mappedColumns(undefined, index);
+      mappedColumns(colName, true);
       mappedPropColumns(undefined, propName);
     }
 
-    var mappedColumns = function (col, id) {
+    var mappedColumns = function (col, remove) {
       //mapped input columns
-      if(col){
+      if(remove == true){
         for(var j = 0; j < $scope.columnShowList.length; j++){
           if($scope.columnShowList[j].colName == col){
-            $scope.columnShowList[j].isSelect = true;
+            $scope.columnShowList[j].isSelect = false;
           } 
         }
-      } else {
-        for(var j = 0; j < $scope.columnShowList.length; j++){
-          if(j == id){
-            $scope.columnShowList[j].isSelect = false;
+      } 
+      for(var j = 0; j < $scope.columnShowList.length; j++){
+        for(var i = 0; i < $scope.tableData.length; i++){
+          if($scope.columnShowList[j].colName == $scope.tableData[i].columnName){
+            $scope.columnShowList[j].isSelect = true;
           } 
         }
       }
