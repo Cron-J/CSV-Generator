@@ -329,8 +329,8 @@ app
 
     $scope.removeRow = function (propName, index) {
       $scope.tableData.splice(index, 1);
-      mappedColumns(null, index);
-      mappedPropColumns(null, propName);
+      mappedColumns(undefined, index);
+      mappedPropColumns(undefined, propName);
     }
 
     var mappedColumns = function (col, id) {
