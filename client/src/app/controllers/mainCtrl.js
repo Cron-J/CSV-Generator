@@ -179,7 +179,8 @@ app
         }
         $scope.PricesList.length++;
         for(var i = 0; i < $scope.PricesList.length ; i++){   
-          $scope.PricesList[i] = 'Price'+'('+(i+1)+')';      
+          $scope.PricesList[i] = 'Price'+'('+(i+1)+')'; 
+          $scope.rowId = i+1;     
         }
       }
       if($scope.pickedTable == 'ProductAttributeValue'){
@@ -262,52 +263,68 @@ app
     }
 
     $scope.mapAttribute = function () {
-      $scope.pickedTable = "ProductAttributeValue";
-      $scope.updateList();
-      if($scope.selectedColumn){
-        if($scope.tableData == undefined){
-          $scope.tableData = [];
-        } 
-        var dummy = {"columnName": null, "propName": null, 
-                        "tableName": null, "aIndex": 0, "quotes": false, "rowId":0, "ma":true };
-        var i = $scope.tableData.length++;
-        var j = $scope.tableData.length++;
-        for(var k = $scope.tableData.length ; k > 0; k--){
-          if(i == k-2){
-            $scope.tableData[i] = angular.copy(dummy);
-            $scope.tableData[i].columnName = $scope.selectedColumn;
-            $scope.tableData[i].tableName = $scope.pickedTable;
-            $scope.tableData[i].rowId = angular.copy($scope.rowId);
-            $scope.tableData[i].quotes = true;
-            if($scope.tableData[i].tableName == $scope.pickedTable){
-              $scope.tableData[i].aIndex++;
+      if($scope.selectedColumn == 'gross_price' || $scope.selectedColumn == 'retail_price' 
+        || $scope.selectedColumn == 'grossprice' || $scope.selectedColumn == 'retailprice'){
+        $scope.pickedTable = "Price";
+      } else {
+        $scope.pickedTable = "ProductAttributeValue";
+      }
+        $scope.updateList();
+        if($scope.selectedColumn){
+          if($scope.tableData == undefined){
+            $scope.tableData = [];
+          } 
+          var dummy = {"columnName": null, "propName": null, 
+                          "tableName": null, "aIndex": 0, "quotes": false, "rowId":0, "ma":true };
+          var i = $scope.tableData.length++;
+          var j = $scope.tableData.length++;
+          for(var k = $scope.tableData.length ; k > 0; k--){
+            if(i == k-2){
+              $scope.tableData[i] = angular.copy(dummy);
+              $scope.tableData[i].columnName = $scope.selectedColumn;
+              $scope.tableData[i].tableName = $scope.pickedTable;
+              $scope.tableData[i].rowId = angular.copy($scope.rowId);
+              $scope.tableData[i].quotes = true;
+              if($scope.tableData[i].tableName == $scope.pickedTable){
+                $scope.tableData[i].aIndex++;
+              }
+              if($scope.selectedColumn == 'gross_price' || $scope.selectedColumn == 'retail_price' ||
+                $scope.selectedColumn == 'grossprice' || $scope.selectedColumn == 'retailprice'){
+                $scope.tableData[i].propName = {};
+                $scope.tableData[i].propName.field = 'priceUnit';
+                $scope.tableData[i].propName.reference = {};
+                $scope.tableData[i].propName.index = null;
+              } else {
+                $scope.tableData[i].propName = {};
+                $scope.tableData[i].propName.field = 'attribute';
+                $scope.tableData[i].propName.reference = {};
+                $scope.tableData[i].propName.index = null;
+              }
             }
-            if($scope.selectedColumn){
-              $scope.tableData[i].propName = {};
-              $scope.tableData[i].propName.field = 'attribute';
-              $scope.tableData[i].propName.instance= "String";
-              $scope.tableData[i].propName.reference = {};
-              $scope.tableData[i].propName.index = null;
+            if(j == k-1){
+              // console.log('j value', j);
+              $scope.tableData[j] = angular.copy(dummy);
+              $scope.tableData[j].columnName = $scope.selectedColumn;
+              $scope.tableData[j].tableName = $scope.pickedTable;
+              $scope.tableData[j].rowId = angular.copy($scope.rowId);
+              if($scope.selectedColumn == 'gross_price' || $scope.selectedColumn == 'retail_price' 
+                || $scope.selectedColumn == 'grossprice' || $scope.selectedColumn == 'retailprice'){
+                $scope.tableData[j].propName = {};
+                $scope.tableData[j].propName.field = 'priceTypeId';
+                $scope.tableData[j].propName.reference = {};
+                $scope.tableData[j].propName.index = null;
+              } else {
+                $scope.tableData[j].propName = {};
+                $scope.tableData[j].propName.field = 'value';
+                $scope.tableData[j].propName.reference = {};
+                $scope.tableData[j].propName.index = null;
+              }
+              if($scope.tableData[j].tableName == $scope.pickedTable){
+                $scope.tableData[j].aIndex = $scope.tableData[j].aIndex+2;
+              }
             }
           }
-          if(j == k-1){
-            // console.log('j value', j);
-            $scope.tableData[j] = angular.copy(dummy);
-            $scope.tableData[j].columnName = $scope.selectedColumn;
-            $scope.tableData[j].tableName = $scope.pickedTable;
-            $scope.tableData[j].rowId = angular.copy($scope.rowId);
-            if($scope.selectedColumn){
-              $scope.tableData[j].propName = {};
-              $scope.tableData[j].propName.field = 'value';
-              $scope.tableData[j].propName.instance= "String";
-              $scope.tableData[j].propName.reference = {};
-              $scope.tableData[j].propName.index = null;
-            }
-            if($scope.tableData[j].tableName == $scope.pickedTable){
-              $scope.tableData[j].aIndex = $scope.tableData[j].aIndex+2;
-            }
-          }
-        }
+
         mappedColumns($scope.selectedColumn);
         mappedPropColumns($scope.pickedTable);
         // console.log($scope.tableData);
