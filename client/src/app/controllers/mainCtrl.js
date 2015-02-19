@@ -3,9 +3,10 @@
 /* Controller */
 
 app
-	.controller('mainCtrl',['$scope', '$http','$location','$timeout', 
-     '$filter','$upload', 'XLSXReaderService',
-		function($scope, $http, $location,$timeout,$filter,$upload, XLSXReaderService){
+	.controller('mainCtrl',['$scope', '$http', 'growl', '$location', '$timeout', 
+     '$filter', '$upload', 'XLSXReaderService',
+		function($scope, $http, growl, $location, $timeout, $filter, $upload,  
+      XLSXReaderService){
 		var _scope = {};
     $scope.badge={}
 		_scope.init = function(){
@@ -14,12 +15,7 @@ app
       $scope.defaultVal={
         val:null
       }
-      // $scope.tableNames = staticFactory.tableArrayFn();
-      // $scope.tableDetails = staticFactory.tableListFn();
 		}
-
-
-
 
   $scope.member = {roles: []};
   $scope.selected_items = [];
@@ -32,8 +28,6 @@ app
                   {id: "Last(noOfChars)"},
                   {id: "Append(String)"},
                   {id: "Prepend(String)"} ];
-
-
 
     //mapping
     $scope.selectColumn = function (info) {
@@ -103,7 +97,6 @@ app
               $scope.tableData[k].quotes = false;
               $scope.tableData[k].tableName = tableName;
               $scope.tableData[k].aIndex = 1;
-              // console.log('table data', $scope.tableData);
             }
           }
         }
@@ -114,7 +107,7 @@ app
       $scope.selectedDefaultVal = info;
     }
 
-   var getTableData = function (table){
+    var getTableData = function (table, originalTName){
         $http.get('/getAttributes/'+table) 
         .success(function(data){
           if(data){
@@ -139,52 +132,35 @@ app
                 break;
               return $scope.propertyList;
             }
-            // console.log('propertyList:', $scope.propertyList)
+            if($scope.propertyList){
+              var modifiedList = $scope.propertyList;
+              $scope.propertyList = [];
+              for(var i = 0; i < modifiedList.length ; i++){  
+                $scope.propertyList[i] = {};
+                $scope.propertyList[i] = modifiedList[i];
+                $scope.propertyList[i].isSelect = false;  
+              }
+              mappedPropColumns(originalTName);
+            }
           } 
         })
         .error(function(){
-          console.log('Unable to get attributes')
+          growl.error("Unable to get attributes");
         });
     }
 
-    $scope.selectTable = function (info, rowNo) {
-      getTableData(info);
-      $scope.selectedTable = info;
+    $scope.selectTable = function (tname, otname, rowNo) {
+      getTableData(tname, otname);
+      $scope.selectedTable = tname;
       $scope.rowId = rowNo+1;
-      // console.log($scope.rowId);
-      // if($scope.selectedTable == 'Price')
-      //   $scope.propertyList = $scope.tableDetails.Price;
-      // else if($scope.selectedTable == 'ProductAttributeValue')
-      //   $scope.propertyList = $scope.tableDetails.ProductAttributeValue;
-      // else if($scope.selectedTable == 'ClassificationAssignment')
-      //   $scope.propertyList = $scope.tableDetails.Product2ClassificationGroup;
-      // else if($scope.selectedTable == 'DocumentAssociation')
-      //   $scope.propertyList = $scope.tableDetails.ProductDocAssociation;
-      // else if($scope.selectedTable == 'ProductRelation')
-      //   $scope.propertyList = $scope.tableDetails.ProductRelations;
-      // else 
-      //   $scope.propertyList = $scope.tableDetails.Product;
-
-      //recoding propertylist
-      if($scope.propertyList){
-        var modifiedList = $scope.propertyList;
-        $scope.propertyList = [];
-        for(var i = 0; i < modifiedList.length ; i++){  
-          $scope.propertyList[i] = {};
-          $scope.propertyList[i] = modifiedList[i];
-          $scope.propertyList[i].isSelect = false;  
-        }
-        // console.log('modified data :', $scope.propertyList);
-      }
-      
-      if($scope.mapDone == true){
-        //clear selection before auto map
-        for(var i = 0; i < $scope.columnShowList.length ; i++){   
-          $scope.columnShowList[i].isSelect = false;      
-        }
-        //do map for same names
-        $scope.autoMap();
-      }
+      // if($scope.mapDone == true){
+      //   //clear selection before auto map
+      //   for(var i = 0; i < $scope.columnShowList.length ; i++){   
+      //     $scope.columnShowList[i].isSelect = false;      
+      //   }
+      //   //do map for same names
+      //   $scope.autoMap();
+      // }
       
     }
 
@@ -276,6 +252,8 @@ app
             $scope.tableData[i].aIndex++;
           }
         }
+        mappedColumns($scope.selectedColumn);
+        mappedPropColumns($scope.selectedTable);
         $scope.defaultVal.val = '';
         $scope.selectedColumn = undefined;
         $scope.selectedTable = undefined;
@@ -296,7 +274,6 @@ app
         var j = $scope.tableData.length++;
         for(var k = $scope.tableData.length ; k > 0; k--){
           if(i == k-2){
-            // console.log('i value', i);
             $scope.tableData[i] = angular.copy(dummy);
             $scope.tableData[i].columnName = $scope.selectedColumn;
             $scope.tableData[i].tableName = $scope.pickedTable;
@@ -312,9 +289,6 @@ app
               $scope.tableData[i].propName.reference = {};
               $scope.tableData[i].propName.index = null;
             }
-            // if($scope.selectedColumn == 'gross_price' || $scope.selectedColumn == 'retail_price'){
-            //   $scope.tableData[i].propName = 'price';
-            // }
           }
           if(j == k-1){
             // console.log('j value', j);
@@ -334,6 +308,8 @@ app
             }
           }
         }
+        mappedColumns($scope.selectedColumn);
+        mappedPropColumns($scope.pickedTable);
         // console.log($scope.tableData);
         $scope.defaultVal.val = '';
         $scope.selectedColumn = undefined;
@@ -351,35 +327,46 @@ app
 
     }
 
-    $scope.removeRow = function (index) {
+    $scope.removeRow = function (propName, index) {
       $scope.tableData.splice(index, 1);
+      mappedColumns(null, index);
+      mappedPropColumns(null, propName);
     }
 
-//     //uploading file
-//     // $scope.save = function (){
-//     //     var file = $scope.myFile;
-//     //     var fd = new FormData();
-//     //     fd.append('file', file);
-//     //     $http.post('/saveFile', fd, {
-//     //         transformRequest: angular.identity,
-//     //         headers: {'Content-Type': undefined}
-//     //     })
-//     //     .success(function(data){
-//     //       $scope.columnList = data.header;
-//     //       $scope.importedData = data.data;
-//     //       console.log($scope.importedData);
-//     //       var selectedColumns = [];
-//     //       for (var i = 0; i < $scope.columnList.length; i ++) {
-//     //         selectedColumns[i] = {"colName":null, "isSelect":null};
-//     //         selectedColumns[i].colName = $filter('smallize')($scope.columnList[i]);
-//     //         selectedColumns[i].isSelect = false;
-//     //       };
-//     //       $scope.columnShowList = selectedColumns;
-//     //       $scope.secondStep();
-//     //     })
-//     //     .error(function(){
-//     //     });
-//     // }
+    var mappedColumns = function (col, id) {
+      //mapped input columns
+      if(col){
+        for(var j = 0; j < $scope.columnShowList.length; j++){
+          if($scope.columnShowList[j].colName == col){
+            $scope.columnShowList[j].isSelect = true;
+          } 
+        }
+      } else {
+        for(var j = 0; j < $scope.columnShowList.length; j++){
+          if(j == id){
+            $scope.columnShowList[j].isSelect = false;
+          } 
+        }
+      }
+    }
+   var mappedPropColumns = function (tname, propName) {
+      //mapped propertyList columns
+      for(var i = 0; i < $scope.propertyList.length; i++){
+        for(var j = 0; j < $scope.tableData.length; j++){
+          if($scope.propertyList[i].field == $scope.tableData[j].propName.field && 
+            $scope.tableData[j].tableName == tname){
+            $scope.propertyList[i].isSelect = true;
+          } 
+        }
+        if(propName){
+          for(var i = 0; i < $scope.propertyList.length; i++){
+            if($scope.propertyList[i].field == propName)
+              $scope.propertyList[i].isSelect = false;
+          }
+        }
+      }
+   }
+
     $scope.startRead = function(files) {
       // $scope.secondStep();
       var file = files[0];
@@ -497,17 +484,19 @@ app
       };
       if(clength == reqFieldList.length)
         return true;
-      else 
+      else {
         return false;
+      }
     }
 
     //save maaping
     var saveMapping = function (map){
         $http.post('/createMapping', map)
           .success(function(data){
-            console.log('mapping created');
+            growl.success("Mapping has been saved successfully");
           })
           .error(function(){
+            growl.error("Unable to save Mapping");
           });
     }
 
@@ -523,13 +512,11 @@ app
 
     $scope.thirdStep = function (info) {
       $scope.badge.step = "three";
-      // console.log(info);
     }
 
     $scope.fourthStep = function (map, tableInfo) {
       if(map){
         $scope.submitted = false;
-        $scope.badge.step = "four";
         // $scope.map = {};
         // $scope.map.details = mapInfo;
         // $scope.map.tableData = [];
@@ -548,8 +535,9 @@ app
             };
           };
           saveMapping(mappingDetails);
+          $scope.badge.step = "four";
         } else {
-          console.log('invalid mapping');
+          growl.error("Please map all required fields before trying to save mapping");
         }
         
       } else {

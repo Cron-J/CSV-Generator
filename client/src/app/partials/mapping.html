@@ -44,29 +44,29 @@
 			<div class="col-md-4">
 				<select class="mapping-select" id="classes" ng-model="table" name="classes" size="20" >
 				<option value="" style="display:none">select Table</option>
-				<option value="Product" ng-click="selectTable('Product')">Product</option>
+				<option value="Product" ng-click="selectTable('Product', 'Product')">Product</option>
 				<optgroup style="font-style: normal;" label="Prices">
-							<option value="{{pa}}" id="com.jcatalog.product.Prices:0" ng-repeat="pa in PricesList" ng-click="selectTable('Prices', $index)">
+							<option value="{{pa}}" id="com.jcatalog.product.Prices:0" ng-repeat="pa in PricesList" ng-click="selectTable('Prices', 'Price', $index)">
 								{{pa}}
 							</option>
 				</optgroup>
 				<optgroup style="font-style: normal;" label="ProductAttributeValues">
-							<option value="{{pa}}" id="com.jcatalog.product.ProductAttributeValue:0" ng-repeat="pa in ProductAttributeValuesList" ng-click="selectTable('ProductAttributeValues', $index)">
+							<option value="{{pa}}" id="com.jcatalog.product.ProductAttributeValue:0" ng-repeat="pa in ProductAttributeValuesList" ng-click="selectTable('ProductAttributeValues', 'ProductAttributeValue', $index)">
 								{{pa}}
 							</option>
 					</optgroup>
 					<optgroup style="font-style: normal;" label="ClassificationAssignment">
-							<option value="{{pa}}" id="com.jcatalog.product.ClassificationAssignment:0" ng-repeat="pa in ClassificationAssignmentsList" ng-click="selectTable('Product2ClassificationGroup', $index)">
+							<option value="{{pa}}" id="com.jcatalog.product.ClassificationAssignment:0" ng-repeat="pa in ClassificationAssignmentsList" ng-click="selectTable('Product2ClassificationGroup', 'Product2ClassificationGroup', $index)">
 								{{pa}}
 							</option>
 					</optgroup>
 					<optgroup style="font-style: normal;" label="ProductRelations">
-							<option value="{{pa}}" id="com.jcatalog.product.ProductRelations:0" ng-repeat="pa in ProductRelationsList" ng-click="selectTable('ProductRelations', $index)">
+							<option value="{{pa}}" id="com.jcatalog.product.ProductRelations:0" ng-repeat="pa in ProductRelationsList" ng-click="selectTable('ProductRelations', 'ProductRelation', $index)">
 								{{pa}}
 							</option>
 					</optgroup>
 					<optgroup style="font-style: normal;" label="ContractedProduct">
-							<option value="{{pa}}" id="com.jcatalog.product.ContractedProduct:0" ng-repeat="pa in ContractedProductList" ng-click="selectTable('ContractedProduct', $index)">
+							<option value="{{pa}}" id="com.jcatalog.product.ContractedProduct:0" ng-repeat="pa in ContractedProductList" ng-click="selectTable('ContractedProduct', 'ContractedProduct',$index)">
 								{{pa}}
 							</option>
 					</optgroup>
@@ -76,7 +76,7 @@
 			<div class="col-md-3">
 				<select class="mapping-select" id="property" name="properties" size="20" ng-model="prop"  >
 				<option value="" style="display:none">select property</option>
-				<option value="{{info}}" ng-repeat="info in propertyList | orderBy: 'field'" ng-class="{mapped: info.isSelect, required: info.isRequired}" ng-hide="info.field == 'productId'" ng-click="selectProperty(info)">{{info.field}}</option>
+				<option value="{{info}}" ng-repeat="info in propertyList | orderBy: 'field'" ng-class="{mapped: info.isSelect, required: info.isRequired}" ng-click="selectProperty(info)">{{info.field}}</option>
 				</select>
 			</div>
 		</div>
@@ -139,7 +139,7 @@
 						<td>{{row.propName.field}}</td>
 						<td>{{row.aIndex}}</td>
 						<td>
-							<button class="btn btn-default btn-xs" ng-click="removeRow($index)"><span class="glyphicon glyphicon-remove"></span> Remove</button>
+							<button class="btn btn-default btn-xs" ng-click="removeRow(row.propName.field, $index)"><span class="glyphicon glyphicon-remove"></span> Remove</button>
 						</td>
 					</tr>
 				</tbody>

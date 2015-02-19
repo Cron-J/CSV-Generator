@@ -79,7 +79,7 @@ fieldset {
 }
 
 .drop-box.dragover-err {
-	border: 5px dashed red;
+	border: 5px dashed green;
 }
 
 /* for IE*/

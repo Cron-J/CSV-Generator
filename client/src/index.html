@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="css/additional.css">
   <link rel="stylesheet" href="css/bootstrap-jc-v8-theme.css">
   <link rel="stylesheet" href="css/custom.css">
+  <link rel="stylesheet" href="css/growl.css">
 </head>
 <body>
 	<div class="navbar navbar-default navbar-main-menu"><!-- main nav -->
@@ -74,7 +75,7 @@
       </form>
     </div><!--/.nav-collapse -->
   </div><!-- /main nav -->
-
+  <div growl></div>
 	<div data-ng-view></div>
 
   <!-- library files -->
@@ -85,11 +86,12 @@
 	<script src="bower_components/ng-file-upload-shim/angular-file-upload-shim.min.js"></script> 
 	<script src="bower_components/ng-file-upload/angular-file-upload.min.js"></script>
   <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script> 
-
+  
 
   <!-- js files -->
   <script src="lib/lodash.js"></script>
   <script src="lib/bootstrap.js"></script>
+  <script type="text/javascript" src="lib/growl.js"></script>
 	<script src="app/app.js"></script>
   <script src="app/controllers/mainCtrl.js"></script>
   <script src="lib/jszip.js"></script>
