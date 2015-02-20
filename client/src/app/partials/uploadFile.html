@@ -1,68 +1,69 @@
 <div class="upload-div">
-        <div class="upload-buttons">
-          <div id="editArea">
-              <div class="upload-container">
-                <legend>Upload File</legend>
-                  <!-- <div class="col-md-12">
-                     <input type="file" file-model="myFile"/>
-                  </div> -->
-                  <div class="row">
-                    <div class="col-lg-12 up-buttons">
-                      <div ng-file-select="" ng-model="files" ng-model-rejected="rejFiles" class="btn btn-default" ng-multiple="false" ng-accept="'.csv,.xls,.xlsx'"  ng-model-rejected="rejFiles" tabindex="0">Choose file</div>
-                    </div>
-                  </div>
-                  <div class="row">
-                      <div class="orClass">OR</div>
-                  </div>
-                  <div class="row">
-                    <div ng-file-drop="" ng-file-select=""
-                    ng-model="files" ng-model-rejected="rejFiles"
-                    drag-over-class="{accept:'dragover', reject:'dragover-err', delay:100}" 
-                    class="drop-box"
-                    ng-multiple="false" ng-accept="'.csv,.xls,.xlsx'">
-                      Drop .CSV or .XLSX file <div>here</div>
-                    </div>
-                    <div ng-no-file-drop class="drop-box">File Darg&Drop not supported on your browser</div>
-                  </div>
-                <br/>
+  <div class="upload-buttons">
+    <div id="editArea">
+        <div class="upload-container">
+          <legend>Upload File</legend>
+            <!-- <div class="col-md-12">
+               <input type="file" file-model="myFile"/>
+            </div> -->
+            <div class="row">
+              <div class="col-lg-12 up-buttons">
+                <div ng-file-select="" ng-model="files" ng-model-rejected="rejFiles" class="btn btn-default" ng-multiple="false" ng-accept="'.csv,.xls,.xlsx'"  ng-model-rejected="rejFiles" tabindex="0">Choose file</div>
               </div>
-          </div>
-        </div>
-        <ul ng-show="rejFiles.length > 0" class="response">
-      <!-- ngRepeat: f in rejFiles -->
-      <li class="sel-file ng-binding ng-scope" ng-repeat="f in rejFiles">
-      <span><b>Rejected File: </b>{{f.name}}</span>
-      </li><!-- end ngRepeat: f in rejFiles -->
-    </ul>
-        <ul ng-show="files.length > 0" class="response">
-          <li class="sel-file" ng-repeat="f in files">
-            <img ng-show="f.dataUrl" ng-src="{{f.dataUrl}}" class="thumb">
-            <span class="progress" ng-show="f.progress >= 0">           
-              <div style="width:{{f.progress}}%">{{f.progress}}%</div>
-            </span>       
-            <button class="button" ng-click="f.upload.abort();f.upload.aborted=true" 
-                ng-show="f.upload != null && f.progress < 100 && !f.upload.aborted">Abort</button>
-              <span><b>Uploaded File: </b>{{f.name}} - size: {{f.size}}B - type: {{f.type}}</span>
-
-            <a ng-show="f.result" href="javascript:void(0)" ng-click="f.showDetail = !f.showDetail">details</a>
-            <div ng-show="f.showDetail">
-              <br/>
-              <div data-ng-show="f.result.result == null">{{f.result}}</div>
-              <ul>
-                <li ng-repeat="item in f.result.result">
-                  <div data-ng-show="item.name">file name: {{item.name}}</div>
-                  <div data-ng-show="item.fieldName">name: {{item.fieldName}}</div>
-                  <div data-ng-show="item.size">size on the serve: {{item.size}}</div>
-                  <div data-ng-show="item.value">value: {{item.value}}</div>
-                </li>
-              </ul>
-              <div data-ng-show="f.result.requestHeaders" class="reqh">request headers: {{f.result.requestHeaders}}</div>
             </div>
-        </ul>
-
-        <br/>
-       <!--  <div class="err" ng-show="errorMsg != null">{{errorMsg}}</div> -->
-        <div class="col-lg-12 btn-set">
-          <button class="btn btn-primary pull-right" ng-show="files" ng-click="startRead(files);">Next</button>
+            <div class="row">
+                <div class="orClass">OR</div>
+            </div>
+            <div class="row">
+              <div ng-file-drop="" ng-file-select=""
+              ng-model="files" ng-model-rejected="rejFiles"
+              drag-over-class="{accept:'dragover', reject:'dragover-err', delay:100}" 
+              class="drop-box"
+              ng-multiple="false" ng-accept="'.csv,.xls,.xlsx'">
+                Drop .CSV or .XLSX file <div>here</div>
+              </div>
+              <div ng-no-file-drop class="drop-box">File Darg&Drop not supported on your browser</div>
+            </div>
+          <br/>
         </div>
-    </div>  
+    </div>
+  </div>
+  <ul ng-show="rejFiles.length > 0" class="response">
+    <!-- ngRepeat: f in rejFiles -->
+    <li class="sel-file ng-binding ng-scope" ng-repeat="f in rejFiles">
+    <span><b>Rejected File: </b>{{f.name}}</span>
+    </li><!-- end ngRepeat: f in rejFiles -->
+  </ul>
+  <ul ng-show="files.length > 0" class="response" ng-hide="isMapSaved">
+    <li class="sel-file" ng-repeat="f in files">
+      <img ng-show="f.dataUrl" ng-src="{{f.dataUrl}}" class="thumb">
+      <span class="progress" ng-show="f.progress >= 0">           
+        <div style="width:{{f.progress}}%">{{f.progress}}%</div>
+      </span>       
+      <button class="button" ng-click="f.upload.abort();f.upload.aborted=true" 
+          ng-show="f.upload != null && f.progress < 100 && !f.upload.aborted">Abort</button>
+        <span><b>Uploaded File: </b>{{f.name}} - size: {{f.size}}B - type: {{f.type}}</span>
+
+      <a ng-show="f.result" href="javascript:void(0)" ng-click="f.showDetail = !f.showDetail">details</a>
+      <div ng-show="f.showDetail">
+        <br/>
+        <div data-ng-show="f.result.result == null">{{f.result}}</div>
+        <ul>
+          <li ng-repeat="item in f.result.result">
+            <div data-ng-show="item.name">file name: {{item.name}}</div>
+            <div data-ng-show="item.fieldName">name: {{item.fieldName}}</div>
+            <div data-ng-show="item.size">size on the serve: {{item.size}}</div>
+            <div data-ng-show="item.value">value: {{item.value}}</div>
+          </li>
+        </ul>
+        <div data-ng-show="f.result.requestHeaders" class="reqh">request headers: {{f.result.requestHeaders}}</div>
+      </div>
+  </ul>
+
+  <br/>
+ <!--  <div class="err" ng-show="errorMsg != null">{{errorMsg}}</div> -->
+  <div class="col-lg-12 btn-set">
+    <button class="btn btn-primary pull-right" ng-show="files && !isMapSaved" ng-click="startRead(files);">Next</button>
+  </div>
+</div>  
+

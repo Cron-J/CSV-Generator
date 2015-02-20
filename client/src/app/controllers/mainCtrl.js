@@ -511,6 +511,7 @@ app
     var saveMapping = function (map){
         $http.post('/createMapping', map)
           .success(function(data){
+            $scope.isMapSaved = true;
             growl.success("Mapping has been saved successfully");
           })
           .error(function(){
@@ -524,6 +525,9 @@ app
     } 
 
     $scope.secondStep = function () {
+      if($scope.isMapSaved == true){
+        $scope.isMapSaved = false;
+      } 
       $scope.badge.step = "two";
       $scope.selectTable('Product');
     }
@@ -532,35 +536,36 @@ app
       $scope.badge.step = "three";
     }
 
-    $scope.fourthStep = function (map, tableInfo) {
+    $scope.saveMappingStep = function (map, tableInfo) {
       if(map){
-        $scope.submitted = false;
-        // $scope.map = {};
-        // $scope.map.details = mapInfo;
-        // $scope.map.tableData = [];
-        // $scope.map.tableData = tableInfo;
-        var valid = checkMapping(tableInfo);
-        if(valid == true){
-          var mappingDetails = {};
-          mappingDetails.tenantId = 1;
-          mappingDetails.mappingName = map.name;
-          mappingDetails.mappingInfo = [];
-          for (var i = 0; i < tableInfo.length; i++) {
-            mappingDetails.mappingInfo[i] = {
-              "userFieldName": tableInfo[i].columnName,
-              "collectionName": tableInfo[i].tableName,
-              "fieldDetail": tableInfo[i].propName
+        if(tableInfo.length > 0){
+          $scope.submitted = false;
+          var valid = checkMapping(tableInfo);
+          if(valid == true){
+            var mappingDetails = {};
+            mappingDetails.tenantId = 1;
+            mappingDetails.mappingName = map.name;
+            mappingDetails.mappingInfo = [];
+            for (var i = 0; i < tableInfo.length; i++) {
+              mappingDetails.mappingInfo[i] = {
+                "userFieldName": tableInfo[i].columnName,
+                "collectionName": tableInfo[i].tableName,
+                "fieldDetail": tableInfo[i].propName
+              };
             };
-          };
-          saveMapping(mappingDetails);
-          $scope.badge.step = "four";
+            saveMapping(mappingDetails);
+          } else {
+            growl.error("Please map all required fields before trying to save mapping");
+          }        
         } else {
-          growl.error("Please map all required fields before trying to save mapping");
+          growl.error("There are no mapping details to save");
         }
-        
       } else {
         $scope.submitted = true;
       }
+    }
+    $scope.fourthStep = function () {
+      $scope.badge.step = "four";
     }
 
 //     /*testing  xls file content formate*/

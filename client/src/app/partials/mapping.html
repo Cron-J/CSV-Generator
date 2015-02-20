@@ -1,3 +1,4 @@
+<div ng-hide="isMapSaved">
 	<form class="form-horizontal" role="form" name="mapForm">
 			<div class="form-group">
 				<label for="x" class="col-sm-2 control-label">Mapping Name</label>
@@ -148,10 +149,31 @@
 		<hr>
 		<div class="pull-right">
 			<button class="btn btn-primary "  ng-click="secondStep()">Back</button>
-      <button class="btn btn-primary"  ng-click="fourthStep(map, tableData)">Next</button>
+      <button class="btn btn-primary"  ng-click="saveMappingStep(map, tableData)">Save Mapping</button>
 		</div>
-
-
+</div>
+<div class="row" ng-show="isMapSaved">
+  <p>Please specify the mapping before you start the import. If you have already created a valid mapping then you can start import directly.</p>
+  <div class="row">
+    <div class="col-lg-2">
+      <label>Mapping Id</label>
+    </div>
+    <div class="col-lg-3">
+      <select class="form-control" ng-model="selectedMapping">
+        <option value="">Select mapping id</option>
+      </select>
+    </div>
+    <div class="col-lg-5">
+    	<button class="btn btn-primary btn-sm" ng-click="editMapping(selectedMapping)">Edit Mapping</button>
+      <button class="btn btn-primary btn-sm" ng-click="firstStep()">Create Mapping</button>
+    </div>
+  </div>
+  <div class="row">
+	  <div class="col-lg-12 btn-set">
+	  	<button class="btn btn-primary "  ng-click="fourthStep()">Next</button>
+	  </div>
+  </div>
+</div>
 		
 		<!-- #### Dev Notes ########################################################## -->
 <!--
