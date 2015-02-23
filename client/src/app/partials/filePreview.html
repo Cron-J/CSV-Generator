@@ -80,6 +80,23 @@
         
     </table>
   </div>
+  <div ng-show="uploadedFileType == 'xls'">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th ng-repeat="headName in resultXls.headerColNames">{{headName}}</th>
+            </tr>
+        </thead>
+        <tbody>
+          <tr>
+              <td ng-repeat="rowData in resultXls.rowOne">{{rowData}}</td>
+          </tr>
+          <tr>
+              <td ng-repeat="rowData in resultXls.rowTwo">{{rowData}}</td>
+          </tr>
+        </tbody>       
+    </table>
+  </div>
   <div class="col-lg-2 col-lg-offset-10 btn-set">
     <button class="btn btn-primary"  ng-click="firstStep()">Back</button>
     <button class="btn btn-primary"  ng-click="thirdStep(fileStyle)">Next</button>

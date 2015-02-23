@@ -12,6 +12,7 @@ app
 		_scope.init = function(){
       $scope.firstStep();
       $scope.tableData = [];
+      $scope.resultXls = {};
       $scope.defaultVal={
         val:null
       }
@@ -49,24 +50,6 @@ app
     }
 
     $scope.onLoadMap = function () {
-      //table data
-      // var k = $scope.tableData.length++;
-      // for (var i = 0; i < $scope.propertyList.length; i++) {
-      //   for (var j = 0; j < $scope.columnShowList.length; j++) {
-      //       if($scope.propertyList[i].propName == $scope.columnShowList[j].colName){
-      //         $scope.tableData[k] = {};
-      //         $scope.tableData[k].columnName = $scope.columnShowList[j].colName;
-      //         $scope.tableData[k].propName.field = $scope.propertyList[i].propName;
-      //         if($scope.selectedTable)
-      //           $scope.tableData[k].tableName = $scope.selectedTable;
-      //         else
-      //           $scope.tableData[k].tableName = 'Product';
-      //         $scope.tableData[k].aIndex = 1;
-      //       }
-      //     };
-      // };
-    
-
       var list = getTableData('Prices');
       addRows(list, 'Prices');
       list = getTableData('ProductAttributeValues');
@@ -396,16 +379,19 @@ app
         }
         else if(name[name.length - 1] == "xlsx"){
           $scope.uploadedFileType = 'xlsx';
-          $scope.fileChanged(files);
-          $scope.updateJSONString(); 
-          $scope.showPreviewChanged();
+          fileChanged(files);
+          updateJSONString(); 
+          showPreviewChanged();
         } 
         else{
-          console.log('entered file type is otherthan csv or xls');
+          $scope.uploadedFileType = 'xls';
+          readXls(file);
+          // console.log('entered file type is otherthan csv or xls');
         }
       }
     }
 
+    //reading csv file
     var getData = function (readFile) {
       var reader = new FileReader();
       reader.readAsText(readFile);
@@ -448,11 +434,38 @@ app
       $scope.secondStep(); 
     }
 
+    // reading xls file
+    var readXls = function (readFile) {
+      var reader = new FileReader();
+      var name = readFile.name;
+      reader.onload = function(e) {
+        var data = e.target.result;
+
+        /* if binary string, read with type 'binary' */
+        var workbook = XLS.read(data, {type: 'binary'});
+
+        /* DO SOMETHING WITH workbook HERE */
+        var result = {};
+        var obj;
+        workbook.SheetNames.forEach(function(sheetName) {
+            var roa = XLS.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
+            if (roa) {
+                $scope.resultXls = roa;
+            }
+        }); 
+        $scope.columnList = $scope.resultXls.headerColNames;
+        loadingColumns();   
+      }
+        reader.readAsBinaryString(readFile);
+        $scope.secondStep();
+    }
+
+    //reading xlsx file
     $scope.showPreview = false;
     $scope.showJSONPreview = true;
     $scope.json_string = "";
 
-    $scope.fileChanged = function(files) {
+    var fileChanged = function(files) {
         $scope.isProcessing = true;
         $scope.sheets = [];
         $scope.excelFile = files[0];
@@ -462,14 +475,14 @@ app
         });
     }
 
-    $scope.updateJSONString = function() {
+    var updateJSONString = function() {
       $scope.showPreview = true;
-        $scope.selectedSheetName = 'Sheet1'
-        $scope.json_string = JSON.stringify($scope.sheets[$scope.selectedSheetName], null, 2);
-    $scope.secondStep();
+      $scope.selectedSheetName = 'Sheet1'
+      $scope.json_string = JSON.stringify($scope.sheets[$scope.selectedSheetName], null, 2);
+      $scope.secondStep();
     }
 
-    $scope.showPreviewChanged = function() {
+    var showPreviewChanged = function() {
         if ($scope.showPreview) {
             $scope.showJSONPreview = false;
             $scope.isProcessing = true;
@@ -568,29 +581,6 @@ app
       $scope.badge.step = "four";
     }
 
-//     /*testing  xls file content formate*/
-
-//     var handleDrop=function(e){
-//   e.stopPropagation();
-//   e.preventDefault();
-//   var files = e.dataTransfer.files;
-//   var i,f;
-//   for (i = 0, f = files[i]; i != files.length; ++i) {
-//     var reader = new FileReader();
-//     var name = f.name;
-//     reader.onload = function(e) {
-//       var data = e.target.result;
-
-//       /* if binary string, read with type 'binary' */
-//       var workbook = XLS.read(data, {type: 'utf-16'});
-
-//       /* DO SOMETHING WITH workbook HERE */
-//     };
-//     reader.readAsBinaryString(f);
-//   }
-// }
-// document.addEventListener('drop', handleDrop, false);
-
     _scope.init();
 	}]);
 
@@ -640,56 +630,56 @@ app.factory("XLSXReaderService", ['$q', '$rootScope',
 ]);
 
 
-app.directive('dropdownMultiselect', function(){
-   return {
-       restrict: 'E',
-       scope:{           
-            model: '=',
-            options: '=',
-            pre_selected: '=preSelected'
-       },
-       template: "<div class='btn-group' data-ng-class='{open: open}'>"+
-        "<button class='btn btn-default'>Select</button>"+
-                "<button class='btn btn-default dropdown-toggle' data-ng-click='open=!open;openDropdown()'><span class='caret'></span></button>"+
-                "<ul class='dropdown-menu' aria-labelledby='dropdownMenu'>" + 
-                    "<li><a data-ng-click='selectAll()'><i class='glyphicon glyphicon-ok-circle'></i>  Check All</a></li>" +
-                    "<li><a data-ng-click='deselectAll();'><i class='glyphicon glyphicon-remove-circle'></i>  Uncheck All</a></li>" +                    
-                    "<li class='divider'></li>" +
-                    "<li data-ng-repeat='option in options'> <a data-ng-click='setSelectedItem()'>{{option.id}}<span data-ng-class='isChecked(option.id)','pull-right'></span></a></li>" +                                        
-                "</ul>" +
-            "</div>" ,
-       controller: function($scope){
+// app.directive('dropdownMultiselect', function(){
+//    return {
+//        restrict: 'E',
+//        scope:{           
+//             model: '=',
+//             options: '=',
+//             pre_selected: '=preSelected'
+//        },
+//        template: "<div class='btn-group' data-ng-class='{open: open}'>"+
+//         "<button class='btn btn-default'>Select</button>"+
+//                 "<button class='btn btn-default dropdown-toggle' data-ng-click='open=!open;openDropdown()'><span class='caret'></span></button>"+
+//                 "<ul class='dropdown-menu' aria-labelledby='dropdownMenu'>" + 
+//                     "<li><a data-ng-click='selectAll()'><i class='glyphicon glyphicon-ok-circle'></i>  Check All</a></li>" +
+//                     "<li><a data-ng-click='deselectAll();'><i class='glyphicon glyphicon-remove-circle'></i>  Uncheck All</a></li>" +                    
+//                     "<li class='divider'></li>" +
+//                     "<li data-ng-repeat='option in options'> <a data-ng-click='setSelectedItem()'>{{option.id}}<span data-ng-class='isChecked(option.id)','pull-right'></span></a></li>" +                                        
+//                 "</ul>" +
+//             "</div>" ,
+//        controller: function($scope){
            
-           $scope.openDropdown = function(){        
-                    $scope.selected_items = [];
-                    for(var i=0; i<$scope.pre_selected.length; i++){                        $scope.selected_items.push($scope.pre_selected[i].id);
-                    }                                        
-            };
+//            $scope.openDropdown = function(){        
+//                     $scope.selected_items = [];
+//                     for(var i=0; i<$scope.pre_selected.length; i++){                        $scope.selected_items.push($scope.pre_selected[i].id);
+//                     }                                        
+//             };
            
-            $scope.selectAll = function () {
-                $scope.model = _.pluck($scope.options, 'id');
-                console.log($scope.model);
-            };            
-            $scope.deselectAll = function() {
-                $scope.model=[];
-                console.log($scope.model);
-            };
-            $scope.setSelectedItem = function(){
-                var id = this.option.id;
-                if (_.contains($scope.model, id)) {
-                    $scope.model = _.without($scope.model, id);
-                } else {
-                    $scope.model.push(id);
-                }
-                console.log($scope.model);
-                return false;
-            };
-            $scope.isChecked = function (id) {                 
-                if (_.contains($scope.model, id)) {
-                    return 'glyphicon glyphicon-ok pull-right';
-                }
-                return false;
-            };                                 
-       }
-   } 
-});
+//             $scope.selectAll = function () {
+//                 $scope.model = _.pluck($scope.options, 'id');
+//                 console.log($scope.model);
+//             };            
+//             $scope.deselectAll = function() {
+//                 $scope.model=[];
+//                 console.log($scope.model);
+//             };
+//             $scope.setSelectedItem = function(){
+//                 var id = this.option.id;
+//                 if (_.contains($scope.model, id)) {
+//                     $scope.model = _.without($scope.model, id);
+//                 } else {
+//                     $scope.model.push(id);
+//                 }
+//                 console.log($scope.model);
+//                 return false;
+//             };
+//             $scope.isChecked = function (id) {                 
+//                 if (_.contains($scope.model, id)) {
+//                     return 'glyphicon glyphicon-ok pull-right';
+//                 }
+//                 return false;
+//             };                                 
+//        }
+//    } 
+// });
