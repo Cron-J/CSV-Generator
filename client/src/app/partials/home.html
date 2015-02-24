@@ -1,9 +1,9 @@
 <div class="container" ng-controller="mainCtrl">
   <div class="btn-group btn-group-justified btn-group-wizard">
     <a class="btn btn-wizard" ng-class="{'active':badge.step == 'one'}"><span class="badge">1</span>First Step</a>
-    <a href="#/2" class="btn btn-wizard" ng-class="{'active':badge.step == 'two'}"><span class="badge">2</span>Second Step</a>
-    <a href="#" class="btn btn-wizard" ng-class="{'active':badge.step == 'three'}"><span class="badge">3</span>Third Step</a>
-    <a href="#" class="btn btn-wizard" ng-class="{'active':badge.step == 'four'}"><span class="badge">4</span>Last Step</a>
+    <a class="btn btn-wizard" ng-class="{'active':badge.step == 'two'}"><span class="badge">2</span>Second Step</a>
+    <a class="btn btn-wizard" ng-class="{'active':badge.step == 'three'}"><span class="badge">3</span>Third Step</a>
+    <a class="btn btn-wizard" ng-class="{'active':badge.step == 'four'}"><span class="badge">4</span>Last Step</a>
   </div>
 
   <div ng-show="badge.step == 'one'">
@@ -23,7 +23,9 @@
   </div>  
   <div ng-show ="badge.step == 'four'">
     <div class="col-lg-12 btn-set">
-      
+      <div class="row">
+        <button class="btn btn-primary pull-right"  ng-click="thirdStep()">Back</button>
+      </div>
     </div>
   </div>  
 </div>
