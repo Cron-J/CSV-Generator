@@ -1,4 +1,4 @@
-<div ng-hide="isMapSaved">
+<div class="row" ng-hide="isMapSaved">
 	<form class="form-horizontal" role="form" name="mapForm">
 			<div class="form-group">
 				<label for="x" class="col-sm-2 control-label">Mapping Name</label>
@@ -140,7 +140,7 @@
 						<td>{{row.propName.field}}</td>
 						<td>{{row.aIndex}}</td>
 						<td>
-							<button class="btn btn-default btn-xs" ng-click="removeRow(row.propName.field, row.columnName, $index)"><span class="glyphicon glyphicon-remove"></span> Remove</button>
+							<button class="btn btn-default btn-xs" ng-click="removeRow(row.propName.field, row.columnName, row.tableName, $index)"><span class="glyphicon glyphicon-remove"></span> Remove</button>
 						</td>
 					</tr>
 				</tbody>

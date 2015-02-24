@@ -35,7 +35,8 @@
       <div class="form-group">
         <label class="col-sm-4 control-label">Delimiter Format</label>
         <div class="col-sm-8">
-          <select name="decimalSeparator" ng-model="fileStyle.decimalSeparator" class="form-control">
+          <select name="decimalSeparator" ng-model="fileStyle.decimalSeparator" class="form-control" >
+          <!-- ng-click="startRead(selectedFiles, fileStyle.decimalSeparator);" -->
             <option value="">select format</option>
             <option value=".">Dot(.)</option>
             <option value=",">Comma(,)</option>
@@ -80,7 +81,7 @@
         
     </table>
   </div>
-  <div ng-show="uploadedFileType == 'xls'">
+  <div  ng-show="uploadedFileType == 'xls'">
     <table class="table table-bordered">
         <thead>
             <tr>

@@ -134,7 +134,7 @@ app
 
     $scope.selectTable = function (tname, otname, rowNo) {
       getTableData(tname, otname);
-      $scope.selectedTable = tname;
+      $scope.selectedTable = otname;
       $scope.rowId = rowNo+1;
       // if($scope.mapDone == true){
       //   //clear selection before auto map
@@ -327,10 +327,10 @@ app
 
     }
 
-    $scope.removeRow = function (propName, colName, index) {
+    $scope.removeRow = function (propName, colName, tname, index) {
       $scope.tableData.splice(index, 1);
       mappedColumns(colName, true);
-      mappedPropColumns(undefined, propName);
+      mappedPropColumns(tname, propName);
     }
 
     var mappedColumns = function (col, remove) {
@@ -350,8 +350,16 @@ app
         }
       }
     }
-   var mappedPropColumns = function (tname, propName) {
+
+    var mappedPropColumns = function (tname, propName) {
       //mapped propertyList columns
+      if(propName){  
+        for(var i = 0; i < $scope.propertyList.length; i++){
+          if($scope.propertyList[i].field == propName) {
+            $scope.propertyList[i].isSelect = false; 
+          } 
+        }   
+      }
       for(var i = 0; i < $scope.propertyList.length; i++){
         for(var j = 0; j < $scope.tableData.length; j++){
           if($scope.propertyList[i].field == $scope.tableData[j].propName.field && 
@@ -359,22 +367,22 @@ app
             $scope.propertyList[i].isSelect = true;
           } 
         }
-        if(propName){
-          for(var i = 0; i < $scope.propertyList.length; i++){
-            if($scope.propertyList[i].field == propName)
-              $scope.propertyList[i].isSelect = false;
-          }
-        }
       }
-   }
+    }
 
-    $scope.startRead = function(files) {
+    $scope.startRead = function(files, option) {
       // $scope.secondStep();
-      var file = files[0];
+
+      $scope.selectedFiles = files;
+      if(option == '.')
+        var file = $scope.selectedFiles[0];
+      else 
+        var file = files[0];
       if (file) {
         var name = file.name.split(".");
         if(name[name.length - 1] == "csv" ){
           $scope.uploadedFileType = 'csv';
+          $scope.selectedOption = option;
           getData(file);
         }
         else if(name[name.length - 1] == "xlsx"){
@@ -414,11 +422,16 @@ app
         }
       };
       // console.log('dumpTable', dumpTable);
-      $scope.columnList = headers.split(",");
       $scope.importedData = tableData;
-      $scope.importedDatar1 = dumpTable[1].split(",");
-      $scope.importedDatar2 = dumpTable[2].split(",");
-
+      if($scope.selectedOption == '.'){
+        $scope.columnList = headers.split(".");
+        $scope.importedDatar1 = dumpTable[1].split(".");
+        $scope.importedDatar2 = dumpTable[2].split(".");
+      } else {
+        $scope.columnList = headers.split(",");
+        $scope.importedDatar1 = dumpTable[1].split(",");
+        $scope.importedDatar2 = dumpTable[2].split(",");
+      }
       // loading columns
       loadingColumns();
     }
