@@ -424,13 +424,19 @@ app
       // console.log('dumpTable', dumpTable);
       $scope.importedData = tableData;
       if($scope.selectedOption == '.'){
-        $scope.columnList = headers.split(".");
-        $scope.importedDatar1 = dumpTable[1].split(".");
-        $scope.importedDatar2 = dumpTable[2].split(".");
+        if(headers != undefined)
+          $scope.columnList = headers.split(".");
+        if(dumpTable[1] != undefined)
+          $scope.importedDatar1 = dumpTable[1].split(".");
+        if(dumpTable[2] != undefined)
+          $scope.importedDatar2 = dumpTable[2].split(".");
       } else {
-        $scope.columnList = headers.split(",");
-        $scope.importedDatar1 = dumpTable[1].split(",");
-        $scope.importedDatar2 = dumpTable[2].split(",");
+        if(headers != undefined)
+          $scope.columnList = headers.split(",");
+        if(dumpTable[1] != undefined)
+          $scope.importedDatar1 = dumpTable[1].split(",");
+        if(dumpTable[2] != undefined)
+          $scope.importedDatar2 = dumpTable[2].split(",");
       }
       // loading columns
       loadingColumns();
