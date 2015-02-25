@@ -43,15 +43,9 @@ var mapinfo = {
             type: String
         },
 
-        reference: {
-            ref: {
-                type: String      
-            },
-
-            isArray:{
-                type: String,
-                default: false
-            }
+        isArray:{
+            type: String,
+            default: false
         }
 
     }   
