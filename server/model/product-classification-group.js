@@ -9,7 +9,7 @@ var Product2ClassificationGroupSchema = new Schema({
   /**
    * Classification Group assigned to the <code>product</code>
    */
-  productId : {type: ObjectId},
+  productId : {type: String},
 
   /**
    * Identifier of Classification.

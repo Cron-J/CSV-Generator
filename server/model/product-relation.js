@@ -10,15 +10,32 @@ var mongoose = require('mongoose'),
  * @author Alexander Pyrkh
  */
 var ProductRelationSchema = new Schema({
+
+  /**
+   * This product has relation to product in catalog {@link #relatedCatalogId} and has identifier {@link #relatedProductId}
+   */
+  productId : {type: String},
+
   /**
    * Identifier of related product.
    */
-  relatedProductId : {type: ObjectId},
+  relatedProductId : {type: String},
+
+  /**
+   * Identifier of related product.
+   */
+  relatedCatalogId : {type: String},
 
   /**
    * Identifier of related product.
    */
   relatedTenantId : {type: ObjectId},
+
+  /**
+   * Translated descriptions of ProductRelation.
+   * key is languageId, value is description for language
+   */
+  descriptions : [{type: String}],
 
   /**
    * Identifier of Product Relation Type.

@@ -13,7 +13,7 @@ var ContractedProductSchema = new Schema({
   /**
    * Product.
     */
-  productId : {type: ObjectId},
+  productId : {type: String},
   
   /**
    * Identifier(contractId) of Contract.

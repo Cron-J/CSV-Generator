@@ -50,8 +50,10 @@ exports.getAll = {
       var data = {};
       data.field = path;
       data.index = schemaPath[path]._index;
+       data.isArray = false;
       if(schemaPath[path].isRequired != undefined) data.isRequired = schemaPath[path].isRequired;
       data.reference = {};
+      
       /*
       if(schemaPath[path].options.ref != undefined) data.reference.ref = schemaPath[path].options.ref
       if(schemaPath[path].instance != undefined) data.instance = schemaPath[path].instance
@@ -62,8 +64,12 @@ exports.getAll = {
       }
       */
 
-      if(schemaPath[path].options.ref != undefined || schemaPath[path].caster != undefined) continue;
+      if(schemaPath[path].options.ref != undefined) continue;
 
+      if(schemaPath[path].caster != undefined){
+          if (schemaPath[path].caster.options.ref != undefined) continue;
+          data.isArray = true;
+      }
 
       obj[collectionName].push(data);
       

@@ -66,12 +66,17 @@ var ProductAttributeValueSchema = new Schema({
     'DocumentVideo',
     /** attributeId for Product's Other Document */
     'DocumentOther'
-  ]},
+  ], required: true},
+
+  /**
+   * Attribute belongs to the <code>product</code>
+   */
+  productId : {type: String},
 
   /**
    * String representation of value.
    */
-  value : {type: String},
+  value : {type: String, required: true},
 
   /**
    * Identifier of Language for multi language attribute.

@@ -15,7 +15,7 @@ var PriceSchema = new Schema({
   /**
    * Price belongs to the <code>product</code>
    */
-  productId : {type: ObjectId},
+  productId : {type: String},
 
   /**
    * Identifier of Contract.
@@ -30,7 +30,7 @@ var PriceSchema = new Schema({
   /**
    * Identifier of Currency.
    */
-  currencyId : {type: String},
+  currencyId : {type: String, required: true},
 
   /**
    * Identifier of Price type.
@@ -40,12 +40,27 @@ var PriceSchema = new Schema({
   /**
    * Value of Price.
    */
-  netPrice : {type: Number},
+  netPrice : {type: Number, required: true},
+
+  /**
+   * Value of grossPrice. use netPrice in combination with priceTypeId
+   */
+  grossPrice : {type: Number},
+
+  /**
+   * Value of fixNetPrice. use netPrice in combination with priceTypeId
+   */
+  fixNetPrice : {type: Number},
+
+  /**
+   * Value of listPrice. use netPrice in combination with priceTypeId
+   */
+  listPrice : {type: Number},
 
   /**
    * Price is valid from quantity
    */
-  validFromQuantity : {type: Number},
+  validFromQuantity : {type: Number, required: true},
 
   /**
    * Price valid range from.
@@ -85,7 +100,7 @@ var PriceSchema = new Schema({
   /**
    * Is preferred.
    */
-  isPreferred : {type: Boolean},
+  isPreferred : {type: Boolean, required: true},
 
   /**
    * User name who has created the Price.

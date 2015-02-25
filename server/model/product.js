@@ -22,9 +22,19 @@ var ProductSchema = new Schema({
   tenantId : {type: String, index: true},
 
   /**
+   *  Identifier inside the product catalog. Together with catalogId this is globally unique.
+   */
+  productId : {type: String, index: true, required: true},
+
+  /**
+   * Identifier of Product's Catalog this product is listed in.
+   */
+  catalogId : {type: String, index: true},
+
+  /**
    * Identifier of the Supplier who own the product.
    */
-  supplierId : {type: String},
+  supplierId : {type: String, index: true},
 
   /**
    * Identifier of product status (like <i>800 - deleted</i>, <i>400 - confirmed</i>, etc).
