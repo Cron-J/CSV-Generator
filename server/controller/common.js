@@ -50,9 +50,8 @@ exports.getAll = {
       var data = {};
       data.field = path;
       data.index = schemaPath[path]._index;
-       data.isArray = false;
+      data.instance = schemaPath[path].instance;
       if(schemaPath[path].isRequired != undefined) data.isRequired = schemaPath[path].isRequired;
-      data.reference = {};
       
       /*
       if(schemaPath[path].options.ref != undefined) data.reference.ref = schemaPath[path].options.ref
@@ -77,4 +76,3 @@ exports.getAll = {
       reply(obj);
   }
 };
-

@@ -31,7 +31,7 @@ var mapinfo = {
     
     fieldDetail: {
 
-        collectionFieldName: {
+        field: {
             type: String
         },
 
@@ -43,7 +43,12 @@ var mapinfo = {
             type: String
         },
 
-        isArray:{
+        isArray: {
+            type: String,
+            default: false
+        },
+
+        isRequired: {
             type: String,
             default: false
         }
