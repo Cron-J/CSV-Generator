@@ -4,9 +4,9 @@
 
 app
 	.controller('mainCtrl',['$scope', '$http', 'growl', '$location', '$timeout', 
-     '$filter', '$upload', 'XLSXReaderService',
+     '$filter', '$upload', 'XLSXReaderService', 'staticFactory',
 		function($scope, $http, growl, $location, $timeout, $filter, $upload,  
-      XLSXReaderService){
+      XLSXReaderService, staticFactory){
 		var _scope = {};
     $scope.badge={}
 		_scope.init = function(){
@@ -16,6 +16,8 @@ app
       $scope.defaultVal={
         val:null
       }
+      $scope.staticPropNames = staticFactory.tableArrayFn();
+      // console.log('staticPropNames', $scope.staticPropNames);
 		}
 
   $scope.member = {roles: []};
@@ -54,8 +56,8 @@ app
       addRows(list, 'Prices');
       list = getTableData('ProductAttributeValues');
       addRows(list, 'ProductAttributeValues');
-      list = getTableData('Product2ClassificationGroup');
-      addRows(list, 'Product2ClassificationGroup');
+      list = getTableData('ClassificationAssignment');
+      addRows(list, 'ClassificationAssignment');
       list = getTableData('ContractedProduct');
       addRows(list, 'ContractedProduct');
       list = getTableData('ProductRelations');
@@ -116,13 +118,21 @@ app
               return $scope.propertyList;
             }
             if($scope.propertyList){
+              // console.log('$scope.propertyList1', $scope.propertyList);
               var modifiedList = $scope.propertyList;
               $scope.propertyList = [];
               for(var i = 0; i < modifiedList.length ; i++){  
                 $scope.propertyList[i] = {};
                 $scope.propertyList[i] = modifiedList[i];
-                $scope.propertyList[i].isSelect = false;  
+                $scope.propertyList[i].isSelect = false;
+                if($scope.staticPropNames[table, $scope.propertyList[i].field] == undefined){
+                  // $scope.propertyList.splice(i, 1);
+                } else {
+                  $scope.propertyList[i].displayName = 
+                  $scope.staticPropNames[table, $scope.propertyList[i].field];
+                }
               }
+              console.log('$scope.propertyList', $scope.propertyList);
               mappedPropColumns(originalTName);
             }
           } 
@@ -585,6 +595,7 @@ app
                 "fieldDetail": tableInfo[i].propName
               };
             };
+            console.log('mappingDetails', mappingDetails);
             saveMapping(mappingDetails);
           } else {
             growl.error("Please map all required fields before trying to save mapping");
