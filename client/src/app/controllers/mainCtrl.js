@@ -11,7 +11,6 @@ app
     $scope.badge={}
 		_scope.init = function(){
       $scope.firstStep();
-      $scope.tableData = [];
       $scope.resultXls = {};
       $scope.defaultVal={
         val:null
@@ -132,7 +131,7 @@ app
                   $scope.staticPropNames[table, $scope.propertyList[i].field];
                 }
               }
-              console.log('$scope.propertyList', $scope.propertyList);
+              // console.log('$scope.propertyList', $scope.propertyList);
               mappedPropColumns(originalTName);
             }
           } 
@@ -371,18 +370,20 @@ app
         }   
       }
       for(var i = 0; i < $scope.propertyList.length; i++){
-        for(var j = 0; j < $scope.tableData.length; j++){
-          if($scope.propertyList[i].field == $scope.tableData[j].propName.field && 
-            $scope.tableData[j].tableName == tname){
-            $scope.propertyList[i].isSelect = true;
-          } 
-        }
+        if($scope.tableData){
+          for(var j = 0; j < $scope.tableData.length; j++){
+            if($scope.propertyList[i].field == $scope.tableData[j].propName.field && 
+              $scope.tableData[j].tableName == tname){
+              $scope.propertyList[i].isSelect = true;
+            } 
+          }
+        } 
       }
     }
 
     $scope.startRead = function(files, option) {
       // $scope.secondStep();
-
+      $scope.columnShowList = [];
       $scope.selectedFiles = files;
       if(option == '.')
         var file = $scope.selectedFiles[0];
@@ -564,6 +565,15 @@ app
     //Steps involved
     $scope.firstStep = function (){
       $scope.badge.step = "one";
+      //reset data
+      $scope.files = {
+        list: []
+      }
+      $scope.PricesList = [];
+      $scope.ProductAttributeValuesList = [];
+      $scope.ClassificationAssignmentsList = [];
+      $scope.ProductRelationsList = [];
+      $scope.ContractedProductList = [];
     } 
 
     $scope.secondStep = function () {
@@ -576,6 +586,11 @@ app
 
     $scope.thirdStep = function (info) {
       $scope.badge.step = "three";
+      $scope.map = {
+        name:null
+      }
+      $scope.tableData = [];
+
     }
 
     $scope.saveMappingStep = function (map, tableInfo) {
@@ -595,7 +610,7 @@ app
                 "fieldDetail": tableInfo[i].propName
               };
             };
-            console.log('mappingDetails', mappingDetails);
+            // console.log('mappingDetails', mappingDetails);
             saveMapping(mappingDetails);
           } else {
             growl.error("Please map all required fields before trying to save mapping");

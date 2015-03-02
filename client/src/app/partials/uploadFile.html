@@ -8,7 +8,7 @@
             </div> -->
             <div class="row">
               <div class="col-lg-12 up-buttons">
-                <div ng-file-select="" ng-model="files" ng-model-rejected="rejFiles" class="btn btn-default" ng-multiple="false" ng-accept="'.csv,.xls,.xlsx'"  ng-model-rejected="rejFiles" tabindex="0">Choose file</div>
+                <div ng-file-select="" ng-model="files.list" ng-model-rejected="rejFiles" class="btn btn-default" ng-multiple="false" ng-accept="'.csv,.xls,.xlsx'"  ng-model-rejected="rejFiles" tabindex="0">Choose file</div>
               </div>
             </div>
             <div class="row">
@@ -16,7 +16,7 @@
             </div>
             <div class="row">
               <div ng-file-drop="" ng-file-select=""
-              ng-model="files" ng-model-rejected="rejFiles"
+              ng-model="files.list" ng-model-rejected="rejFiles"
               drag-over-class="{accept:'dragover', reject:'dragover-err', delay:100}" 
               class="drop-box"
               ng-multiple="false" ng-accept="'.csv,.xls,.xlsx'">
@@ -34,8 +34,8 @@
     <span><b>Rejected File: </b>{{f.name}}</span>
     </li><!-- end ngRepeat: f in rejFiles -->
   </ul>
-  <ul ng-show="files.length > 0" class="response" ng-hide="isMapSaved">
-    <li class="sel-file" ng-repeat="f in files">
+  <ul ng-show="files.list.length > 0" class="response" ng-hide="isMapSaved">
+    <li class="sel-file" ng-repeat="f in files.list">
       <img ng-show="f.dataUrl" ng-src="{{f.dataUrl}}" class="thumb">
       <span class="progress" ng-show="f.progress >= 0">           
         <div style="width:{{f.progress}}%">{{f.progress}}%</div>
@@ -63,7 +63,7 @@
   <br/>
  <!--  <div class="err" ng-show="errorMsg != null">{{errorMsg}}</div> -->
   <div class="col-lg-12 btn-set">
-    <button class="btn btn-primary pull-right" ng-show="files && !isMapSaved" ng-click="startRead(files);">Next</button>
+    <button class="btn btn-primary pull-right" ng-show="files.list.length > 0" ng-click="startRead(files.list);">Next</button>
   </div>
 </div>  
 
