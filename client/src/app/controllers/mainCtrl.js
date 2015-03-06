@@ -3,10 +3,60 @@
 /* Controller */
 
 app
-	.controller('mainCtrl',['$scope', '$http', 'growl', '$location', '$timeout', 
-     '$filter', '$upload', 'XLSXReaderService', 'staticFactory',
-		function($scope, $http, growl, $location, $timeout, $filter, $upload,  
-      XLSXReaderService, staticFactory){
+	.controller('mainCtrl',['$scope', '$http', 'growl', '$location', '$timeout','$filter', '$upload', 'XLSXReaderService', 'staticFactory','$rootScope',
+		function($scope, $http, growl, $location, $timeout, $filter, $upload, XLSXReaderService, staticFactory,$rootScope){
+
+      var rowIndex;
+      $scope.transInfo={pushable:[]};
+
+      $scope.clicked = '';
+      var contextIndex;
+  $scope.saveIndex=function(ind){
+    rowIndex=ind;
+    if($scope.tableData[rowIndex].transformations && $scope.tableData[rowIndex].transformations.length>=0){
+      $scope.transInfo.pushable=$scope.tableData[rowIndex].transformations;
+      $rootScope.$broadcast("transformation",$scope.transInfo.pushable);
+    }
+    else{
+      $scope.tableData[rowIndex].transformations=[];
+      $scope.transInfo.pushable=$scope.tableData[rowIndex].transformations;
+      $rootScope.$broadcast("transformation",$scope.transInfo.pushable);
+    }
+  }
+  $scope.saveTransformationInfo = function(){
+    for(var i=0;i<$scope.transInfo.pushable.length;i++){
+        delete $scope.transInfo.pushable[i].def.category;
+        //delete $scope.transInfo.pushable[i].def;
+        //delete $scope.transInfo.pushable[i].params;
+        //delete $scope.transInfo.pushable[i].added;
+    }
+    $scope.tableData[rowIndex].transformations=$scope.transInfo.pushable;
+    console.log('mk',$scope.transInfo.pushable)
+  };
+
+  $scope.edit = function() {
+    $scope.clicked = 'edit was clicked';
+    console.log($scope.clicked);
+  };
+  
+  $scope.properties = function() {
+    $scope.clicked = 'properties was clicked';
+    console.log($scope.clicked);
+  };
+  
+  $scope.link = function() {
+    $scope.clicked = 'link was clicked';
+    console.log($scope.clicked);
+  };
+  
+  $scope.delete = function() {
+    $scope.clicked = 'delete was clicked';
+    console.log($scope.clicked);
+  };
+
+
+
+  
 		var _scope = {};
     $scope.badge={}
 		_scope.init = function(){
@@ -230,12 +280,13 @@ app
       if(($scope.selectedColumn || $scope.selectedDefaultVal) && $scope.selectedTable && $scope.selectedProperty){
         var i = $scope.tableData.length++;
         $scope.tableData[i] = {"columnName": null, "propName": null, "isSelect":false,
-                        "tableName": null, "aIndex": 0, "quotes": false , "rowId":0};
+                        "tableName": null, "aIndex": 0, "quotes": false , "rowId":0,"transformations":[]};
         $scope.tableData[i].columnName = $scope.selectedColumn;
         $scope.tableData[i].propName = $scope.selectedProperty;
         $scope.tableData[i].tableName = $scope.selectedTable;
         $scope.tableData[i].rowId = $scope.rowId;
         $scope.tableData[i].isSelect = true;
+        
         if($scope.selectedDefaultVal != null){
           $scope.tableData[i].columnName = $scope.selectedDefaultVal;
           $scope.selectedDefaultVal = null;
@@ -579,6 +630,7 @@ app
     }
 
     $scope.saveMappingStep = function (map, tableInfo) {
+
       if(map){
         if(tableInfo.length > 0){
           $scope.submitted = false;
@@ -592,6 +644,7 @@ app
               mappingDetails.mappingInfo[i] = {
                 "userFieldName": tableInfo[i].columnName,
                 "collectionName": tableInfo[i].tableName,
+                "transformations": tableInfo[i].transformations,
                 "fieldDetail": tableInfo[i].propName
               };
             };
@@ -630,6 +683,88 @@ app.directive('fileModel', ['$parse', function ($parse) {
         }
     };
 }]);
+
+
+app.directive('cellHighlight', function() {
+    return {
+      restrict: 'C',
+      link: function postLink(scope, iElement, iAttrs) {
+        iElement.find('td')
+          .mouseover(function() {
+            $(this).parent('tr').css('opacity', '0.7');
+          }).mouseout(function() {
+            $(this).parent('tr').css('opacity', '1.0');
+          });
+      }
+    };
+  });
+
+app.directive('context', [
+
+    function() {
+      return {
+        restrict: 'A',
+        scope: '@&',
+        compile: function compile(tElement, tAttrs, transclude) {
+          return {
+            post: function postLink(scope, iElement, iAttrs, controller) {
+              var ul = $('#' + iAttrs.context),
+                last = null;
+
+              ul.css({
+                'display': 'none'
+              });
+              $(iElement).bind('click', function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+                 ul.css({
+                  position: "fixed",
+                  display: "block",
+                  left: event.clientX + 'px',
+                  top: event.clientY + 'px'
+                });
+                last = event.timeStamp;
+              });
+              //$(iElement).click(function(event) {
+              //  ul.css({
+              //    position: "fixed",
+              //    display: "block",
+              //    left: event.clientX + 'px',
+              //    top: event.clientY + 'px'
+              //  });
+              //  last = event.timeStamp;
+              //});
+
+              $(document).click(function(event) {
+                var target = $(event.target);
+                if (!target.is(".popover") && !target.parents().is(".popover")) {
+                  if (last === event.timeStamp)
+                    return;
+                  ul.css({
+                    'display': 'none'
+                  });
+                }
+              });
+            }
+          };
+        }
+      };
+    }
+  ]);
+
+
+app.directive('ngRightClick', function($parse) {
+    return function(scope, element, attrs) {
+        var fn = $parse(attrs.ngRightClick);
+        element.bind('contextmenu', function(event) {
+            scope.$apply(function() {
+                event.preventDefault();
+                fn(scope, {$event:event});
+            });
+        });
+    };
+});
+
 
 //filters
 app.filter('smallize', function() {

@@ -15,7 +15,7 @@
 		</div>
 		<div class="row">
 			<div class="col-md-3">
-				<h4><a href="#">Columns from input file</a> <a class="btn btn-default"><span class="glyphicon glyphicon-question-sign"></span></a></h4>
+				<h4><a href="#" prev-default>Columns from input file</a> <a class="btn btn-default"><span class="glyphicon glyphicon-question-sign"></span></a></h4>
 			</div>
 			<div class="col-md-4 col-md-offset-2">
 				<h4>Tables <a class="btn btn-default"><span class="glyphicon glyphicon-question-sign"></span></a></h4>
@@ -28,7 +28,8 @@
 			<div class="col-md-3">
 				<select class="mapping-select" id="columns1" name="columns" ng-model="column" size="20" ng-click="selectColumn(column)">
 				<option value="" style="display:none">select option</option>
-				<option ng-repeat="col in columnShowList" ng-class="{mapped: col.isSelect}">{{col.colName}}</option>
+				<!-- removed from here -->
+				<option  ng-repeat="col in columnShowList" ng-class="{mapped: col.isSelect}">{{col.colName}}</option>
 				</select>
 			</div>
 			<div class="col-md-2">
@@ -124,7 +125,8 @@
 			<table class="table" cellspacing="0">
 				<thead>
 					<tr>
-						<th>Column from import file</th>
+						<th prev-default>Column from import file</th>
+						<th>Transformation</th>
 						<th>Property name</th>
 						<th>Property description</th>
 						<th>Index</th>
@@ -136,7 +138,8 @@
 						<td ng-show="row.quotes == true">"{{row.columnName}}"</td>
 						<td ng-show="row.quotes == false">{{row.columnName}}</td>
 						<!-- <td><dropdown-multiselect pre-selected="member.roles" model="selected_items" options="roles"></dropdown-multiselect></td> -->
-						<td><span ng-show="row.tableName != 'Product'">Product.</span>{{row.tableName}}<span ng-show="row.rowId > 0">({{row.rowId}})</span>.{{row.propName.displayName}}</td>
+						<td><button class="btn btn-primary btn-sm" context="context1" ng-click="saveIndex($index)"> transform</button></td>
+						<td><span ng-show="row.tableName != 'Product'" ng-click="">Product.</span>{{row.tableName}}<span ng-show="row.rowId > 0">({{row.rowId}})</span>.{{row.propName.displayName}}</td>
 						<td>{{row.propName.displayName}}</td>
 						<td>{{row.aIndex}}</td>
 						<td>
@@ -190,3 +193,82 @@
 		</div>
 -->
 		<!-- #### /Dev Notes ########################################################## -->
+
+
+
+ <div id="context1" class="editor-row" style="z-index:99999;background: #262626;" prev-default >
+
+        <div class="tight-form" ng-class="{'tight-form-disabled': target.hide}" ng-controller="GraphiteQueryCtrl" ng-init="init()">
+            <ul class="tight-form-list pull-right">
+                <!-- <li ng-show="parserError" class="tight-form-item">
+                    <a bs-tooltip="parserError" style="color: rgb(229, 189, 28)" role="menuitem">
+                        <i class="fa fa-warning"></i>
+                    </a>
+                </li> -->
+                <!-- <li class="tight-form-item">
+                    <a class="pointer" tabindex="1" ng-click="showTextEditor = !showTextEditor">
+                        <i class="fa fa-pencil"></i>
+                    </a>
+                </li> -->
+                <li class="tight-form-item">
+                    <div class="dropdown">
+                       <!--  <a class="pointer dropdown-toggle" data-toggle="dropdown" tabindex="1">
+                            <i class="fa fa-bars"></i>
+                        </a> -->
+                        <ul class="dropdown-menu pull-right" role="menu">
+                            <li role="menuitem">
+                                <a tabindex="1" ng-click="duplicate()">Duplicate</a>
+                            </li>
+                            <li role="menuitem">
+                                <a tabindex="1" ng-click="moveMetricQuery($index, $index-1)">Move up</a>
+                            </li>
+                            <li role="menuitem">
+                                <a tabindex="1" ng-click="moveMetricQuery($index, $index+1)">Move down</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="tight-form-item last">
+                    <a class="pointer" tabindex="1" ng-click="removeDataQuery(target)">
+                        <i class="fa fa-remove"></i>
+                    </a>
+                </li>
+            </ul>
+
+            <ul class="tight-form-list">
+                <li class="tight-form-item" style="min-width: 15px; text-align: center">
+                    {{targetLetters[$index]}}
+                </li>
+                <li>
+                    <a class="tight-form-item" ng-click="target.hide = !target.hide; get_data();" role="menuitem">
+                        <i class="fa fa-eye"></i>
+                    </a>
+                </li>
+            </ul>
+
+            <input type="text" class="tight-form-clear-input span10" ng-model="target.target" focus-me="showTextEditor" spellcheck='false' ng-model-onblur ng-change="targetTextChanged()" ng-show="showTextEditor" />
+
+            <ul class="tight-form-list" role="menu" ng-hide="showTextEditor" >
+                <li ng-repeat="segment in segments" role="menuitem" graphite-segment></li>
+                <li ng-repeat="func in functions">
+                    <span graphite-func-editor class="tight-form-item tight-form-func"></span>
+                </li>
+                <li class="dropdown" graphite-add-func >
+                </li>
+            </ul>
+
+            <div class="clearfix"></div>
+        </div>
+    </div>
+
+	
+    
+  <!--   <ul id="context1" class="dropdown-menu">
+      <li><a ng-click="edit()">Edit</a></li>
+      <li><a ng-click="link()">Link</a></li>
+      <li><a ng-click="delete()">Delete</a></li>
+      <li class="divider"></li>
+      <li><a ng-click="properties()">Properties</a></li>
+    </ul> -->
+
+

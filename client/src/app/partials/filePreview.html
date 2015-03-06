@@ -49,15 +49,15 @@
     <table class="table table-bordered">
       <thead >
         <tr>
-          <th ng-repeat="col in columnShowList">{{col.colName}}</th>
+          <th ng-repeat="col in columnShowList track by $index">{{col.colName}}</th>
         </tr>
       </thead>
       <tbody>
         <tr >
-          <td ng-repeat="row in importedDatar1">{{row}}</td>
+          <td ng-repeat="row in importedDatar1 track by $index">{{row}}</td>
         </tr>
         <tr >
-          <td ng-repeat="row in importedDatar2">{{row}}</td>
+          <td ng-repeat="row in importedDatar2 track by $index">{{row}}</td>
         </tr>
       </tbody>
     </table>
@@ -66,15 +66,15 @@
     <table class="table table-bordered">
         <thead>
             <tr>
-                <th ng-repeat="headName in sheets.Sheet1.data[0]">{{headName}}</th>
+                <th ng-repeat="headName in sheets.Sheet1.data[0] track by $index">{{headName}}</th>
             </tr>
         </thead>
         <tbody>
           <tr>
-              <td ng-repeat="rowData in sheets.Sheet1.data[1]">{{rowData}}</td>
+              <td ng-repeat="rowData in sheets.Sheet1.data[1] track by $index">{{rowData}}</td>
           </tr>
           <tr>
-              <td ng-repeat="rowData in sheets.Sheet1.data[2]">{{rowData}}</td>
+              <td ng-repeat="rowData in sheets.Sheet1.data[2] track by $index">{{rowData}}</td>
           </tr>
         </tbody>
         
@@ -84,15 +84,15 @@
     <table class="table table-bordered">
         <thead>
             <tr>
-                <th ng-repeat="headName in resultXls.headerColNames">{{headName}}</th>
+                <th ng-repeat="headName in resultXls.headerColNames track by $index">{{headName}}</th>
             </tr>
         </thead>
         <tbody>
           <tr>
-              <td ng-repeat="rowData in resultXls.rowOne">{{rowData}}</td>
+              <td ng-repeat="rowData in resultXls.rowOne track by $index">{{rowData}}</td>
           </tr>
           <tr>
-              <td ng-repeat="rowData in resultXls.rowTwo">{{rowData}}</td>
+              <td ng-repeat="rowData in resultXls.rowTwo track by $index">{{rowData}}</td>
           </tr>
         </tbody>       
     </table>
