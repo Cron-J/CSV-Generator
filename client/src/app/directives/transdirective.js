@@ -214,7 +214,7 @@ angular
                 options = _.map($scope.altSegments, function(alt) { return alt.value; });
 
                 // add custom values
-                if (segment.value !== 'select metric' &&  _.indexOf(options, segment.value) === -1) {
+                if (segment.value !== 'select function' &&  _.indexOf(options, segment.value) === -1) {
                   options.unshift(segment.value);
                 }
 

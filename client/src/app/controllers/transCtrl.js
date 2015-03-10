@@ -110,7 +110,7 @@ var targetLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
     function checkOtherSegments(fromIndex) {
       if (fromIndex === 0) {
-        $scope.segments.push(new MetricSegment('select metric'));
+        $scope.segments.push(new MetricSegment('select function'));
         return;
       }
 
@@ -120,13 +120,13 @@ var targetLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
           if (segments.length === 0) {
             if (path !== '') {
               $scope.segments = $scope.segments.splice(0, fromIndex);
-              $scope.segments.push(new MetricSegment('select metric'));
+              $scope.segments.push(new MetricSegment('select function'));
             }
             return;
           }
           if (segments[0].expandable) {
             if ($scope.segments.length === fromIndex) {
-              $scope.segments.push(new MetricSegment('select metric'));
+              $scope.segments.push(new MetricSegment('select function'));
             }
             else {
               return checkOtherSegments(fromIndex + 1);
@@ -237,7 +237,7 @@ var targetLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
       $scope.moveAliasFuncLast();
       $scope.smartlyHandleNewAliasByNode(newFunc);
 
-      if ($scope.segments.length === 1 && $scope.segments[0].value === 'select metric') {
+      if ($scope.segments.length === 1 && $scope.segments[0].value === 'select function') {
         $scope.segments = [];
       }
 

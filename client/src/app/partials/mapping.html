@@ -78,7 +78,7 @@
 			<div class="col-md-3">
 				<select class="mapping-select" id="property" name="properties" size="20" ng-model="prop"  >
 				<option value="" style="display:none">select property</option>
-				<option value="{{info}}" ng-repeat="info in propertyList | orderBy: 'displayName'" ng-class="{mapped: info.isSelect, required: info.isRequired}" ng-click="selectProperty(info)">{{info.displayName}}</option>
+				<option value="{{info}}" ng-repeat="info in propertyList | orderBy: 'field'" ng-class="{mapped: info.isSelect, required: info.isRequired}" ng-click="selectProperty(info)">{{info.field}}</option>
 				</select>
 			</div>
 		</div>
@@ -91,7 +91,7 @@
 				</div>
 				<form role="form" style="padding-top: 10px;">
 					<div class="form-group">
-						<input type="text" ng-model="defaultVal.val" class="form-control" ng-change="enteredDefaultVal(defaultVal.val)"  placeholder="???">
+						<input type="text" ng-model="defaultVal.val" class="form-control" ng-change="enteredDefaultVal(defaultVal.val)"  placeholder="">
 					</div>
 				</form>
 			</div>
@@ -121,7 +121,7 @@
 		<div ng-show="tableData.length == 0">
 			No mapped details
 		</div>
-		<div ng-show="tableData.length > 0">
+		<div ng-show="tableData.length > 0" class="table-container">
 			<table class="table" cellspacing="0">
 				<thead>
 					<tr>
@@ -139,8 +139,8 @@
 						<td ng-show="row.quotes == false">{{row.columnName}}</td>
 						<!-- <td><dropdown-multiselect pre-selected="member.roles" model="selected_items" options="roles"></dropdown-multiselect></td> -->
 						<td><button class="btn btn-primary btn-sm" context="context1" ng-click="saveIndex($index)"> transform</button></td>
-						<td><span ng-show="row.tableName != 'Product'" ng-click="">Product.</span>{{row.tableName}}<span ng-show="row.rowId > 0">({{row.rowId}})</span>.{{row.propName.displayName}}</td>
-						<td>{{row.propName.displayName}}</td>
+						<td><span ng-show="row.tableName != 'Product'">Product.</span>{{row.tableName}}<span ng-show="row.rowId > 0">({{row.rowId}})</span>.{{row.propName.field}}</td>
+						<td>{{row.propName.field}}</td>
 						<td>{{row.aIndex}}</td>
 						<td>
 							<button class="btn btn-default btn-xs" ng-click="removeRow(row.propName.field, row.columnName, row.tableName, $index)"><span class="glyphicon glyphicon-remove"></span> Remove</button>
@@ -168,7 +168,7 @@
     </div>
     <div class="col-lg-5">
     	<button class="btn btn-primary btn-sm" ng-click="editMapping(selectedMapping)">Edit Mapping</button>
-      <button class="btn btn-primary btn-sm" ng-click="firstStep()">Create Mapping</button>
+      <button class="btn btn-primary btn-sm" ng-click="newMapping();firstStep()">Create Mapping</button>
     </div>
   </div>
   <div class="row">
