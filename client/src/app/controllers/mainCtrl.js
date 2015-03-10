@@ -15,15 +15,14 @@ app
       $scope.defaultVal={
         val:null
       }
-      // $scope.staticPropNames = staticFactory.tableArrayFn();
-      // console.log('staticPropNames', $scope.staticPropNames);
 		}
 
-        var rowIndex;
-      $scope.transInfo={pushable:[]};
+    var rowIndex;
+    var transValue;
+    $scope.transInfo={pushable:[],transVal:''};
 
-      $scope.clicked = '';
-      var contextIndex;
+    $scope.clicked = '';
+    var contextIndex;
     $scope.saveIndex=function(ind){
       rowIndex=ind;
       if($scope.tableData[rowIndex].transformations && $scope.tableData[rowIndex].transformations.length>=0){
@@ -36,28 +35,19 @@ app
         $rootScope.$broadcast("transformation",$scope.transInfo.pushable);
       }
     }
+
     $scope.saveTransformationInfo = function(){
       for(var i=0;i<$scope.transInfo.pushable.length;i++){
           delete $scope.transInfo.pushable[i].def.category;
           //delete $scope.transInfo.pushable[i].def;
           //delete $scope.transInfo.pushable[i].params;
           //delete $scope.transInfo.pushable[i].added;
-    }
-    $scope.tableData[rowIndex].transformations=$scope.transInfo.pushable;
-    // console.log('mk',$scope.transInfo.pushable)
-  };
-
-  $scope.member = {roles: []};
-  $scope.selected_items = [];
-  $scope.roles= [ {id:  "Lower Case"}, 
-                  {id: "Upper Case"}, 
-                  {id: "Remove Whitespace"}, 
-                  {id: "Remove Delimiter"},
-                  {id: "Regexp(regExpr,nthOccurence)"},
-                  {id: "First(noOfChars)"},
-                  {id: "Last(noOfChars)"},
-                  {id: "Append(String)"},
-                  {id: "Prepend(String)"} ];
+      }
+      //transValue=$scope.transInfo.transVal
+      $scope.tableData[rowIndex].transformations=$scope.transInfo.pushable;
+      $scope.tableData[rowIndex].transVal=angular.copy($scope.transInfo.transVal);
+      
+    };
 
     //mapping
     $scope.selectColumn = function (info) {

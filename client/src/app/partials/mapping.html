@@ -138,7 +138,10 @@
 						<td ng-show="row.quotes == true">"{{row.columnName}}"</td>
 						<td ng-show="row.quotes == false">{{row.columnName}}</td>
 						<!-- <td><dropdown-multiselect pre-selected="member.roles" model="selected_items" options="roles"></dropdown-multiselect></td> -->
-						<td><button class="btn btn-primary btn-sm" context="context1" ng-click="saveIndex($index)"> transform</button></td>
+						<td >
+							<div class="truncate" popover-placement="top" popover="{{row.transVal}}" popover-trigger="mouseenter">{{row.transVal}}</div>
+       				<button class="btn btn-primary btn-xxs" context="context1" ng-click="saveIndex($index)"><span class="glyphicon glyphicon-edit"></span></button>
+       			</td>
 						<td><span ng-show="row.tableName != 'Product'">Product.</span>{{row.tableName}}<span ng-show="row.rowId > 0">({{row.rowId}})</span>.{{row.propName.field}}</td>
 						<td>{{row.propName.field}}</td>
 						<td>{{row.aIndex}}</td>

@@ -1,14 +1,3 @@
-// lowercase
-//   uppercase
-//   removeWhitespace
-//   removeDelimiter
-//   regexp (regExpression, nthOccurence)
-//   first (noOfChars)
-//   last (noOfChars)
-//   append (String)
-//   prepend (String)
-
-
 
 angular.module('app')
 
@@ -45,12 +34,11 @@ angular.module('app')
 
 // Transformation 
 
-
   addFuncDef({
-    name: 'RemoveWhitespace',
+    name: 'lowercase',
     category: categories.Transform,
     params: [],
-  });
+  }); 
 
   addFuncDef({
     name: 'removeDelimiter',
@@ -59,7 +47,7 @@ angular.module('app')
   });
 
   addFuncDef({
-    name: 'lowercase',
+    name: 'removeWhitespace',
     category: categories.Transform,
     params: [],
   });
@@ -74,17 +62,17 @@ angular.module('app')
 // Combine
 
   addFuncDef({
-    name: 'Append',
+    name: 'append',
     params: [{name:"appendedString"}],
-    // defaultParams: ['#A'],
+    defaultParams: ['#A'],
     category: categories.Combine,
   });
 
   addFuncDef({
-    name: 'Prepend',
+    name: 'prepend',
     // shortName: 'map',
     params: [{ name: "prependString"}],
-    //defaultParams: [3],
+    defaultParams: ['#A'],
     category: categories.Combine,
   });
 
@@ -93,14 +81,14 @@ angular.module('app')
 
 
   addFuncDef({
-    name: 'First',
+    name: 'first',
     category: categories.Filter,
     params: [{ name: "firstFilter", type: "int", }],
     defaultParams: [5]
   });
 
   addFuncDef({
-    name: 'Last',
+    name: 'last',
     category: categories.Filter,
     params: [{ name: "lastFilter", type: "int", }],
     defaultParams: [5]
@@ -108,7 +96,7 @@ angular.module('app')
 
 
   addFuncDef({
-    name: 'RegExp',
+    name: 'regExp',
     category: categories.Filter,
     params: [
       { name: "exp", type: "string" },

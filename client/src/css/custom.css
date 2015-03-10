@@ -15,5 +15,27 @@
 }
 
 
+.btn-xxs {
+padding: 0px 5px !important;
+font-size: 12px !important;
+font-weight: 100 !important;
+}
 
- 
+.truncate {
+  max-width: 225px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+}
+
+
+/* .popover {
+    max-width: none!important;
+} */
+
+
+
+.popover-content {
+    word-wrap: break-word!important;
+}
