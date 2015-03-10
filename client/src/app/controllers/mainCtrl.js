@@ -4,9 +4,9 @@
 
 app
 	.controller('mainCtrl',['$scope', '$http', 'growl', '$location', '$timeout', 
-     '$filter', '$upload', 'XLSXReaderService', 'staticFactory',
+     '$filter', '$upload', 'XLSXReaderService', 
 		function($scope, $http, growl, $location, $timeout, $filter, $upload,  
-      XLSXReaderService, staticFactory){
+      XLSXReaderService){
 		var _scope = {};
     $scope.badge={}
 		_scope.init = function(){
@@ -15,7 +15,7 @@ app
       $scope.defaultVal={
         val:null
       }
-      $scope.staticPropNames = staticFactory.tableArrayFn();
+      // $scope.staticPropNames = staticFactory.tableArrayFn();
       // console.log('staticPropNames', $scope.staticPropNames);
 		}
 
@@ -124,12 +124,12 @@ app
                 $scope.propertyList[i] = {};
                 $scope.propertyList[i] = modifiedList[i];
                 $scope.propertyList[i].isSelect = false;
-                if($scope.staticPropNames[table, $scope.propertyList[i].field] == undefined){
-                  // $scope.propertyList.splice(i, 1);
-                } else {
-                  $scope.propertyList[i].displayName = 
-                  $scope.staticPropNames[table, $scope.propertyList[i].field];
-                }
+                // if($scope.staticPropNames[table, $scope.propertyList[i].field] == undefined){
+                //   // $scope.propertyList.splice(i, 1);
+                // } else {
+                //   $scope.propertyList[i].displayName = 
+                //   $scope.staticPropNames[table, $scope.propertyList[i].field];
+                // }
               }
               // console.log('$scope.propertyList', $scope.propertyList);
               mappedPropColumns(originalTName);
@@ -255,8 +255,8 @@ app
     }
 
     $scope.mapAttribute = function () {
-      if($scope.selectedColumn == 'gross_price' || $scope.selectedColumn == 'retail_price' 
-        || $scope.selectedColumn == 'grossprice' || $scope.selectedColumn == 'retailprice'){
+      if(($scope.selectedColumn == "gross_price") || ($scope.selectedColumn == "retail_price") 
+        || ($scope.selectedColumn == "grossprice") || ($scope.selectedColumn == "retailprice")){
         $scope.pickedTable = "Price";
       } else {
         $scope.pickedTable = "ProductAttributeValue";
@@ -280,8 +280,7 @@ app
               if($scope.tableData[i].tableName == $scope.pickedTable){
                 $scope.tableData[i].aIndex++;
               }
-              if($scope.selectedColumn == 'gross_price' || $scope.selectedColumn == 'retail_price' ||
-                $scope.selectedColumn == 'grossprice' || $scope.selectedColumn == 'retailprice'){
+              if($scope.pickedTable == "Price"){
                 $scope.tableData[i].propName = {};
                 $scope.tableData[i].propName.field = 'priceUnit';
                 $scope.tableData[i].propName.reference = {};
@@ -299,8 +298,7 @@ app
               $scope.tableData[j].columnName = $scope.selectedColumn;
               $scope.tableData[j].tableName = $scope.pickedTable;
               $scope.tableData[j].rowId = angular.copy($scope.rowId);
-              if($scope.selectedColumn == 'gross_price' || $scope.selectedColumn == 'retail_price' 
-                || $scope.selectedColumn == 'grossprice' || $scope.selectedColumn == 'retailprice'){
+              if($scope.pickedTable == "Price"){
                 $scope.tableData[j].propName = {};
                 $scope.tableData[j].propName.field = 'priceTypeId';
                 $scope.tableData[j].propName.reference = {};
@@ -566,8 +564,8 @@ app
     $scope.firstStep = function (){
       $scope.badge.step = "one";
       //reset data
-      $scope.files = {
-        list: []
+      if($scope.newMap == true){
+        $location.path("#/");
       }
       $scope.PricesList = [];
       $scope.ProductAttributeValuesList = [];
@@ -577,24 +575,29 @@ app
     } 
 
     $scope.secondStep = function () {
-      if($scope.isMapSaved == true){
-        $scope.isMapSaved = false;
-      } 
       $scope.badge.step = "two";
+      $scope.fileStyle = {"isHeader":true,
+                          "datePattern":'dd.MM.yyyy',
+                          "numberPattern":'#.##',
+                          "decimalSeparator":',' 
+                        }
       $scope.selectTable('Product');
     }
 
     $scope.thirdStep = function (info) {
       $scope.badge.step = "three";
-      $scope.map = {
-        name:null
+      if($scope.tableData == undefined){
+        $scope.tableData = [];
       }
-      $scope.tableData = [];
-
+      if($scope.map == undefined){
+        $scope.map = {
+          name:null
+        }
+      }
     }
 
     $scope.saveMappingStep = function (map, tableInfo) {
-      if(map){
+      if(map.name){
         if(tableInfo.length > 0){
           $scope.submitted = false;
           var valid = checkMapping(tableInfo);
@@ -612,6 +615,8 @@ app
             };
             // console.log('mappingDetails', mappingDetails);
             saveMapping(mappingDetails);
+            //reset newmap
+            $scope.newMap = false;
           } else {
             growl.error("Please map all required fields before trying to save mapping");
           }        
@@ -622,29 +627,17 @@ app
         $scope.submitted = true;
       }
     }
+
+    $scope.newMapping = function () {
+      $scope.newMap = true;
+    }
+
     $scope.fourthStep = function () {
       $scope.badge.step = "four";
     }
 
     _scope.init();
 	}]);
-
-//directives
-app.directive('fileModel', ['$parse', function ($parse) {
-    return {
-        restrict: 'A',
-        link: function(scope, element, attrs) {
-            var model = $parse(attrs.fileModel);
-            var modelSetter = model.assign;
-            
-            element.bind('change', function(){
-                scope.$apply(function(){
-                    modelSetter(scope, element[0].files[0]);
-                });
-            });
-        }
-    };
-}]);
 
 //filters
 app.filter('smallize', function() {
