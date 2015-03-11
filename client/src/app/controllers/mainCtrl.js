@@ -4,9 +4,9 @@
 
 app
 	.controller('mainCtrl',['$scope', '$rootScope', '$http', 'growl', '$location', '$timeout', 
-     '$filter', '$upload', 'XLSXReaderService', 
+     '$filter', '$upload', 'XLSXReaderService', '$modal', '$log',
 		function($scope, $rootScope, $http, growl, $location, $timeout, $filter, $upload,  
-      XLSXReaderService){
+      XLSXReaderService, $modal, $log){
 		var _scope = {};
     $scope.badge={}
 		_scope.init = function(){
@@ -182,15 +182,16 @@ app
       $scope.pickedTable = info;
     }
 
-    $scope.updateList = function () {
+    $scope.addToList = function () {
       if($scope.pickedTable == 'Price'){
         if($scope.PricesList == undefined){
           $scope.PricesList = [];
         }
         $scope.PricesList.length++;
         for(var i = 0; i < $scope.PricesList.length ; i++){   
-          $scope.PricesList[i] = 'Price'+'('+(i+1)+')'; 
-          $scope.rowId = i+1;     
+          $scope.PricesList[i] = {};
+          $scope.PricesList[i].table = 'Price'; 
+          $scope.PricesList[i].rowId = i+1;     
         }
       }
       if($scope.pickedTable == 'ProductAttributeValue'){
@@ -198,9 +199,10 @@ app
           $scope.ProductAttributeValuesList = [];
         }
         $scope.ProductAttributeValuesList.length++;
-        for(var i = 0; i < $scope.ProductAttributeValuesList.length ; i++){   
-          $scope.ProductAttributeValuesList[i] = 'ProductAttributeValue'+'('+(i+1)+')';      
-          $scope.rowId = i+1;
+        for(var i = 0; i < $scope.ProductAttributeValuesList.length ; i++){
+          $scope.ProductAttributeValuesList[i] = {};   
+          $scope.ProductAttributeValuesList[i].table = 'ProductAttributeValue';      
+          $scope.ProductAttributeValuesList[i].rowId = i+1;
         }
 
       }
@@ -210,7 +212,9 @@ app
         }
         $scope.ClassificationAssignmentsList.length++;
         for(var i = 0; i < $scope.ClassificationAssignmentsList.length ; i++){   
-          $scope.ClassificationAssignmentsList[i] = 'ClassificationAssignment'+'('+(i+1)+')';      
+          $scope.ClassificationAssignmentsList[i] = {};
+          $scope.ClassificationAssignmentsList[i].table = 'ClassificationAssignment';      
+          $scope.ClassificationAssignmentsList[i].rowId = i+1;
         }
       }
       if($scope.pickedTable == 'ProductRelation'){
@@ -218,8 +222,10 @@ app
           $scope.ProductRelationsList = [];
         }
         $scope.ProductRelationsList.length++;
-        for(var i = 0; i < $scope.ProductRelationsList.length ; i++){   
-          $scope.ProductRelationsList[i] = 'ProductRelation'+'('+(i+1)+')';      
+        for(var i = 0; i < $scope.ProductRelationsList.length ; i++){  
+          $scope.ProductRelationsList[i] = {}; 
+          $scope.ProductRelationsList[i].table = 'ProductRelation';
+          $scope.ProductRelationsList[i].rowId = i+1;      
         }
       }
       if($scope.pickedTable == 'ContractedProduct'){
@@ -227,8 +233,10 @@ app
           $scope.ContractedProductList = [];
         }
         $scope.ContractedProductList.length++;
-        for(var i = 0; i < $scope.ContractedProductList.length ; i++){   
-          $scope.ContractedProductList[i] = 'ContractedProduct'+'('+(i+1)+')';      
+        for(var i = 0; i < $scope.ContractedProductList.length ; i++){
+          $scope.ContractedProductList[i] = {};  
+          $scope.ContractedProductList[i].table= 'ContractedProduct';  
+          $scope.ContractedProductList[i].rowId = i+1;    
         }
       }
       if($scope.pickedTable == 'DocumentAssociations'){
@@ -236,11 +244,90 @@ app
           $scope.DocumentAssociationsList = [];
         }
         $scope.DocumentAssociationsList.length++;
-        for(var i = 0; i < $scope.DocumentAssociationsList.length ; i++){   
-          $scope.DocumentAssociationsList[i] = 'DocumentAssociation'+'('+(i+1)+')';      
+        for(var i = 0; i < $scope.DocumentAssociationsList.length ; i++){  
+          $scope.DocumentAssociationsList[i] = {};
+          $scope.DocumentAssociationsList[i] = 'DocumentAssociation';
+          $scope.DocumentAssociationsList[i].rowId = i+1;      
         }
       }
 
+    }
+
+    // removing select tables and its properties
+
+    $scope.removeProperty = function(size) {
+      if($scope.selectedTable){
+        var modalInstance = $modal.open({
+            templateUrl: 'confirmation.html',
+            controller: 'confirmationModalInstanceCtrl',
+            size: size,
+            resolve: {
+                    table_scope: function() {
+                        return $scope.selectedTable;
+                    },
+                    row_no: function() {
+                      return $scope.rowId;
+                    }
+            }
+        });
+        
+        modalInstance.result.then(function(cnfDelete) {
+          var valid = cnfDelete;
+          if(valid){
+            $scope.acceptDeletetion();
+          }  
+        }, function() {
+            $log.info('Modal dismissed at: ' + new Date());
+        });
+      } else {
+        growl.error("Select table to delete");
+      }
+    };
+
+    $scope.acceptDeletetion = function () {
+      var id;
+      if($scope.selectedTable != 'Product'){
+        if($scope.selectedTable && $scope.rowId){
+          id = $scope.rowId;
+          if($scope.selectedTable == 'Price'){
+            $scope.PricesList.splice(id-1, 1);
+          }
+          if($scope.selectedTable == 'ProductAttributeValue'){
+            $scope.ProductAttributeValuesList.splice(id-1, 1);
+          }
+          if($scope.selectedTable == 'ClassificationAssignment'){
+            $scope.ClassificationAssignmentsList.splice(id-1, 1);
+          }
+          if($scope.selectedTable == 'ProductRelation'){
+            $scope.ProductRelationsList.splice(id-1, 1);
+          }
+          if($scope.selectedTable == 'ContractedProduct'){
+            $scope.ContractedProductList.splice(id-1, 1);
+          }
+          if($scope.selectedTable == 'DocumentAssociation'){
+            $scope.DocumentAssociationsList.splice(id-1, 1);
+          }
+          updateList($scope.selectedTable, id);
+          $scope.table = "";
+        } 
+      } else {
+        growl.error("You can't delete Product table");
+      } 
+    }
+
+    var updateList = function (table, id) {
+      for (var i = 0; i < $scope.tableData.length ;i++) {
+        if($scope.tableData[i].tableName == table && 
+          $scope.tableData[i].rowId == id) {
+            $scope.tableData.splice(i, 1);
+        }
+      };
+      for (var i = 0; i < $scope.tableData.length ;i++) {
+        if($scope.tableData[i].tableName == table && 
+          $scope.tableData[i].rowId > id) {
+            $scope.tableData[i].rowId = $scope.tableData[i].rowId - 1;
+        }
+      };
     }
 
     $scope.mapping = function () {
@@ -280,7 +367,7 @@ app
       } else {
         $scope.pickedTable = "ProductAttributeValue";
       }
-        $scope.updateList();
+        $scope.addToList();
         if($scope.selectedColumn){
           if($scope.tableData == undefined){
             $scope.tableData = [];
@@ -822,3 +909,16 @@ app.factory("XLSXReaderService", ['$q', '$rootScope',
 //        }
 //    } 
 // });
+
+app.controller('confirmationModalInstanceCtrl', function($scope, 
+  $modalInstance, table_scope, row_no) {
+    $scope.selectedTable = table_scope;
+    $scope.num = row_no;
+    $scope.acceptDelete = function (){
+      var cnfDelete = true;
+      $modalInstance.close(cnfDelete);
+    }
+    $scope.cancel = function() {
+        $modalInstance.dismiss('cancel');
+    };
+});

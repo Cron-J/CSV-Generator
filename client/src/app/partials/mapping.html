@@ -45,31 +45,32 @@
 			</div>
 			<div class="col-md-4">
 				<select class="mapping-select" id="classes" ng-model="table" name="classes" size="20" >
-				<option value="" style="display:none">select Table</option>
+				<!-- <option value="? string:{{selectedTable}} ?" style="display:none"></option> -->
+				<option value="" style="display:none"></option>
 				<option value="Product" ng-click="selectTable('Product', 'Product')">Product</option>
 				<optgroup style="font-style: normal;" label="Prices">
-							<option value="{{pa}}" id="com.jcatalog.product.Prices:0" ng-repeat="pa in PricesList" ng-click="selectTable('Prices', 'Price', $index)">
-								{{pa}}
+							<option value="{{pa.table}}" id="com.jcatalog.product.Prices:0" ng-repeat="pa in PricesList track by $index" ng-click="selectTable('Prices', 'Price', $index)">
+								{{pa.table}}({{$index+1}})
 							</option>
 				</optgroup>
 				<optgroup style="font-style: normal;" label="ProductAttributeValues">
-							<option value="{{pa}}" id="com.jcatalog.product.ProductAttributeValue:0" ng-repeat="pa in ProductAttributeValuesList" ng-click="selectTable('ProductAttributeValues', 'ProductAttributeValue', $index)">
-								{{pa}}
+							<option value="{{pav.table}}" id="com.jcatalog.product.ProductAttributeValue:0" ng-repeat="pav in ProductAttributeValuesList track by $index" ng-click="selectTable('ProductAttributeValues', 'ProductAttributeValue', $index)">
+								{{pav.table}}({{$index+1}})
 							</option>
 					</optgroup>
 					<optgroup style="font-style: normal;" label="ClassificationAssignment">
-							<option value="{{pa}}" id="com.jcatalog.product.ClassificationAssignment:0" ng-repeat="pa in ClassificationAssignmentsList" ng-click="selectTable('Product2ClassificationGroup', 'Product2ClassificationGroup', $index)">
-								{{pa}}
+							<option value="{{cg.table}}" id="com.jcatalog.product.ClassificationAssignment:0" ng-repeat="cg in ClassificationAssignmentsList track by $index" ng-click="selectTable('Product2ClassificationGroup', 'Product2ClassificationGroup', $index)">
+								{{cg.table}}({{$index+1}})
 							</option>
 					</optgroup>
 					<optgroup style="font-style: normal;" label="ProductRelations">
-							<option value="{{pa}}" id="com.jcatalog.product.ProductRelations:0" ng-repeat="pa in ProductRelationsList" ng-click="selectTable('ProductRelations', 'ProductRelation', $index)">
-								{{pa}}
+							<option value="{{pr.table}}" id="com.jcatalog.product.ProductRelations:0" ng-repeat="pr in ProductRelationsList track by $index" ng-click="selectTable('ProductRelations', 'ProductRelation', $index)">
+								{{pr.table}}({{$index+1}})
 							</option>
 					</optgroup>
 					<optgroup style="font-style: normal;" label="ContractedProduct">
-							<option value="{{pa}}" id="com.jcatalog.product.ContractedProduct:0" ng-repeat="pa in ContractedProductList" ng-click="selectTable('ContractedProduct', 'ContractedProduct',$index)">
-								{{pa}}
+							<option value="{{cp.table}}" id="com.jcatalog.product.ContractedProduct:0" ng-repeat="cp in ContractedProductList track by $index" ng-click="selectTable('ContractedProduct', 'ContractedProduct',$index)">
+								{{cp.table}}({{$index+1}})
 							</option>
 					</optgroup>
 				</select>
@@ -111,7 +112,9 @@
 							<li><a ng-click="selectnewPropTable('ContractedProduct')">ContractedProduct</a></li>
 						</ul>
 					</div>
-					<a class="btn btn-default" ng-click="updateList()"><span class="glyphicon glyphicon-plus"></span></a>
+					<a class="btn btn-default" ng-click="addToList()"><span class="glyphicon glyphicon-plus"></span></a>
+					<a class="btn btn-default" ng-click="removeProperty()"><span class="glyphicon glyphicon-remove"></span></a>
+					<div ng-include="'app/partials/confirmationDialogBox.html'"></div>
 				</div>
 			</div>
 			<div class="col-md-3">
@@ -170,7 +173,7 @@
       </select>
     </div>
     <div class="col-lg-5">
-    	<button class="btn btn-primary btn-sm" ng-click="editMapping(selectedMapping)">Edit Mapping</button>
+    	<!-- <button class="btn btn-primary btn-sm" ng-click="editMapping(selectedMapping)">Edit Mapping</button> -->
       <button class="btn btn-primary btn-sm" ng-click="newMapping();firstStep()">Create Mapping</button>
     </div>
   </div>

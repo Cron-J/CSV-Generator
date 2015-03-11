@@ -1,0 +1,15 @@
+<script type="text/ng-template" id="confirmation.html">
+    <div class="modal-header">
+        <h4 class="modal-title" id="defModalHead">Delete</h4>
+    </div>
+    <div class="modal-body">
+        <p>Do you really want to delete selected <b>{{selectedTable}}<span ng-show="num">({{num}})<span></b> and its mapped properties?</p>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary " ng-click="acceptDelete()">Yes</button>
+        <button class="btn btn-default" ng-click="cancel()">No</button>
+    </div>
+</script>
+
+
+
