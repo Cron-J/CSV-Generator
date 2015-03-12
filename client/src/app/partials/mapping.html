@@ -44,7 +44,7 @@
 				</div> -->
 			</div>
 			<div class="col-md-4">
-				<select class="mapping-select" id="classes" ng-model="table" name="classes" size="20" >
+				<select class="mapping-select" id="SelectId" ng-model="table" name="classes" size="20" >
 				<!-- <option value="? string:{{selectedTable}} ?" style="display:none"></option> -->
 				<option value="" style="display:none"></option>
 				<option value="Product" ng-click="selectTable('Product', 'Product')">Product</option>
@@ -59,7 +59,7 @@
 							</option>
 					</optgroup>
 					<optgroup style="font-style: normal;" label="ClassificationAssignment">
-							<option value="{{cg.table}}" id="com.jcatalog.product.ClassificationAssignment:0" ng-repeat="cg in ClassificationAssignmentsList track by $index" ng-click="selectTable('Product2ClassificationGroup', 'Product2ClassificationGroup', $index)">
+							<option value="{{cg.table}}" id="com.jcatalog.product.ClassificationAssignment:0" ng-repeat="cg in ClassificationAssignmentsList track by $index" ng-click="selectTable('ClassificationAssignment', 'ClassificationAssignment', $index)">
 								{{cg.table}}({{$index+1}})
 							</option>
 					</optgroup>
