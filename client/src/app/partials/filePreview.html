@@ -13,9 +13,9 @@
       <div class="form-group">
         <label class="col-sm-4 control-label">Date Format</label>
         <div class="col-sm-8">
-          <select name="datePattern" id="date" ng-model="fileStyle.datePattern" class="form-control">
+          <select name="datePattern" id="date" ng-model="fileStyle.datePattern" class="form-control" ng-change="selectedDateFormat(fileStyle.datePattern, importedDatar1, importedDatar2)">
             <option value="">select format</option>
-            <option value="dd.MM.yyyy">dd.MM.yyyy</option>
+            <option value="dd-MM-yyyy">dd-MM-yyyy</option>
             <option value="MM/dd/yyyy">MM/dd/yyyy</option>
           </select>
         </div>
@@ -35,8 +35,7 @@
       <div class="form-group">
         <label class="col-sm-4 control-label">Delimiter Format</label>
         <div class="col-sm-8">
-          <select name="decimalSeparator" ng-model="fileStyle.decimalSeparator" class="form-control" ng-click="startRead(selectedFiles, fileStyle.decimalSeparator);">
-            <option value="">select format</option>
+          <select name="decimalSeparator" ng-model="fileStyle.decimalSeparator" class="form-control" ng-change="startRead(selectedFiles, fileStyle.decimalSeparator)">
             <option value=".">Dot(.)</option>
             <option value=",">Comma(,)</option>
           </select>
@@ -45,7 +44,7 @@
     </form>
   </div>
  
-  <div ng-show="uploadedFileType == 'csv'">
+  <div >
     <table class="table table-bordered">
       <thead ng-show="fileStyle.isHeader">
         <tr>
@@ -62,7 +61,7 @@
       </tbody>
     </table>
   </div>
-  <div ng-show="uploadedFileType == 'xlsx'">
+<!--   <div ng-show="uploadedFileType == 'xlsx'">
     <table class="table table-bordered">
         <thead ng-show="fileStyle.isHeader">
             <tr>
@@ -95,7 +94,7 @@
               <td ng-repeat="rowData in resultXls.rowTwo track by $index">{{rowData}}</td>
           </tr>
         </tbody>       
-    </table>
+    </table> -->
   </div>
   <div class="col-lg-2 col-lg-offset-10 btn-set">
     <button class="btn btn-primary"  ng-click="firstStep()">Back</button>

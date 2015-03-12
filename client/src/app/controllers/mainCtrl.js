@@ -15,6 +15,12 @@ app
       $scope.defaultVal={
         val:null
       }
+      $scope.fileStyle = {
+        "isHeader":true,
+        "datePattern":'dd-MM-yyyy',
+        "numberPattern":'#.##',
+        "decimalSeparator":',' 
+      }
 		}
 
     var rowIndex;
@@ -308,7 +314,6 @@ app
             $scope.DocumentAssociationsList.splice(id-1, 1);
           }
           updateList($scope.selectedTable, id);
-          $scope.table = "";
         } 
       } else {
         growl.error("You can't delete Product table");
@@ -485,6 +490,31 @@ app
       }
     }
 
+    $scope.selectedDateFormat = function (format, list1, list2) {
+      $scope.importedDatar1 = changeDateFormat(list1, format);
+      $scope.importedDatar2 = changeDateFormat(list2, format);
+    }
+
+    var changeDateFormat = function (list, format) {
+      for (var i = 0; i < list.length; i++) {
+        if(isNaN(list[i])) {
+          var d = new Date(list[i]);
+          if(d != "Invalid Date"){
+            var date = d.getDate();
+            if(date < 10) date = "0"+date;
+            var month = d.getMonth()+1;
+            if(month < 10) month = "0"+month;
+            var year = d.getFullYear();
+            if(format == "MM/dd/yyyy")
+              list[i] = month+"/"+date+"/"+year;
+            else
+              list[i] = date+"-"+month+"-"+year;
+          }
+        }
+      };
+      return list;
+    }
+
     $scope.startRead = function(files, option) {
       // $scope.secondStep();
       $scope.columnShowList = [];
@@ -555,6 +585,7 @@ app
       }
       // loading columns
       loadingColumns();
+      $scope.selectedDateFormat('dd-MM-yyyy', $scope.importedDatar1, $scope.importedDatar2);
     }
 
     var loadingColumns = function () {
@@ -588,7 +619,10 @@ app
             }
         }); 
         $scope.columnList = $scope.resultXls.headerColNames;
-        loadingColumns();   
+        $scope.importedDatar1 = $scope.resultXls.rowOne;
+        $scope.importedDatar2 = $scope.resultXls.rowTwo;
+        loadingColumns();
+        $scope.selectedDateFormat('dd-MM-yyyy', $scope.importedDatar1, $scope.importedDatar2);   
       }
         reader.readAsBinaryString(readFile);
         $scope.secondStep();
@@ -623,7 +657,10 @@ app
             XLSXReaderService.readFile($scope.excelFile, $scope.showPreview, $scope.showJSONPreview).then(function(xlsxData) {
                 $scope.sheets = xlsxData.sheets;
                 $scope.columnList = $scope.sheets.Sheet1.data[0];
+                $scope.importedDatar1 = $scope.sheets.Sheet1.data[1];
+                $scope.importedDatar2 = $scope.sheets.Sheet1.data[2];
                 loadingColumns();
+                $scope.selectedDateFormat('dd-MM-yyyy', $scope.importedDatar1, $scope.importedDatar2);
                 $scope.isProcessing = false;
             });
         }
@@ -682,11 +719,6 @@ app
 
     $scope.secondStep = function () {
       $scope.badge.step = "two";
-      $scope.fileStyle = {"isHeader":true,
-                          "datePattern":'dd.MM.yyyy',
-                          "numberPattern":'#.##',
-                          "decimalSeparator":',' 
-                        }
       $scope.selectTable('Product');
     }
 
