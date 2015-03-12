@@ -325,12 +325,33 @@ app
     }
 
     var updateList = function (table, id) {
+      var count =0;
+      for (var i = 0; i < $scope.tableData.length ;i++) {
+        if($scope.tableData[i].tableName == table && 
+          $scope.tableData[i].rowId == id) count++;
+      }
+      if(count > 1){
+        for (var i = 0; i < $scope.tableData.length ;i++) {
+          if($scope.tableData[i].tableName == table && 
+            $scope.tableData[i].rowId == id) {
+            var colName = $scope.tableData[i].columnName;
+            var prop = $scope.tableData[i].propName.field;
+            $scope.tableData.splice(i, 1);
+            mappedColumns(colName, true);
+            mappedPropColumns(table, prop);
+          }
+        };
+      } 
       for (var i = 0; i < $scope.tableData.length ;i++) {
         if($scope.tableData[i].tableName == table && 
           $scope.tableData[i].rowId == id) {
-            $scope.tableData.splice(i, 1);
+          var colName = $scope.tableData[i].columnName;
+          var prop = $scope.tableData[i].propName.field;
+          $scope.tableData.splice(i, 1);
+          mappedColumns(colName, true);
+          mappedPropColumns(table, prop);
         }
-      };
+      };  
       for (var i = 0; i < $scope.tableData.length ;i++) {
         if($scope.tableData[i].tableName == table && 
           $scope.tableData[i].rowId > id) {
@@ -390,17 +411,18 @@ app
               $scope.tableData[i] = angular.copy(dummy);
               $scope.tableData[i].columnName = $scope.selectedColumn;
               $scope.tableData[i].tableName = $scope.pickedTable;
-              $scope.tableData[i].rowId = angular.copy($scope.rowId);
               $scope.tableData[i].quotes = true;
               if($scope.tableData[i].tableName == $scope.pickedTable){
                 $scope.tableData[i].aIndex++;
               }
               if($scope.pickedTable == "Price"){
+                $scope.tableData[i].rowId = $scope.PricesList.length;
                 $scope.tableData[i].propName = {};
                 $scope.tableData[i].propName.field = 'priceUnit';
                 $scope.tableData[i].propName.reference = {};
                 $scope.tableData[i].propName.index = null;
               } else {
+                $scope.tableData[i].rowId = $scope.ProductAttributeValuesList.length;
                 $scope.tableData[i].propName = {};
                 $scope.tableData[i].propName.field = 'attribute';
                 $scope.tableData[i].propName.reference = {};
@@ -412,13 +434,14 @@ app
               $scope.tableData[j] = angular.copy(dummy);
               $scope.tableData[j].columnName = $scope.selectedColumn;
               $scope.tableData[j].tableName = $scope.pickedTable;
-              $scope.tableData[j].rowId = angular.copy($scope.rowId);
               if($scope.pickedTable == "Price"){
+                $scope.tableData[j].rowId = $scope.PricesList.length;
                 $scope.tableData[j].propName = {};
                 $scope.tableData[j].propName.field = 'priceTypeId';
                 $scope.tableData[j].propName.reference = {};
                 $scope.tableData[j].propName.index = null;
               } else {
+                $scope.tableData[j].rowId = $scope.ProductAttributeValuesList.length;
                 $scope.tableData[j].propName = {};
                 $scope.tableData[j].propName.field = 'value';
                 $scope.tableData[j].propName.reference = {};
@@ -519,24 +542,6 @@ app
         }
       };
       return list;
-    }
-
-    $scope.selectedDelimiterFormat = function () {
-      var list1 = angular.copy($scope.orginalImportedDatar1);
-      var list2 = angular.copy($scope.orginalImportedDatar2);
-      $scope.importedDatar1 = changeDateFormat(list1, format);
-      $scope.importedDatar2 = changeDateFormat(list2, format);
-    }
-
-    var changeDelimiterFormat = function (list, format) {
-      var res = [];
-      var k =0;
-      for (var i = 0; i < list.length; i++) {
-        if(isNaN(list[i])) {
-          res[k] = list[i].replace(format, ",");
-          k++;
-        }
-      }
     }
 
     $scope.selectedNumberFormat = function (format) {
