@@ -13,7 +13,7 @@
       <div class="form-group">
         <label class="col-sm-4 control-label">Date Format</label>
         <div class="col-sm-8">
-          <select name="datePattern" id="date" ng-model="fileStyle.datePattern" class="form-control" ng-change="selectedDateFormat(fileStyle.datePattern, importedDatar1, importedDatar2)">
+          <select name="datePattern" id="date" ng-model="fileStyle.datePattern" class="form-control" ng-change="selectedDateFormat(fileStyle.datePattern)">
             <option value="">select format</option>
             <option value="dd-MM-yyyy">dd-MM-yyyy</option>
             <option value="MM/dd/yyyy">MM/dd/yyyy</option>
@@ -23,7 +23,7 @@
       <div class="form-group">
         <label class="col-sm-4 control-label">Number Format</label>
         <div class="col-sm-8">
-          <select name="numberPattern" id="number" ng-model="fileStyle.numberPattern" class="form-control">
+          <select name="numberPattern" id="number" ng-model="fileStyle.numberPattern" class="form-control" ng-change="selectedNumberFormat(fileStyle.numberPattern)">
             <option value="">select format</option>
             <option value="#,###.##">#,###.##</option>
             <option value="#.##">#.##</option>

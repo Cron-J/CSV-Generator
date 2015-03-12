@@ -18,9 +18,11 @@ app
       $scope.fileStyle = {
         "isHeader":true,
         "datePattern":'dd-MM-yyyy',
-        "numberPattern":'#.##',
+        "numberPattern":'',
         "decimalSeparator":',' 
       }
+      // changeNumberFormat();
+      // changeDelimiterFormat();
 		}
 
     var rowIndex;
@@ -314,6 +316,8 @@ app
             $scope.DocumentAssociationsList.splice(id-1, 1);
           }
           updateList($scope.selectedTable, id);
+          // var opt = "? string:"+$scope.selectedTable+" ?";
+           // $("#SelectId option:selected").remove();
         } 
       } else {
         growl.error("You can't delete Product table");
@@ -490,7 +494,9 @@ app
       }
     }
 
-    $scope.selectedDateFormat = function (format, list1, list2) {
+    $scope.selectedDateFormat = function (format) {
+      var list1 = angular.copy($scope.orginalImportedDatar1);
+      var list2 = angular.copy($scope.orginalImportedDatar2);
       $scope.importedDatar1 = changeDateFormat(list1, format);
       $scope.importedDatar2 = changeDateFormat(list2, format);
     }
@@ -512,6 +518,76 @@ app
           }
         }
       };
+      return list;
+    }
+
+    $scope.selectedDelimiterFormat = function () {
+      var list1 = angular.copy($scope.orginalImportedDatar1);
+      var list2 = angular.copy($scope.orginalImportedDatar2);
+      $scope.importedDatar1 = changeDateFormat(list1, format);
+      $scope.importedDatar2 = changeDateFormat(list2, format);
+    }
+
+    var changeDelimiterFormat = function (list, format) {
+      var res = [];
+      var k =0;
+      for (var i = 0; i < list.length; i++) {
+        if(isNaN(list[i])) {
+          res[k] = list[i].replace(format, ",");
+          k++;
+        }
+      }
+    }
+
+    $scope.selectedNumberFormat = function (format) {
+      var list1 = angular.copy($scope.orginalImportedDatar1);
+      var list2 = angular.copy($scope.orginalImportedDatar2);
+      $scope.importedDatar1 = changeNumberFormat(list1, format);
+      $scope.importedDatar2 = changeNumberFormat(list2, format);
+    }
+
+    var changeNumberFormat = function (list, format) {
+      for (var i = 0; i < list.length; i++) {
+        if(!isNaN(list[i])) {
+          if(format == '#,##'){
+            var str = list[i].toString().split('.');
+            if (str[0].length >= 3) {
+                str[0] = str[0].replace(/(\d)(?=(\d{2})+$)/g, '$1,');
+            }
+            if (str[1] && str[1].length >= 3) {
+                str[1] = str[1].replace(/(\d{2})/g, '$1 ');
+            }
+             list[i] = str.join('.');
+          }
+          if(format == '#.##'){
+            list[i] = (list[i] / 100);
+          }
+          if(format == '#,###.##'){
+            if(list[i].toString().length > 5){
+              list[i] = (list[i] / 100);
+              var str = list[i].toString().split('.');
+              if (str[0].length >= 4) {
+                str[0] = str[0].replace(/(\d)(?=(\d{3})+$)/g, '$1,');
+              }
+              // if (str[1] && str[1].length >= 4) {
+              //     str[1] = str[1].replace(/(\d{3})/g, '$1 ');
+              // }
+              list[i] = str.join('.');
+            }
+
+          }
+          if(format == '#.###,##'){
+            if(list[i].toString().length > 5){
+              var dec = (list[i] % 100000);
+              list[i] = (list[i] / 100000);
+              var str = list[i].toString();
+              var index = str.length-2;
+              str = str.slice(0,index)+ "," + str.slice(index);  
+              list[i] = str;  
+            }
+          }
+        }
+      }
       return list;
     }
 
@@ -575,6 +651,8 @@ app
           $scope.importedDatar1 = dumpTable[1].split(".");
         if(dumpTable[2] != undefined)
           $scope.importedDatar2 = dumpTable[2].split(".");
+          $scope.orginalImportedDatar1 =dumpTable[1].split(".");
+          $scope.orginalImportedDatar2 = dumpTable[2].split(".");
       } else {
         if(headers != undefined)
           $scope.columnList = headers.split(",");
@@ -582,10 +660,12 @@ app
           $scope.importedDatar1 = dumpTable[1].split(",");
         if(dumpTable[2] != undefined)
           $scope.importedDatar2 = dumpTable[2].split(",");
+        $scope.orginalImportedDatar1 = dumpTable[1].split(",");
+        $scope.orginalImportedDatar2 = dumpTable[2].split(",");
       }
       // loading columns
       loadingColumns();
-      $scope.selectedDateFormat('dd-MM-yyyy', $scope.importedDatar1, $scope.importedDatar2);
+      $scope.selectedDateFormat('dd-MM-yyyy');
     }
 
     var loadingColumns = function () {
@@ -621,8 +701,10 @@ app
         $scope.columnList = $scope.resultXls.headerColNames;
         $scope.importedDatar1 = $scope.resultXls.rowOne;
         $scope.importedDatar2 = $scope.resultXls.rowTwo;
+        $scope.orginalImportedDatar1 = $scope.resultXls.rowOne;
+        $scope.orginalImportedDatar2 = $scope.resultXls.rowTwo;
         loadingColumns();
-        $scope.selectedDateFormat('dd-MM-yyyy', $scope.importedDatar1, $scope.importedDatar2);   
+        $scope.selectedDateFormat('dd-MM-yyyy');   
       }
         reader.readAsBinaryString(readFile);
         $scope.secondStep();
@@ -657,10 +739,12 @@ app
             XLSXReaderService.readFile($scope.excelFile, $scope.showPreview, $scope.showJSONPreview).then(function(xlsxData) {
                 $scope.sheets = xlsxData.sheets;
                 $scope.columnList = $scope.sheets.Sheet1.data[0];
+                $scope.orginalImportedDatar1 = $scope.sheets.Sheet1.data[1];
+                $scope.orginalImportedDatar2 = $scope.sheets.Sheet1.data[2];
                 $scope.importedDatar1 = $scope.sheets.Sheet1.data[1];
                 $scope.importedDatar2 = $scope.sheets.Sheet1.data[2];
                 loadingColumns();
-                $scope.selectedDateFormat('dd-MM-yyyy', $scope.importedDatar1, $scope.importedDatar2);
+                $scope.selectedDateFormat('dd-MM-yyyy');
                 $scope.isProcessing = false;
             });
         }
