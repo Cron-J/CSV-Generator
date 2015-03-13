@@ -46,30 +46,30 @@
 			<div class="col-md-4">
 				<select class="mapping-select" id="SelectId" ng-model="table" name="classes" size="20" >
 				<!-- <option value="? string:{{selectedTable}} ?" style="display:none"></option> -->
-				<option value="" style="display:none"></option>
-				<option ng-click="selectTable('Product', 'Product')">Product</option>
+				<option value="" style="display:none" ></option>
+				<option value="Product" ng-click="selectTable('Product', 'Product')" ng-selected="preSelect">Product</option>
 				<optgroup style="font-style: normal;" label="Prices">
-							<option id="com.jcatalog.product.Prices:{{$index}}" ng-repeat="pa in PricesList track by $index" ng-click="selectTable('Prices', 'Price', $index, PricesList)">
+							<option value="{{pa.table}}" id="com.jcatalog.product.Prices:{{$index}}" ng-repeat="pa in tableLists.PricesList track by $index" ng-click="selectTable('Prices', 'Price', $index, tableLists.PricesList)">
 								{{pa.table}}({{$index+1}})
 							</option>
 				</optgroup>
 				<optgroup style="font-style: normal;" label="ProductAttributeValues">
-							<option id="com.jcatalog.product.ProductAttributeValue:{{$index}}" ng-repeat="pav in ProductAttributeValuesList track by $index" ng-click="selectTable('ProductAttributeValues', 'ProductAttributeValue', $index, ProductAttributeValuesList)">
+							<option value="{{pav.table}}" id="com.jcatalog.product.ProductAttributeValue:{{$index}}" ng-repeat="pav in tableLists.ProductAttributeValuesList track by $index" ng-click="selectTable('ProductAttributeValues', 'ProductAttributeValue', $index, tableLists.ProductAttributeValuesList)">
 								{{pav.table}}({{$index+1}})
 							</option>
 					</optgroup>
 					<optgroup style="font-style: normal;" label="ClassificationAssignment">
-							<option id="com.jcatalog.product.ClassificationAssignment:{{$index}}" ng-repeat="cg in ClassificationAssignmentsList track by $index" ng-click="selectTable('ClassificationAssignment', 'ClassificationAssignment', $index, ClassificationAssignmentsList)">
+							<option value="{{cg.table}}" id="com.jcatalog.product.ClassificationAssignment:{{$index}}" ng-repeat="cg in tableLists.ClassificationAssignmentsList track by $index" ng-click="selectTable('Product2ClassificationGroup', 'ClassificationAssignment', $index, tableLists.ClassificationAssignmentsList)">
 								{{cg.table}}({{$index+1}})
 							</option>
 					</optgroup>
 					<optgroup style="font-style: normal;" label="ProductRelations">
-							<option id="com.jcatalog.product.ProductRelations:{{$index}}" ng-repeat="pr in ProductRelationsList track by $index" ng-click="selectTable('ProductRelations', 'ProductRelation', $index, ProductRelationsList)">
+							<option value="{{pr.table}}" id="com.jcatalog.product.ProductRelations:{{$index}}" ng-repeat="pr in tableLists.ProductRelationsList track by $index" ng-click="selectTable('ProductRelations', 'ProductRelation', $index, tableLists.ProductRelationsList)">
 								{{pr.table}}({{$index+1}})
 							</option>
 					</optgroup>
 					<optgroup style="font-style: normal;" label="ContractedProduct">
-							<option id="com.jcatalog.product.ContractedProduct:{{$index}}" ng-repeat="cp in ContractedProductList track by $index" ng-click="selectTable('ContractedProduct', 'ContractedProduct',$index, ContractedProductList)">
+							<option value="{{cp.table}}" id="com.jcatalog.product.ContractedProduct:{{$index}}" ng-repeat="cp in tableLists.ContractedProductList track by $index" ng-click="selectTable('ContractedProduct', 'ContractedProduct',$index, tableLists.ContractedProductList)">
 								{{cp.table}}({{$index+1}})
 							</option>
 					</optgroup>
@@ -105,11 +105,11 @@
 							<span class="caret"></span>
 						</button>
 						<ul class="dropdown-menu" role="menu">
-							<li><a ng-click="selectnewPropTable('Price')">Price</a></li>
-							<li><a ng-click="selectnewPropTable('ProductAttributeValue')">ProductAttributeValue</a></li>
-							<li><a ng-click="selectnewPropTable('ClassificationAssignment')">ClassificationAssignment</a></li>
-							<li><a ng-click="selectnewPropTable('ProductRelation')">ProductRelation</a></li>
-							<li><a ng-click="selectnewPropTable('ContractedProduct')">ContractedProduct</a></li>
+							<li><a ng-click="selectnewPropTable('Price', tableLists.PricesList)">Price</a></li>
+							<li><a ng-click="selectnewPropTable('ProductAttributeValue', tableLists.ProductAttributeValuesList)">ProductAttributeValue</a></li>
+							<li><a ng-click="selectnewPropTable('ClassificationAssignment', tableLists.ClassificationAssignmentsList)">ClassificationAssignment</a></li>
+							<li><a ng-click="selectnewPropTable('ProductRelation', tableLists.ProductRelationsList)">ProductRelation</a></li>
+							<li><a ng-click="selectnewPropTable('ContractedProduct', tableLists.ContractedProductList)">ContractedProduct</a></li>
 						</ul>
 					</div>
 					<a class="btn btn-default" ng-click="addToList()"><span class="glyphicon glyphicon-plus"></span></a>

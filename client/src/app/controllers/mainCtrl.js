@@ -150,12 +150,6 @@ app
                 $scope.propertyList[i] = {};
                 $scope.propertyList[i] = modifiedList[i];
                 $scope.propertyList[i].isSelect = false;
-                // if($scope.staticPropNames[table, $scope.propertyList[i].field] == undefined){
-                //   // $scope.propertyList.splice(i, 1);
-                // } else {
-                //   $scope.propertyList[i].displayName = 
-                //   $scope.staticPropNames[table, $scope.propertyList[i].field];
-                // }
               }
               // console.log('$scope.propertyList', $scope.propertyList);
               mappedPropColumns(originalTName);
@@ -172,94 +166,24 @@ app
       $scope.selectedTable = otname;
       $scope.rowId = rowNo+1;
       $scope.selectedTableList = list;
-      // if($scope.mapDone == true){
-      //   //clear selection before auto map
-      //   for(var i = 0; i < $scope.columnShowList.length ; i++){   
-      //     $scope.columnShowList[i].isSelect = false;      
-      //   }
-      //   //do map for same names
-      //   $scope.autoMap();
-      // }
-      
     }
 
     $scope.selectProperty = function (info) {
       $scope.selectedProperty = info;
     }
 
-    $scope.selectnewPropTable = function (info) {
+    $scope.selectnewPropTable = function (info, list) {
       $scope.pickedTable = info;
+      $scope.passingList = list;
     }
 
     $scope.addToList = function () {
-      if($scope.pickedTable == 'Price'){
-        if($scope.PricesList == undefined){
-          $scope.PricesList = [];
-        }
-        $scope.PricesList.length++;
-        for(var i = 0; i < $scope.PricesList.length ; i++){   
-          $scope.PricesList[i] = {};
-          $scope.PricesList[i].table = 'Price'; 
-          $scope.PricesList[i].rowId = i+1;     
-        }
+      $scope.passingList.length ++;
+      for(var i = 0; i < $scope.passingList.length ; i++){   
+          $scope.passingList[i] = {};
+          $scope.passingList[i].table = $scope.pickedTable; 
+          $scope.passingList[i].rowId = i+1;     
       }
-      if($scope.pickedTable == 'ProductAttributeValue'){
-        if($scope.ProductAttributeValuesList == undefined){
-          $scope.ProductAttributeValuesList = [];
-        }
-        $scope.ProductAttributeValuesList.length++;
-        for(var i = 0; i < $scope.ProductAttributeValuesList.length ; i++){
-          $scope.ProductAttributeValuesList[i] = {};   
-          $scope.ProductAttributeValuesList[i].table = 'ProductAttributeValue';      
-          $scope.ProductAttributeValuesList[i].rowId = i+1;
-        }
-
-      }
-      if($scope.pickedTable == 'ClassificationAssignment'){
-        if($scope.ClassificationAssignmentsList == undefined){
-          $scope.ClassificationAssignmentsList = [];
-        }
-        $scope.ClassificationAssignmentsList.length++;
-        for(var i = 0; i < $scope.ClassificationAssignmentsList.length ; i++){   
-          $scope.ClassificationAssignmentsList[i] = {};
-          $scope.ClassificationAssignmentsList[i].table = 'ClassificationAssignment';      
-          $scope.ClassificationAssignmentsList[i].rowId = i+1;
-        }
-      }
-      if($scope.pickedTable == 'ProductRelation'){
-        if($scope.ProductRelationsList == undefined){
-          $scope.ProductRelationsList = [];
-        }
-        $scope.ProductRelationsList.length++;
-        for(var i = 0; i < $scope.ProductRelationsList.length ; i++){  
-          $scope.ProductRelationsList[i] = {}; 
-          $scope.ProductRelationsList[i].table = 'ProductRelation';
-          $scope.ProductRelationsList[i].rowId = i+1;      
-        }
-      }
-      if($scope.pickedTable == 'ContractedProduct'){
-        if($scope.ContractedProductList == undefined){
-          $scope.ContractedProductList = [];
-        }
-        $scope.ContractedProductList.length++;
-        for(var i = 0; i < $scope.ContractedProductList.length ; i++){
-          $scope.ContractedProductList[i] = {};  
-          $scope.ContractedProductList[i].table= 'ContractedProduct';  
-          $scope.ContractedProductList[i].rowId = i+1;    
-        }
-      }
-      if($scope.pickedTable == 'DocumentAssociations'){
-        if($scope.DocumentAssociationsList == undefined){
-          $scope.DocumentAssociationsList = [];
-        }
-        $scope.DocumentAssociationsList.length++;
-        for(var i = 0; i < $scope.DocumentAssociationsList.length ; i++){  
-          $scope.DocumentAssociationsList[i] = {};
-          $scope.DocumentAssociationsList[i] = 'DocumentAssociation';
-          $scope.DocumentAssociationsList[i].rowId = i+1;      
-        }
-      }
-
     }
 
     // removing select tables and its properties
@@ -301,10 +225,7 @@ app
           $scope.selectedTableList.splice(id-1, 1);
           updateList($scope.selectedTable, id);
           if($scope.selectedTableList.length == 0) {
-            // $('#SelectId').click(function() {
-            //   $('option:selected', this ).remove();
-            // });
-             // $("#SelectId option:first").remove();
+            $scope.preSelect = true;
           }
         } 
       } else {
@@ -366,8 +287,10 @@ app
       if(($scope.selectedColumn == "gross_price") || ($scope.selectedColumn == "retail_price") 
         || ($scope.selectedColumn == "grossprice") || ($scope.selectedColumn == "retailprice")){
         $scope.pickedTable = "Price";
+        $scope.passingList = $scope.tableLists.PricesList;
       } else {
         $scope.pickedTable = "ProductAttributeValue";
+        $scope.passingList = $scope.tableLists.ProductAttributeValuesList;
       }
         $scope.addToList();
         if($scope.selectedColumn){
@@ -388,13 +311,13 @@ app
                 $scope.tableData[i].aIndex++;
               }
               if($scope.pickedTable == "Price"){
-                $scope.tableData[i].rowId = $scope.PricesList.length;
+                $scope.tableData[i].rowId = $scope.tableLists.PricesList.length;
                 $scope.tableData[i].propName = {};
                 $scope.tableData[i].propName.field = 'priceUnit';
                 $scope.tableData[i].propName.reference = {};
                 $scope.tableData[i].propName.index = null;
               } else {
-                $scope.tableData[i].rowId = $scope.ProductAttributeValuesList.length;
+                $scope.tableData[i].rowId = $scope.tableLists.ProductAttributeValuesList.length;
                 $scope.tableData[i].propName = {};
                 $scope.tableData[i].propName.field = 'attribute';
                 $scope.tableData[i].propName.reference = {};
@@ -407,13 +330,13 @@ app
               $scope.tableData[j].columnName = $scope.selectedColumn;
               $scope.tableData[j].tableName = $scope.pickedTable;
               if($scope.pickedTable == "Price"){
-                $scope.tableData[j].rowId = $scope.PricesList.length;
+                $scope.tableData[j].rowId = $scope.tableLists.PricesList.length;
                 $scope.tableData[j].propName = {};
                 $scope.tableData[j].propName.field = 'priceTypeId';
                 $scope.tableData[j].propName.reference = {};
                 $scope.tableData[j].propName.index = null;
               } else {
-                $scope.tableData[j].rowId = $scope.ProductAttributeValuesList.length;
+                $scope.tableData[j].rowId = $scope.tableLists.ProductAttributeValuesList.length;
                 $scope.tableData[j].propName = {};
                 $scope.tableData[j].propName.field = 'value';
                 $scope.tableData[j].propName.reference = {};
@@ -531,9 +454,9 @@ app
             if (str[0].length >= 3) {
                 str[0] = str[0].replace(/(\d)(?=(\d{2})+$)/g, '$1,');
             }
-            if (str[1] && str[1].length >= 3) {
-                str[1] = str[1].replace(/(\d{2})/g, '$1 ');
-            }
+            // if (str[1] && str[1].length >= 3) {
+            //     str[1] = str[1].replace(/(\d{2})/g, '$1 ');
+            // }
              list[i] = str.join('.');
           }
           if(format == '#.##'){
@@ -766,11 +689,13 @@ app
       if($scope.newMap == true){
         $location.path("#/");
       }
-      $scope.PricesList = [];
-      $scope.ProductAttributeValuesList = [];
-      $scope.ClassificationAssignmentsList = [];
-      $scope.ProductRelationsList = [];
-      $scope.ContractedProductList = [];
+      $scope.tableLists = {
+        "PricesList" : [],
+        "ProductAttributeValuesList" : [],
+        "ClassificationAssignmentsList" : [],
+        "ProductRelationsList" : [],
+        "ContractedProductList" : []
+      }
     } 
 
     $scope.secondStep = function () {
