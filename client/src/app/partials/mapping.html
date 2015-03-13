@@ -47,29 +47,29 @@
 				<select class="mapping-select" id="SelectId" ng-model="table" name="classes" size="20" >
 				<!-- <option value="? string:{{selectedTable}} ?" style="display:none"></option> -->
 				<option value="" style="display:none"></option>
-				<option value="Product" ng-click="selectTable('Product', 'Product')">Product</option>
+				<option ng-click="selectTable('Product', 'Product')">Product</option>
 				<optgroup style="font-style: normal;" label="Prices">
-							<option value="{{pa.table}}" id="com.jcatalog.product.Prices:0" ng-repeat="pa in PricesList track by $index" ng-click="selectTable('Prices', 'Price', $index)">
+							<option id="com.jcatalog.product.Prices:{{$index}}" ng-repeat="pa in PricesList track by $index" ng-click="selectTable('Prices', 'Price', $index, PricesList)">
 								{{pa.table}}({{$index+1}})
 							</option>
 				</optgroup>
 				<optgroup style="font-style: normal;" label="ProductAttributeValues">
-							<option value="{{pav.table}}" id="com.jcatalog.product.ProductAttributeValue:0" ng-repeat="pav in ProductAttributeValuesList track by $index" ng-click="selectTable('ProductAttributeValues', 'ProductAttributeValue', $index)">
+							<option id="com.jcatalog.product.ProductAttributeValue:{{$index}}" ng-repeat="pav in ProductAttributeValuesList track by $index" ng-click="selectTable('ProductAttributeValues', 'ProductAttributeValue', $index, ProductAttributeValuesList)">
 								{{pav.table}}({{$index+1}})
 							</option>
 					</optgroup>
 					<optgroup style="font-style: normal;" label="ClassificationAssignment">
-							<option value="{{cg.table}}" id="com.jcatalog.product.ClassificationAssignment:0" ng-repeat="cg in ClassificationAssignmentsList track by $index" ng-click="selectTable('ClassificationAssignment', 'ClassificationAssignment', $index)">
+							<option id="com.jcatalog.product.ClassificationAssignment:{{$index}}" ng-repeat="cg in ClassificationAssignmentsList track by $index" ng-click="selectTable('ClassificationAssignment', 'ClassificationAssignment', $index, ClassificationAssignmentsList)">
 								{{cg.table}}({{$index+1}})
 							</option>
 					</optgroup>
 					<optgroup style="font-style: normal;" label="ProductRelations">
-							<option value="{{pr.table}}" id="com.jcatalog.product.ProductRelations:0" ng-repeat="pr in ProductRelationsList track by $index" ng-click="selectTable('ProductRelations', 'ProductRelation', $index)">
+							<option id="com.jcatalog.product.ProductRelations:{{$index}}" ng-repeat="pr in ProductRelationsList track by $index" ng-click="selectTable('ProductRelations', 'ProductRelation', $index, ProductRelationsList)">
 								{{pr.table}}({{$index+1}})
 							</option>
 					</optgroup>
 					<optgroup style="font-style: normal;" label="ContractedProduct">
-							<option value="{{cp.table}}" id="com.jcatalog.product.ContractedProduct:0" ng-repeat="cp in ContractedProductList track by $index" ng-click="selectTable('ContractedProduct', 'ContractedProduct',$index)">
+							<option id="com.jcatalog.product.ContractedProduct:{{$index}}" ng-repeat="cp in ContractedProductList track by $index" ng-click="selectTable('ContractedProduct', 'ContractedProduct',$index, ContractedProductList)">
 								{{cp.table}}({{$index+1}})
 							</option>
 					</optgroup>

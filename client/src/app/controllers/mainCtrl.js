@@ -167,10 +167,11 @@ app
         });
     }
 
-    $scope.selectTable = function (tname, otname, rowNo) {
+    $scope.selectTable = function (tname, otname, rowNo, list) {
       getTableData(tname, otname);
       $scope.selectedTable = otname;
       $scope.rowId = rowNo+1;
+      $scope.selectedTableList = list;
       // if($scope.mapDone == true){
       //   //clear selection before auto map
       //   for(var i = 0; i < $scope.columnShowList.length ; i++){   
@@ -297,27 +298,14 @@ app
       if($scope.selectedTable != 'Product'){
         if($scope.selectedTable && $scope.rowId){
           id = $scope.rowId;
-          if($scope.selectedTable == 'Price'){
-            $scope.PricesList.splice(id-1, 1);
-          }
-          if($scope.selectedTable == 'ProductAttributeValue'){
-            $scope.ProductAttributeValuesList.splice(id-1, 1);
-          }
-          if($scope.selectedTable == 'ClassificationAssignment'){
-            $scope.ClassificationAssignmentsList.splice(id-1, 1);
-          }
-          if($scope.selectedTable == 'ProductRelation'){
-            $scope.ProductRelationsList.splice(id-1, 1);
-          }
-          if($scope.selectedTable == 'ContractedProduct'){
-            $scope.ContractedProductList.splice(id-1, 1);
-          }
-          if($scope.selectedTable == 'DocumentAssociation'){
-            $scope.DocumentAssociationsList.splice(id-1, 1);
-          }
+          $scope.selectedTableList.splice(id-1, 1);
           updateList($scope.selectedTable, id);
-          // var opt = "? string:"+$scope.selectedTable+" ?";
-           // $("#SelectId option:selected").remove();
+          if($scope.selectedTableList.length == 0) {
+            // $('#SelectId').click(function() {
+            //   $('option:selected', this ).remove();
+            // });
+             // $("#SelectId option:first").remove();
+          }
         } 
       } else {
         growl.error("You can't delete Product table");
@@ -326,23 +314,7 @@ app
 
     var updateList = function (table, id) {
       var count =0;
-      for (var i = 0; i < $scope.tableData.length ;i++) {
-        if($scope.tableData[i].tableName == table && 
-          $scope.tableData[i].rowId == id) count++;
-      }
-      if(count > 1){
-        for (var i = 0; i < $scope.tableData.length ;i++) {
-          if($scope.tableData[i].tableName == table && 
-            $scope.tableData[i].rowId == id) {
-            var colName = $scope.tableData[i].columnName;
-            var prop = $scope.tableData[i].propName.field;
-            $scope.tableData.splice(i, 1);
-            mappedColumns(colName, true);
-            mappedPropColumns(table, prop);
-          }
-        };
-      } 
-      for (var i = 0; i < $scope.tableData.length ;i++) {
+      for (var i = $scope.tableData.length - 1 ; i >=0 ;i--) {
         if($scope.tableData[i].tableName == table && 
           $scope.tableData[i].rowId == id) {
           var colName = $scope.tableData[i].columnName;
@@ -351,7 +323,7 @@ app
           mappedColumns(colName, true);
           mappedPropColumns(table, prop);
         }
-      };  
+      }; 
       for (var i = 0; i < $scope.tableData.length ;i++) {
         if($scope.tableData[i].tableName == table && 
           $scope.tableData[i].rowId > id) {
@@ -633,8 +605,6 @@ app
     }
 
     var processData = function (allText) {
-      // $scope.secondStep(); 
-      // console.log('pd',$scope.badge.step);
       var result=allText.srcElement.result;
       var allTextLines = result.split('+/\r\n|\n/+');
       var headers = allTextLines[0].split("\n")[0];
@@ -647,7 +617,6 @@ app
           k++;
         }
       };
-      // console.log('dumpTable', dumpTable);
       $scope.importedData = tableData;
       if($scope.selectedOption == '.'){
         if(headers != undefined)
@@ -690,10 +659,8 @@ app
       var name = readFile.name;
       reader.onload = function(e) {
         var data = e.target.result;
-
         /* if binary string, read with type 'binary' */
         var workbook = XLS.read(data, {type: 'binary'});
-
         /* DO SOMETHING WITH workbook HERE */
         var result = {};
         var obj;
@@ -935,7 +902,7 @@ app.directive('context', [
     }
   ]);
 
-
+//directives
 app.directive('ngRightClick', function($parse) {
     return function(scope, element, attrs) {
         var fn = $parse(attrs.ngRightClick);
@@ -975,61 +942,6 @@ app.factory("XLSXReaderService", ['$q', '$rootScope',
         return service;
     }
 ]);
-
-
-// app.directive('dropdownMultiselect', function(){
-//    return {
-//        restrict: 'E',
-//        scope:{           
-//             model: '=',
-//             options: '=',
-//             pre_selected: '=preSelected'
-//        },
-//        template: "<div class='btn-group' data-ng-class='{open: open}'>"+
-//         "<button class='btn btn-default'>Select</button>"+
-//                 "<button class='btn btn-default dropdown-toggle' data-ng-click='open=!open;openDropdown()'><span class='caret'></span></button>"+
-//                 "<ul class='dropdown-menu' aria-labelledby='dropdownMenu'>" + 
-//                     "<li><a data-ng-click='selectAll()'><i class='glyphicon glyphicon-ok-circle'></i>  Check All</a></li>" +
-//                     "<li><a data-ng-click='deselectAll();'><i class='glyphicon glyphicon-remove-circle'></i>  Uncheck All</a></li>" +                    
-//                     "<li class='divider'></li>" +
-//                     "<li data-ng-repeat='option in options'> <a data-ng-click='setSelectedItem()'>{{option.id}}<span data-ng-class='isChecked(option.id)','pull-right'></span></a></li>" +                                        
-//                 "</ul>" +
-//             "</div>" ,
-//        controller: function($scope){
-           
-//            $scope.openDropdown = function(){        
-//                     $scope.selected_items = [];
-//                     for(var i=0; i<$scope.pre_selected.length; i++){                        $scope.selected_items.push($scope.pre_selected[i].id);
-//                     }                                        
-//             };
-           
-//             $scope.selectAll = function () {
-//                 $scope.model = _.pluck($scope.options, 'id');
-//                 console.log($scope.model);
-//             };            
-//             $scope.deselectAll = function() {
-//                 $scope.model=[];
-//                 console.log($scope.model);
-//             };
-//             $scope.setSelectedItem = function(){
-//                 var id = this.option.id;
-//                 if (_.contains($scope.model, id)) {
-//                     $scope.model = _.without($scope.model, id);
-//                 } else {
-//                     $scope.model.push(id);
-//                 }
-//                 console.log($scope.model);
-//                 return false;
-//             };
-//             $scope.isChecked = function (id) {                 
-//                 if (_.contains($scope.model, id)) {
-//                     return 'glyphicon glyphicon-ok pull-right';
-//                 }
-//                 return false;
-//             };                                 
-//        }
-//    } 
-// });
 
 app.controller('confirmationModalInstanceCtrl', function($scope, 
   $modalInstance, table_scope, row_no) {
