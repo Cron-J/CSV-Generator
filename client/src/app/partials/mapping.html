@@ -1,130 +1,131 @@
 <div class="row" ng-hide="isMapSaved">
 	<form class="form-horizontal" role="form" name="mapForm">
-			<div class="form-group">
-				<label for="x" class="col-sm-2 control-label">Mapping Name</label>
-				<div class="col-sm-3">
-					<input name="jobId" class="form-control" placeholder="Choose Mapping Name" id="x" type="text" ng-model="map.name" required>
-					<span style="color:red" ng-show="form-mapForm.$invalid && submitted">please enter mapping name</span>
-				</div>
-			</div>
-		</form>
-		<hr><!-- mapping editor -->
-		<div class="bs-callout bs-callout-info">
-			<p><span style="color:#428bca"><b>Required properties</b> are displayed in blue.</span><br>
-			<span style="color:green"><b>Mapped properties</b> are marked with green color.</span></p>
-		</div>
-		<div class="row">
-			<div class="col-md-3">
-				<h4><a href="#" prev-default>Columns from input file</a> <a class="btn btn-default"><span class="glyphicon glyphicon-question-sign"></span></a></h4>
-			</div>
-			<div class="col-md-4 col-md-offset-2">
-				<h4>Tables <a class="btn btn-default"><span class="glyphicon glyphicon-question-sign"></span></a></h4>
-			</div>
-			<div class="col-md-3">
-				<h4><a href="#">Properties</a></h4>
+		<div class="form-group">
+			<label for="x" class="col-sm-2 control-label">Mapping Name</label>
+			<div class="col-sm-3">
+				<input name="jobId" class="form-control" placeholder="Choose Mapping Name" id="x" type="text" ng-model="map.name" required>
+				<span style="color:red" ng-show="form-mapForm.$invalid && submitted">please enter mapping name</span>
 			</div>
 		</div>
-		<div class="row">
-			<div class="col-md-3">
-				<select class="mapping-select" id="columns1" name="columns" ng-model="column" size="20" ng-click="selectColumn(column)">
-				<option value="" style="display:none">select option</option>
-				<!-- removed from here -->
-				<option  ng-repeat="col in columnShowList" ng-class="{mapped: col.isSelect}">{{col.colName}}</option>
-				</select>
-			</div>
-			<div class="col-md-2">
-				<div class="btn-group btn-group-justified">
-					<a href="" class="btn btn-default" ng-click="mapping();">Map <span class="glyphicon glyphicon-chevron-right"></span></a>
-				</div><br>
-				<div class="btn-group btn-group-justified">
-					<a class="btn btn-default" ng-click="mapAttribute()">Auto Add Attribute <span class="glyphicon glyphicon-chevron-right"></span></a>
-				</div><br>
-				<!-- <div class="btn-group btn-group-justified">
-					<a class="btn btn-default" ng-click="automaticMap()">Automatic Mapping</a>
-				</div> -->
-			</div>
-			<div class="col-md-4">
-				<select class="mapping-select" id="SelectId"  name="classesList" size="20" >
-				<!-- <option value="? string:{{selectedTable}} ?" style="display:none"></option> -->
-				<!-- <option value="" style="display:none" ></option> -->
-				<option value="Product" ng-click="selectTable('Product', 'Product')">Product</option>
-				<optgroup style="font-style: normal;" label="Prices">
-							<option value="{{pa.table}}" id="com.jcatalog.product.Prices:{{$index}}" ng-repeat="pa in tableLists.PricesList track by $index" ng-click="selectTable('Prices', 'Price', $index, tableLists.PricesList)">
-								{{pa.table}}({{$index+1}})
-							</option>
+	</form>
+	<hr><!-- mapping editor -->
+	<div class="bs-callout bs-callout-info">
+		<p><span style="color:#428bca"><b>Required properties</b> are displayed in blue.</span><br>
+		<span style="color:green"><b>Mapped properties</b> are marked with green color.</span></p>
+	</div>
+	<div class="row">
+		<div class="col-md-3">
+			<h4><a href="#" prev-default>Columns from input file</a> <a class="btn btn-default"><span class="glyphicon glyphicon-question-sign"></span></a></h4>
+		</div>
+		<div class="col-md-4 col-md-offset-2">
+			<h4>Tables <a class="btn btn-default"><span class="glyphicon glyphicon-question-sign"></span></a></h4>
+		</div>
+		<div class="col-md-3">
+			<h4><a href="#">Properties</a></h4>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-3">
+			<select class="mapping-select" id="columns1" name="columns" ng-model="column" size="20" ng-click="selectColumn(column)">
+			<option value="" style="display:none">select option</option>
+			<!-- removed from here -->
+			<option  ng-repeat="col in columnShowList" ng-class="{mapped: col.isSelect}">{{col.colName}}</option>
+			</select>
+		</div>
+		<div class="col-md-2">
+			<div class="btn-group btn-group-justified">
+				<a href="" class="btn btn-default" ng-click="mapping();">Map <span class="glyphicon glyphicon-chevron-right"></span></a>
+			</div><br>
+			<div class="btn-group btn-group-justified">
+				<a class="btn btn-default" ng-click="mapAttribute()">Auto Add Attribute <span class="glyphicon glyphicon-chevron-right"></span></a>
+			</div><br>
+			<!-- <div class="btn-group btn-group-justified">
+				<a class="btn btn-default" ng-click="automaticMap()">Automatic Mapping</a>
+			</div> -->
+		</div>
+		<div class="col-md-4">
+			<select class="mapping-select" id="SelectId"  name="classesList" size="20" >
+			<!-- <option value="? string:{{selectedTable}} ?" style="display:none"></option> -->
+			<!-- <option value="" style="display:none" ></option> -->
+			<option value="Product" ng-click="selectTable('Product', 'Product')">Product</option>
+			<optgroup style="font-style: normal;" label="Prices">
+						<option value="{{pa.table}}" id="com.jcatalog.product.Prices:{{$index}}" ng-repeat="pa in tableLists.PricesList track by $index" ng-click="selectTable('Prices', 'Price', $index, tableLists.PricesList)">
+							{{pa.table}}({{$index+1}})
+						</option>
+			</optgroup>
+			<optgroup style="font-style: normal;" label="ProductAttributeValues">
+						<option value="{{pav.table}}" id="com.jcatalog.product.ProductAttributeValue:{{$index}}" ng-repeat="pav in tableLists.ProductAttributeValuesList track by $index" ng-click="selectTable('ProductAttributeValues', 'ProductAttributeValue', $index, tableLists.ProductAttributeValuesList)">
+							{{pav.table}}({{$index+1}})
+						</option>
 				</optgroup>
-				<optgroup style="font-style: normal;" label="ProductAttributeValues">
-							<option value="{{pav.table}}" id="com.jcatalog.product.ProductAttributeValue:{{$index}}" ng-repeat="pav in tableLists.ProductAttributeValuesList track by $index" ng-click="selectTable('ProductAttributeValues', 'ProductAttributeValue', $index, tableLists.ProductAttributeValuesList)">
-								{{pav.table}}({{$index+1}})
-							</option>
-					</optgroup>
-					<optgroup style="font-style: normal;" label="ClassificationAssignment">
-							<option value="{{cg.table}}" id="com.jcatalog.product.ClassificationAssignment:{{$index}}" ng-repeat="cg in tableLists.ClassificationAssignmentsList track by $index" ng-click="selectTable('Product2ClassificationGroup', 'ClassificationAssignment', $index, tableLists.ClassificationAssignmentsList)">
-								{{cg.table}}({{$index+1}})
-							</option>
-					</optgroup>
-					<optgroup style="font-style: normal;" label="ProductRelations">
-							<option value="{{pr.table}}" id="com.jcatalog.product.ProductRelations:{{$index}}" ng-repeat="pr in tableLists.ProductRelationsList track by $index" ng-click="selectTable('ProductRelations', 'ProductRelation', $index, tableLists.ProductRelationsList)">
-								{{pr.table}}({{$index+1}})
-							</option>
-					</optgroup>
-					<optgroup style="font-style: normal;" label="ContractedProduct">
-							<option value="{{cp.table}}" id="com.jcatalog.product.ContractedProduct:{{$index}}" ng-repeat="cp in tableLists.ContractedProductList track by $index" ng-click="selectTable('ContractedProduct', 'ContractedProduct',$index, tableLists.ContractedProductList)">
-								{{cp.table}}({{$index+1}})
-							</option>
-					</optgroup>
-				</select>
-			</div>
+				<optgroup style="font-style: normal;" label="ClassificationAssignment">
+						<option value="{{cg.table}}" id="com.jcatalog.product.ClassificationAssignment:{{$index}}" ng-repeat="cg in tableLists.ClassificationAssignmentsList track by $index" ng-click="selectTable('Product2ClassificationGroup', 'ClassificationAssignment', $index, tableLists.ClassificationAssignmentsList)">
+							{{cg.table}}({{$index+1}})
+						</option>
+				</optgroup>
+				<optgroup style="font-style: normal;" label="ProductRelations">
+						<option value="{{pr.table}}" id="com.jcatalog.product.ProductRelations:{{$index}}" ng-repeat="pr in tableLists.ProductRelationsList track by $index" ng-click="selectTable('ProductRelations', 'ProductRelation', $index, tableLists.ProductRelationsList)">
+							{{pr.table}}({{$index+1}})
+						</option>
+				</optgroup>
+				<optgroup style="font-style: normal;" label="ContractedProduct">
+						<option value="{{cp.table}}" id="com.jcatalog.product.ContractedProduct:{{$index}}" ng-repeat="cp in tableLists.ContractedProductList track by $index" ng-click="selectTable('ContractedProduct', 'ContractedProduct',$index, tableLists.ContractedProductList)">
+							{{cp.table}}({{$index+1}})
+						</option>
+				</optgroup>
+			</select>
+		</div>
 
-			<div class="col-md-3">
-				<select class="mapping-select" id="property" name="properties" size="20" ng-model="prop"  >
-				<option value="" style="display:none">select property</option>
-				<option value="{{info}}" ng-repeat="info in propertyList | orderBy: 'field'" ng-class="{mapped: info.isSelect, required: info.isRequired}" ng-click="selectProperty(info)">{{info.field}}</option>
-				</select>
+		<div class="col-md-3">
+			<select class="mapping-select" id="property" name="properties" size="20" ng-model="prop"  >
+			<option value="" style="display:none">select property</option>
+			<option value="{{info}}" ng-repeat="info in propertyList | orderBy: 'field'" ng-class="{mapped: info.isSelect, required: info.isRequired}" ng-click="selectProperty(info)">{{info.field}}</option>
+			</select>
+		</div>
+	</div>
+	<br>
+	<div class="row">
+		<div class="col-md-3">
+			<div class="btn-group">
+				<button type="button" class="btn btn-default" ng-class="{active: defaultVal.val}" data-toggle="button">Default value</button>
+				<a class="btn btn-default"><span class="glyphicon glyphicon-question-sign"></span></a>
+			</div>
+			<form role="form" style="padding-top: 10px;">
+				<div class="form-group">
+					<input type="text" ng-model="defaultVal.val" class="form-control" ng-change="enteredDefaultVal(defaultVal.val)"  placeholder="">
+				</div>
+			</form>
+		</div>
+		<div class="col-md-4 col-md-offset-2">
+			<div class="btn-group">
+				<div class="btn-group">
+					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+						<span ng-show="pickedTable">{{pickedTable}}</span>
+						<span ng-hide="pickedTable">Select</span>
+						<span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu" role="menu">
+						<li><a ng-click="selectnewPropTable('Price', tableLists.PricesList)">Price</a></li>
+						<li><a ng-click="selectnewPropTable('ProductAttributeValue', tableLists.ProductAttributeValuesList)">ProductAttributeValue</a></li>
+						<li><a ng-click="selectnewPropTable('ClassificationAssignment', tableLists.ClassificationAssignmentsList)">ClassificationAssignment</a></li>
+						<li><a ng-click="selectnewPropTable('ProductRelation', tableLists.ProductRelationsList)">ProductRelation</a></li>
+						<li><a ng-click="selectnewPropTable('ContractedProduct', tableLists.ContractedProductList)">ContractedProduct</a></li>
+					</ul>
+				</div>
+				<a class="btn btn-default" ng-click="addToList()"><span class="glyphicon glyphicon-plus"></span></a>
+				<a class="btn btn-default" ng-click="removeProperty()"><span class="glyphicon glyphicon-remove"></span></a>
+				<div ng-include="'app/partials/confirmationDialogBox.html'"></div>
 			</div>
 		</div>
-		<br>
-		<div class="row">
-			<div class="col-md-3">
-				<div class="btn-group">
-					<button type="button" class="btn btn-default" ng-class="{active: defaultVal.val}" data-toggle="button">Default value</button>
-					<a class="btn btn-default"><span class="glyphicon glyphicon-question-sign"></span></a>
-				</div>
-				<form role="form" style="padding-top: 10px;">
-					<div class="form-group">
-						<input type="text" ng-model="defaultVal.val" class="form-control" ng-change="enteredDefaultVal(defaultVal.val)"  placeholder="">
-					</div>
-				</form>
-			</div>
-			<div class="col-md-4 col-md-offset-2">
-				<div class="btn-group">
-					<div class="btn-group">
-						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-							<span ng-show="pickedTable">{{pickedTable}}</span>
-							<span ng-hide="pickedTable">Select</span>
-							<span class="caret"></span>
-						</button>
-						<ul class="dropdown-menu" role="menu">
-							<li><a ng-click="selectnewPropTable('Price', tableLists.PricesList)">Price</a></li>
-							<li><a ng-click="selectnewPropTable('ProductAttributeValue', tableLists.ProductAttributeValuesList)">ProductAttributeValue</a></li>
-							<li><a ng-click="selectnewPropTable('ClassificationAssignment', tableLists.ClassificationAssignmentsList)">ClassificationAssignment</a></li>
-							<li><a ng-click="selectnewPropTable('ProductRelation', tableLists.ProductRelationsList)">ProductRelation</a></li>
-							<li><a ng-click="selectnewPropTable('ContractedProduct', tableLists.ContractedProductList)">ContractedProduct</a></li>
-						</ul>
-					</div>
-					<a class="btn btn-default" ng-click="addToList()"><span class="glyphicon glyphicon-plus"></span></a>
-					<a class="btn btn-default" ng-click="removeProperty()"><span class="glyphicon glyphicon-remove"></span></a>
-					<div ng-include="'app/partials/confirmationDialogBox.html'"></div>
-				</div>
-			</div>
-			<div class="col-md-3">
-			</div>
+		<div class="col-md-3">
 		</div>
-		<hr><!-- /mapping editor -->
+	</div>
+	<hr><!-- /mapping editor -->
+	<div class="button-container">
 		<div ng-show="tableData.length == 0">
 			No mapped details
 		</div>
-		<div ng-show="tableData.length > 0" class="table-container">
+		<div ng-show="tableData.length > 0">
 			<table class="table" cellspacing="0">
 				<thead>
 					<tr>
@@ -160,6 +161,7 @@
 			<button class="btn btn-primary "  ng-click="secondStep()">Back</button>
       <button class="btn btn-primary"  ng-click="saveMappingStep(map, tableData)">Save Mapping</button>
 		</div>
+	</div>
 </div>
 <div class="row" ng-show="isMapSaved">
   <p>Please specify the mapping before you start the import. If you have already created a valid mapping then you can start import directly.</p>

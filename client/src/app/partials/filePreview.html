@@ -46,59 +46,22 @@
     </div>
   </div>
  
-  <div >
-    <table class="table table-bordered">
-      <thead ng-show="fileStyle.isHeader">
-        <tr>
-          <th ng-repeat="col in columnShowList track by $index">{{col.colName}}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr >
-          <td ng-repeat="row in importedDatar1 track by $index">{{row}}</td>
-        </tr>
-        <tr >
-          <td ng-repeat="row in importedDatar2 track by $index">{{row}}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-<!--   <div ng-show="uploadedFileType == 'xlsx'">
-    <table class="table table-bordered">
-        <thead ng-show="fileStyle.isHeader">
-            <tr>
-                <th ng-repeat="headName in sheets.Sheet1.data[0] track by $index">{{headName}}</th>
-            </tr>
-        </thead>
-        <tbody>
-          <tr>
-              <td ng-repeat="rowData in sheets.Sheet1.data[1] track by $index">{{rowData}}</td>
-          </tr>
-          <tr>
-              <td ng-repeat="rowData in sheets.Sheet1.data[2] track by $index">{{rowData}}</td>
-          </tr>
-        </tbody>
-        
-    </table>
-  </div>
-  <div  ng-show="uploadedFileType == 'xls'">
-    <table class="table table-bordered">
-        <thead ng-show="fileStyle.isHeader">
-            <tr>
-                <th ng-repeat="headName in resultXls.headerColNames track by $index">{{headName}}</th>
-            </tr>
-        </thead>
-        <tbody>
-          <tr>
-              <td ng-repeat="rowData in resultXls.rowOne track by $index">{{rowData}}</td>
-          </tr>
-          <tr>
-              <td ng-repeat="rowData in resultXls.rowTwo track by $index">{{rowData}}</td>
-          </tr>
-        </tbody>       
-    </table> -->
-  </div>
-  <div class="col-lg-2 col-lg-offset-10 btn-set">
+  <table class="table table-bordered">
+    <thead ng-show="fileStyle.isHeader">
+      <tr>
+        <th ng-repeat="col in columnShowList track by $index">{{col.colName}}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr >
+        <td ng-repeat="row in importedDatar1 track by $index">{{row}}</td>
+      </tr>
+      <tr >
+        <td ng-repeat="row in importedDatar2 track by $index">{{row}}</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="col-lg-2 col-lg-offset-10 btn-set button-container">
     <button class="btn btn-primary"  ng-click="firstStep()">Back</button>
     <button class="btn btn-primary"  ng-click="thirdStep(fileStyle)">Next</button>
   </div>
