@@ -44,10 +44,10 @@
 				</div> -->
 			</div>
 			<div class="col-md-4">
-				<select class="mapping-select" id="SelectId" ng-model="table" name="classes" size="20" >
+				<select class="mapping-select" id="SelectId"  name="classesList" size="20" >
 				<!-- <option value="? string:{{selectedTable}} ?" style="display:none"></option> -->
-				<option value="" style="display:none" ></option>
-				<option value="Product" ng-click="selectTable('Product', 'Product')" ng-selected="preSelect">Product</option>
+				<!-- <option value="" style="display:none" ></option> -->
+				<option value="Product" ng-click="selectTable('Product', 'Product')">Product</option>
 				<optgroup style="font-style: normal;" label="Prices">
 							<option value="{{pa.table}}" id="com.jcatalog.product.Prices:{{$index}}" ng-repeat="pa in tableLists.PricesList track by $index" ng-click="selectTable('Prices', 'Price', $index, tableLists.PricesList)">
 								{{pa.table}}({{$index+1}})
