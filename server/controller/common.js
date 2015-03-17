@@ -1,76 +1,36 @@
 var Joi = require('joi'),
     Boom = require('boom'),
-    Product = require('../model/product').Product,
-    Price = require('../model/price').Price,
-    ProductAttributeValue = require('../model/product-attribute-value').ProductAttributeValue,
-    ProductRelation = require('../model/product-relation').ProductRelation,
-    ContractedProduct = require('../model/contracted-product').ContractedProduct,
-    ProductDocAssociation = require('../model/product-doc-association').ProductDocAssociation,
-    Product2ClassificationGroup = require('../model/product-classification-group').Product2ClassificationGroup;
-
+    Product = require('../model/product').Product;
 
 exports.getAll = {
   handler: function (request, reply) {
-    var collectionName = request.params.table ;
-    var obj = {};
-    var schemaPath;
-    var collectionName;
+    var obj = [];
+    var schemaPath = Product.schema.paths;
 
-    switch (collectionName) {
-      case 'Product':
-            collectionName = "Product";
-            schemaPath = Product.schema.paths;
-            break;
-      case 'Prices':
-            collectionName = "Price";
-            schemaPath = Price.schema.paths;
-            break;
-      case 'ProductAttributeValues':
-            collectionName = "ProductAttributeValue";
-            schemaPath = ProductAttributeValue.schema.paths;
-            break;
-      case 'ProductRelations':
-            collectionName = "ProductRelation";
-            schemaPath = ProductRelation.schema.paths;
-            break;
-      case 'ContractedProduct':
-            collectionName = "ContractedProduct";
-            schemaPath = ContractedProduct.schema.paths;
-            break;
-      case 'Product2ClassificationGroup':
-            collectionName = "Product2ClassificationGroup";
-            schemaPath = Product2ClassificationGroup.schema.paths;
-            break;
-    }
-
-    obj[collectionName] = []
     for (var path in schemaPath){
       if(path === '_id' || path === '__v' || path === 'createdBy' || path === 'updatedBy' || path === 'updatedAt' || path === 'createdAt') continue;
 
       var data = {};
-      data.field = path;
-      data.index = schemaPath[path]._index;
-      data.instance = schemaPath[path].instance;
-      if(schemaPath[path].isRequired != undefined) data.isRequired = schemaPath[path].isRequired;
-      
-      /*
-      if(schemaPath[path].options.ref != undefined) data.reference.ref = schemaPath[path].options.ref
-      if(schemaPath[path].instance != undefined) data.instance = schemaPath[path].instance
-      if(schemaPath[path].caster != undefined){
-        data.instance = schemaPath[path].caster.instance;
-        data.reference.ref = schemaPath[path].caster.options.ref;
-        data.reference.isArray = "true";
+      data.field = path;    
+
+      if(schemaPath[path].schema != undefined){
+        data.values = [];
+        for (var path1 in schemaPath[path].schema.paths){
+            if(path1 === '_id' || path1 === '__v' || path1 === 'createdBy' || path1 === 'updatedBy' || path1 === 'updatedAt' || path1 === 'createdAt') continue;
+              var data1 = {};
+              data1.field = schemaPath[path].schema.paths[path1].path;
+              data1.index = schemaPath[path].schema.paths[path1]._index;
+              data1.instance = schemaPath[path].schema.paths[path1].instance;
+              data.values.push(data1);
+        }
       }
-      */
-
-      if(schemaPath[path].options.ref != undefined) continue;
-
-      if(schemaPath[path].caster != undefined){
-          if (schemaPath[path].caster.options.ref != undefined) continue;
-          data.isArray = true;
+      else{
+        data.index = schemaPath[path]._index;
+        data.isRequired = schemaPath[path].isRequired;
+        data.instance = schemaPath[path].instance;
       }
 
-      obj[collectionName].push(data);
+      obj.push(data);
       
     }
       reply(obj);
