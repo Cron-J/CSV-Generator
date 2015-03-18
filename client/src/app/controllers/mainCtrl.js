@@ -115,48 +115,81 @@ app
       $scope.selectedDefaultVal = info;
     }
 
-    var getTableData = function (table, originalTName){
-        $http.get('/getAttributes/'+table) 
+    var getPropertyList = function () {
+      $scope.property = {
+        "productPropertyList": [],
+        "pricePropertyList": [],
+        "attributePropertyList": [],
+        "prPropertyList": [],
+        "cpPropertyList": [],
+        "cgaPropertyList": []
+      };
+      $http.get('/getAttributes') 
         .success(function(data){
           if(data){
-            switch (table) {
-              case 'Product':
-                $scope.propertyList = data.Product;
-                break;
-              case 'Prices':
-                $scope.propertyList = data.Price;
-                break;
-              case 'ProductAttributeValues':
-                $scope.propertyList = data.ProductAttributeValue;
-                break;
-              case 'ProductRelations':
-                $scope.propertyList = data.ProductRelation;
-                break;
-              case 'ContractedProduct':
-                $scope.propertyList = data.ContractedProduct;
-                break;
-              case 'Product2ClassificationGroup':
-                $scope.propertyList = data.Product2ClassificationGroup;
-                break;
-              return $scope.propertyList;
-            }
-            if($scope.propertyList){
-              // console.log('$scope.propertyList1', $scope.propertyList);
-              var modifiedList = $scope.propertyList;
-              $scope.propertyList = [];
-              for(var i = 0; i < modifiedList.length ; i++){  
-                $scope.propertyList[i] = {};
-                $scope.propertyList[i] = modifiedList[i];
-                $scope.propertyList[i].isSelect = false;
+            var k = 0;
+            for (var i = 0; i < data.length; i++) {
+              if(!data[i].values){
+                $scope.property.productPropertyList[k] = data[i];
+                k++;
               }
-              // console.log('$scope.propertyList', $scope.propertyList);
-              mappedPropColumns(originalTName);
-            }
-          } 
+              if(data[i].field == 'prices'){
+                $scope.property.pricePropertyList = data[i].values;
+              }
+              if(data[i].field == 'attributeValues'){
+                $scope.property.attributePropertyList = data[i].values;
+              }
+              if(data[i].field == 'productRelations'){
+                $scope.property.prPropertyList = data[i].values;
+              }
+              if(data[i].field == 'contractedProducts'){
+                $scope.property.cpPropertyList = data[i].values;
+              }
+              if(data[i].field == 'classificationGroupAssociations'){
+                $scope.property.cgaPropertyList = data[i].values;
+              }
+            };
+          }
         })
         .error(function(){
           growl.error("Unable to get attributes");
         });
+    }
+
+    var getTableData = function (table, originalTName){
+        switch (table) {
+          case 'product':
+            $scope.propertyList = $scope.property.productPropertyList;
+            break;
+          case 'prices':
+            $scope.propertyList = $scope.property.pricePropertyList;
+            break;
+          case 'attributeValues':
+            $scope.propertyList = $scope.property.attributePropertyList;
+            break;
+          case 'productRelations':
+            $scope.propertyList = $scope.property.prPropertyList;
+            break;
+          case 'contractedProducts':
+            $scope.propertyList = $scope.property.cpPropertyList;
+            break;
+          case 'classificationGroupAssociations':
+            $scope.propertyList = $scope.property.cgaPropertyList;
+            break;
+        }
+        if($scope.propertyList){
+          // console.log('$scope.propertyList1', $scope.propertyList);
+          var modifiedList = $scope.propertyList;
+          $scope.propertyList = [];
+          for(var i = 0; i < modifiedList.length ; i++){  
+            $scope.propertyList[i] = {};
+            $scope.propertyList[i] = modifiedList[i];
+            $scope.propertyList[i].isSelect = false;
+          }
+          // console.log('$scope.propertyList', $scope.propertyList);
+          mappedPropColumns(originalTName);
+        } 
+        
     }
 
     $scope.selectTable = function (tname, otname, rowNo, list) {
@@ -281,10 +314,10 @@ app
     $scope.mapAttribute = function () {
       if(($scope.selectedColumn == "gross_price") || ($scope.selectedColumn == "retail_price") 
         || ($scope.selectedColumn == "grossprice") || ($scope.selectedColumn == "retailprice")){
-        $scope.pickedTable = "Price";
+        $scope.pickedTable = "price";
         $scope.passingList = $scope.tableLists.PricesList;
       } else {
-        $scope.pickedTable = "ProductAttributeValue";
+        $scope.pickedTable = "attributeValue";
         $scope.passingList = $scope.tableLists.ProductAttributeValuesList;
       }
         $scope.addToList();
@@ -305,7 +338,7 @@ app
               if($scope.tableData[i].tableName == $scope.pickedTable){
                 $scope.tableData[i].aIndex++;
               }
-              if($scope.pickedTable == "Price"){
+              if($scope.pickedTable == "price"){
                 $scope.tableData[i].rowId = $scope.tableLists.PricesList.length;
                 $scope.tableData[i].propName = {};
                 $scope.tableData[i].propName.field = 'priceUnit';
@@ -324,7 +357,7 @@ app
               $scope.tableData[j] = angular.copy(dummy);
               $scope.tableData[j].columnName = $scope.selectedColumn;
               $scope.tableData[j].tableName = $scope.pickedTable;
-              if($scope.pickedTable == "Price"){
+              if($scope.pickedTable == "price"){
                 $scope.tableData[j].rowId = $scope.tableLists.PricesList.length;
                 $scope.tableData[j].propName = {};
                 $scope.tableData[j].propName.field = 'priceTypeId';
@@ -695,11 +728,12 @@ app
 
     $scope.secondStep = function () {
       $scope.badge.step = "two";
-      $scope.selectTable('Product');
+      getPropertyList();
     }
 
     $scope.thirdStep = function (info) {
       $scope.badge.step = "three";
+      $scope.selectTable('product');
       if($scope.tableData == undefined){
         $scope.tableData = [];
       }
