@@ -9,7 +9,7 @@ var mongoose = require('mongoose'),
 var MappingSchema = new Schema({
 
   /** tenant id is indexed */
-  tenantId : { type: String, required:true, index: true },
+  tenantId : { type: String, required: true, index: true },
 
   mappingName : { type: String, required: true },
 
@@ -23,6 +23,14 @@ var MappingSchema = new Schema({
  * Date when the ContractedProduct was changed last time.
  */
 MappingSchema.plugin(timestamps);
+
+MappingSchema.statics.createMapping = function(mapping, callback) {
+    this.create(mapping, callback);
+};
+
+MappingSchema.statics.getMappingList = function(tenantId, callback) {
+    this.find({'tenantId': tenantId}, {mappingName: 1}, callback);
+};
 
 // export
 var mapping = mongoose.model('Mapping', MappingSchema);
