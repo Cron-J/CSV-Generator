@@ -13,14 +13,6 @@ var mapinfo = {
     },
 
     /** 
-      Building. Collection name where data is to be put.
-    */
-
-    collectionName: {
-        type: String
-    },
-
-    /** 
       transformations. transformation applied on fields.
     */
 
@@ -28,8 +20,19 @@ var mapinfo = {
         type: String
     }],
 
-    
-    fieldDetail: {
+    field: {
+        type: String
+    },
+
+    values: [{
+     
+        userFieldName: {
+            type: String
+        },
+
+        transformations: [{
+            type: String
+        }],
 
         field: {
             type: String
@@ -43,22 +46,27 @@ var mapinfo = {
             type: String
         },
 
-        isArray: {
-            type: String,
-            default: false
-        },
-
         isRequired: {
             type: String,
             default: false
         }
+    }],
 
-    }   
+    index: {
+        type: Boolean
+    },
 
-   
+    instance: {
+        type: String
+    },
+
+    isRequired: {
+        type: String,
+        default: false
+    }
 };
 
 
 module.exports = {
-    Mapinfo : mapinfo
+    Mapinfo: mapinfo
 }
