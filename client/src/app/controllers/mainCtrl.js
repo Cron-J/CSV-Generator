@@ -706,7 +706,7 @@ app
       }
     }
 
-    //save maaping
+    //save maping
     var saveMapping = function (map){
         $http.post('/createMapping', map)
           .success(function(data){
@@ -716,6 +716,29 @@ app
           .error(function(){
             growl.error("Unable to save Mapping");
           });
+    }
+
+    //getMappingList
+    var getMappingList = function (tenantId){
+      $http.get('/getMappingList/'+ tenantId)
+        .success(function(data){
+          $scope.mappingList = data;
+        })
+        .error(function(){
+          growl.error("Unable to get mapping list");
+        });
+    }
+
+    //getMappedJson
+    var getMappingJson = function (tenantId, mappingId) {
+      $http.get('/getMappingData/'+tenantId+'/'+mappingId)
+        .success(function(data){
+          $scope.mappedJson = data;
+          console.log("mappingId",$scope.mappedJson);
+        })
+        .error(function(){
+          growl.error("Unable to get mapping list");
+        });
     }
 
     //Steps involved
@@ -790,6 +813,8 @@ app
             saveMapping(mappingDetails);
             //reset newmap
             $scope.newMap = false;
+            //get list
+            getMappingList(1);
           } else {
             growl.error("Please map all required fields before trying to save mapping");
           }        
@@ -805,8 +830,9 @@ app
       $scope.newMap = true;
     }
 
-    $scope.fourthStep = function () {
+    $scope.fourthStep = function (selectedMapping) {
       $scope.badge.step = "four";
+      getMappingJson(1, selectedMapping);
     }
 
     _scope.init();
@@ -899,6 +925,26 @@ app.filter('smallize', function() {
     if (input!=null)
     return input.substring(0,1).toLowerCase()+input.substring(1);
   }
+});
+app.filter('prettify', function () {
+   return function(json, scope) {
+        json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+            var cls = 'number';
+            if (/^"/.test(match)) {
+                if (/:$/.test(match)) {
+                    cls = 'key';
+                } else {
+                    cls = 'string';
+                }
+            } else if (/true|false/.test(match)) {
+                cls = 'boolean';
+            } else if (/null/.test(match)) {
+                cls = 'null';
+            }
+            return '<span class="' + cls + '">' + match + '</span>';
+        });
+    }
 });
 
 //factory

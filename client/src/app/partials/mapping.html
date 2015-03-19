@@ -146,7 +146,7 @@
 							<div class="truncate" popover-placement="top" popover="{{row.transVal}}" popover-trigger="mouseenter">{{row.transVal}}</div>
        				<button class="btn btn-primary btn-xxs" context="context1" ng-click="saveIndex($index)"><span class="glyphicon glyphicon-edit"></span></button>
        			</td>
-						<td><span ng-show="row.tableName != 'Product'">product.</span>{{row.tableName}}<span ng-show="row.rowId > 0">({{row.rowId}})</span>.{{row.propName.field}}</td>
+						<td><span ng-show="row.tableName != 'product'">product.</span>{{row.tableName}}<span ng-show="row.rowId > 0">({{row.rowId}})</span>.{{row.propName.field}}</td>
 						<td>{{row.propName.field}}</td>
 						<td>{{row.aIndex}}</td>
 						<td>
@@ -170,7 +170,7 @@
       <label>Mapping Id</label>
     </div>
     <div class="col-lg-3">
-      <select class="form-control" ng-model="selectedMapping">
+      <select class="form-control" ng-model="selectedMapping" ng-options="item._id as item.mappingName for item in mappingList">
         <option value="">Select mapping id</option>
       </select>
     </div>
@@ -179,9 +179,9 @@
       <button class="btn btn-primary btn-sm" ng-click="newMapping();firstStep()">Create Mapping</button>
     </div>
   </div>
-  <div class="row">
+  <div class="row" ng-show="selectedMapping">
 	  <div class="col-lg-12 btn-set">
-	  	<button class="btn btn-primary "  ng-click="fourthStep()">Next</button>
+	  	<button class="btn btn-primary" ng-click="fourthStep(selectedMapping)">Next</button>
 	  </div>
   </div>
 </div>
