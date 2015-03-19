@@ -77,7 +77,7 @@
 		</div>
 
 		<div class="col-md-3">
-			<select class="mapping-select" id="property" name="properties" size="20" ng-model="prop"  >
+			<select class="mapping-select" id="property" name="properties" size="20"  >
 			<option value="" style="display:none">select property</option>
 			<option value="{{info}}" ng-repeat="info in propertyList | orderBy: 'field'" ng-class="{mapped: info.isSelect, required: info.isRequired}" ng-click="selectProperty(info)">{{info.field}}</option>
 			</select>
