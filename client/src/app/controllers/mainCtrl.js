@@ -340,16 +340,20 @@ app
               }
               if($scope.pickedTable == "price"){
                 $scope.tableData[i].rowId = $scope.tableLists.PricesList.length;
-                $scope.tableData[i].propName = {};
-                $scope.tableData[i].propName.field = 'priceUnit';
-                $scope.tableData[i].propName.reference = {};
-                $scope.tableData[i].propName.index = null;
+                for(var q = 0 ; q < $scope.property.pricePropertyList.length ; q++) {
+                  if( $scope.property.pricePropertyList[q].field == 'priceUnit'){
+                    $scope.tableData[i].propName = {};
+                    $scope.tableData[i].propName = $scope.property.pricePropertyList[q];
+                  }
+                }
               } else {
                 $scope.tableData[i].rowId = $scope.tableLists.ProductAttributeValuesList.length;
-                $scope.tableData[i].propName = {};
-                $scope.tableData[i].propName.field = 'attribute';
-                $scope.tableData[i].propName.reference = {};
-                $scope.tableData[i].propName.index = null;
+                for(var q = 0 ; q < $scope.property.attributePropertyList.length ; q++){
+                  if( $scope.property.attributePropertyList[q].field == 'attribute'){
+                    $scope.tableData[i].propName = {};
+                    $scope.tableData[i].propName = $scope.property.attributePropertyList[q];
+                  }
+                }
               }
             }
             if(j == k-1){
@@ -359,16 +363,20 @@ app
               $scope.tableData[j].tableName = $scope.pickedTable;
               if($scope.pickedTable == "price"){
                 $scope.tableData[j].rowId = $scope.tableLists.PricesList.length;
-                $scope.tableData[j].propName = {};
-                $scope.tableData[j].propName.field = 'priceTypeId';
-                $scope.tableData[j].propName.reference = {};
-                $scope.tableData[j].propName.index = null;
+                for(var q=0 ; q < $scope.property.pricePropertyList.length ; q++){
+                  if( $scope.property.pricePropertyList[q].field == 'priceTypeId'){
+                    $scope.tableData[j].propName = {};
+                    $scope.tableData[j].propName = $scope.property.pricePropertyList[q];
+                  }
+                }
               } else {
                 $scope.tableData[j].rowId = $scope.tableLists.ProductAttributeValuesList.length;
-                $scope.tableData[j].propName = {};
-                $scope.tableData[j].propName.field = 'value';
-                $scope.tableData[j].propName.reference = {};
-                $scope.tableData[j].propName.index = null;
+                for(var q=0 ; q < $scope.property.attributePropertyList.length; q++){
+                  if( $scope.property.attributePropertyList[q].field == 'value'){
+                    $scope.tableData[j].propName = {};
+                    $scope.tableData[j].propName = $scope.property.attributePropertyList[q];
+                  }
+                }
               }
               if($scope.tableData[j].tableName == $scope.pickedTable){
                 $scope.tableData[j].aIndex = $scope.tableData[j].aIndex+2;
@@ -679,8 +687,8 @@ app
       var k = 0;
       for (var i = 0; i < $scope.propertyList.length; i++) {
         if($scope.propertyList[i].isRequired){
-          reqFieldList.length++;
           reqFieldList[k] = $scope.propertyList[i].field;
+          k++;
         }
       };
       var clength = 0;
@@ -755,12 +763,28 @@ app
             mappingDetails.mappingName = map.name;
             mappingDetails.mappingInfo = [];
             for (var i = 0; i < tableInfo.length; i++) {
-              mappingDetails.mappingInfo[i] = {
-                "userFieldName": tableInfo[i].columnName,
-                "collectionName": tableInfo[i].tableName,
-                "transformations": tableInfo[i].transformations,
-                "fieldDetail": tableInfo[i].propName
-              };
+              if(tableInfo[i].tableName == 'product'){
+                 mappingDetails.mappingInfo[i] = {
+                  "userFieldName": tableInfo[i].columnName,
+                  "transformations": tableInfo[i].transformations,
+                  "field": tableInfo[i].propName.field,
+                  "index": tableInfo[i].propName.index,
+                  "instance": tableInfo[i].propName.instance,
+                  "isRequired": tableInfo[i].propName.isRequired
+                };
+              } else {
+                mappingDetails.mappingInfo[i] = {
+                  "field": tableInfo[i].tableName+"s",
+                  "values": [{
+                    "userFieldName": tableInfo[i].columnName,
+                    "transformations": tableInfo[i].transformations,
+                    "field": tableInfo[i].propName.field,
+                    "index": tableInfo[i].propName.index,
+                    "instance": tableInfo[i].propName.instance,
+                    "isRequired": tableInfo[i].propName.isRequired
+                  }]
+                };
+              }
             };
             // console.log('mappingDetails', mappingDetails);
             saveMapping(mappingDetails);
