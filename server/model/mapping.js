@@ -32,6 +32,10 @@ MappingSchema.statics.getMappingList = function(tenantId, callback) {
     this.find({'tenantId': tenantId}, {mappingName: 1}, callback);
 };
 
+MappingSchema.statics.getMappedData = function(tenantId, mappingId, callback) {
+    this.find({_id:mappingId,'tenantId': tenantId}, callback);
+};
+
 // export
 var mapping = mongoose.model('Mapping', MappingSchema);
 

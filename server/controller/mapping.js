@@ -25,3 +25,15 @@ exports.getMappingList = {
     	});
     }
 }
+
+exports.getMappingData = {
+    handler: function(request, reply) {
+    	Mapping.getMappedData(request.params.tenantId, request.params.mappingId, function(err, mappings){
+    		if (!err) {
+	            reply(mappings);
+	        } else {
+	             reply(Boom.forbidden(err));
+	        }
+    	});
+    }
+}
