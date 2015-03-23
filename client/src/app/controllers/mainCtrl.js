@@ -427,23 +427,25 @@ app
     }
 
     var changeDateFormat = function (list, format) {
-      for (var i = 0; i < list.length; i++) {
-        if(isNaN(list[i])) {
-          var d = new Date(list[i]);
-          if(d != "Invalid Date"){
-            var date = d.getDate();
-            if(date < 10) date = "0"+date;
-            var month = d.getMonth()+1;
-            if(month < 10) month = "0"+month;
-            var year = d.getFullYear();
-            if(format == "MM/dd/yyyy")
-              list[i] = month+"/"+date+"/"+year;
-            else
-              list[i] = date+"-"+month+"-"+year;
+      if(list){
+        for (var i = 0; i < list.length; i++) {
+          if(isNaN(list[i])) {
+            var d = new Date(list[i]);
+            if(d != "Invalid Date"){
+              var date = d.getDate();
+              if(date < 10) date = "0"+date;
+              var month = d.getMonth()+1;
+              if(month < 10) month = "0"+month;
+              var year = d.getFullYear();
+              if(format == "MM/dd/yyyy")
+                list[i] = month+"/"+date+"/"+year;
+              else
+                list[i] = date+"-"+month+"-"+year;
+            }
           }
-        }
-      };
-      return list;
+        };
+        return list;
+      }
     }
 
     $scope.selectedNumberFormat = function (format) {
@@ -548,24 +550,39 @@ app
         }
       };
       $scope.importedData = tableData;
+      
+      if(headers == "" && dumpTable[1] == undefined){
+        growl.error('Empty file is uploaded please upload another file');
+        $scope.stopStep = true;
+      }
+      if (headers != "" && dumpTable[1] == undefined) {
+         growl.warning('There are no data rows');
+         $scope.stopStep = false;
+      }
       if($scope.selectedOption == '.'){
-        if(headers != undefined)
+        if(headers != "") {
           $scope.columnList = headers.split(".");
-        if(dumpTable[1] != undefined)
+          $scope.stopStep = false;
+        }
+        if(dumpTable[1] != undefined) {
           $scope.importedDatar1 = dumpTable[1].split(".");
-        if(dumpTable[2] != undefined)
-          $scope.importedDatar2 = dumpTable[2].split(".");
           $scope.orginalImportedDatar1 =dumpTable[1].split(".");
+        }
+        if(dumpTable[2] != undefined) {
+          $scope.importedDatar2 = dumpTable[2].split(".");
           $scope.orginalImportedDatar2 = dumpTable[2].split(".");
+        }
       } else {
         if(headers != undefined)
           $scope.columnList = headers.split(",");
-        if(dumpTable[1] != undefined)
+        if(dumpTable[1] != undefined) {
           $scope.importedDatar1 = dumpTable[1].split(",");
-        if(dumpTable[2] != undefined)
+          $scope.orginalImportedDatar1 = dumpTable[1].split(",");
+        }
+        if(dumpTable[2] != undefined) {
           $scope.importedDatar2 = dumpTable[2].split(",");
-        $scope.orginalImportedDatar1 = dumpTable[1].split(",");
-        $scope.orginalImportedDatar2 = dumpTable[2].split(",");
+          $scope.orginalImportedDatar2 = dumpTable[2].split(",");
+        }
       }
       // loading columns
       loadingColumns();
@@ -593,20 +610,34 @@ app
         var workbook = XLS.read(data, {type: 'binary'});
         /* DO SOMETHING WITH workbook HERE */
         var result = {};
-        var obj;
-        workbook.SheetNames.forEach(function(sheetName) {
+        var sheetName = workbook.SheetNames[0];
+
+        // workbook.SheetNames.forEach(function(sheetName) {
             var roa = XLS.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
             if (roa) {
                 $scope.resultXls = roa;
             }
-        }); 
-        $scope.columnList = $scope.resultXls.headerColNames;
-        $scope.importedDatar1 = $scope.resultXls.rowOne;
-        $scope.importedDatar2 = $scope.resultXls.rowTwo;
-        $scope.orginalImportedDatar1 = $scope.resultXls.rowOne;
-        $scope.orginalImportedDatar2 = $scope.resultXls.rowTwo;
-        loadingColumns();
-        $scope.selectedDateFormat('dd-MM-yyyy');   
+        // }); 
+        if($scope.resultXls.headerColNames){
+          $scope.stopStep = false;
+          $scope.columnList = $scope.resultXls.headerColNames;
+          if($scope.resultXls.rowOne.length > 0) { 
+            $scope.orginalImportedDatar1 = $scope.resultXls.rowOne;
+            $scope.importedDatar1 = $scope.orginalImportedDatar1;
+          } else {
+            growl.warning('There are no data rows');
+          }
+          if($scope.resultXls.rowTwo) { 
+            $scope.orginalImportedDatar2 = $scope.resultXls.rowTwo;
+            $scope.importedDatar2 = $scope.orginalImportedDatar2;
+          }
+          loadingColumns();
+          $scope.selectedDateFormat('dd-MM-yyyy');
+        } else {
+          $scope.stopStep = true;
+          growl.error('Empty file is uploaded please upload another file');
+        }
+
       }
         reader.readAsBinaryString(readFile);
         $scope.secondStep();
@@ -640,12 +671,23 @@ app
             $scope.isProcessing = true;
             XLSXReaderService.readFile($scope.excelFile, $scope.showPreview, $scope.showJSONPreview).then(function(xlsxData) {
                 $scope.sheets = xlsxData.sheets;
-                $scope.columnList = $scope.sheets.Sheet1.data[0];
-                $scope.orginalImportedDatar1 = $scope.sheets.Sheet1.data[1];
-                $scope.orginalImportedDatar2 = $scope.sheets.Sheet1.data[2];
-                $scope.importedDatar1 = $scope.sheets.Sheet1.data[1];
-                $scope.importedDatar2 = $scope.sheets.Sheet1.data[2];
-                loadingColumns();
+                if($scope.sheets.Sheet1.data.length > 0) {
+                  $scope.stopStep = false;
+                  $scope.columnList = $scope.sheets.Sheet1.data[0];
+                  if($scope.sheets.Sheet1.data.length > 1) {
+                    $scope.orginalImportedDatar1 = $scope.sheets.Sheet1.data[1];
+                    $scope.importedDatar1 = $scope.orginalImportedDatar1;
+                    $scope.orginalImportedDatar2 = $scope.sheets.Sheet1.data[2];
+                    $scope.importedDatar2 = $scope.orginalImportedDatar2;
+                  } else {
+                    growl.warning('There are no data rows');
+                  }
+                  loadingColumns();
+                }
+                else {
+                  $scope.stopStep = true;
+                  growl.error('Empty file is uploaded please upload another file');
+                }
                 $scope.selectedDateFormat('dd-MM-yyyy');
                 $scope.isProcessing = false;
             });
@@ -731,6 +773,10 @@ app
     $scope.secondStep = function () {
       $scope.badge.step = "two";
       getPropertyList();
+    }
+
+    $scope.reloadStep = function () {
+      $location.path("#/");
     }
 
     $scope.thirdStep = function (info) {

@@ -45,7 +45,7 @@
       </form>
     </div>
   </div>
- 
+
   <table class="table table-bordered">
     <thead ng-show="fileStyle.isHeader">
       <tr>
@@ -61,8 +61,9 @@
       </tr>
     </tbody>
   </table>
-  <div class="col-lg-2 col-lg-offset-10 btn-set button-container">
+  <div class="col-lg-3 col-lg-offset-9 btn-set button-container">
     <button class="btn btn-primary"  ng-click="firstStep()">Back</button>
-    <button class="btn btn-primary"  ng-click="thirdStep(fileStyle)">Next</button>
+    <button class="btn btn-primary"  ng-show="!stopStep" ng-click="thirdStep(fileStyle)">Next</button>
+    <button class="btn btn-primary"  ng-show="stopStep" ng-click="reloadStep()">Upload File</button>
   </div>
 </div>
