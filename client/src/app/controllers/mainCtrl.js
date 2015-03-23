@@ -74,43 +74,6 @@ app
       } 
     }
 
-    $scope.onLoadMap = function () {
-      var list = getTableData('Prices');
-      addRows(list, 'Prices');
-      list = getTableData('ProductAttributeValues');
-      addRows(list, 'ProductAttributeValues');
-      list = getTableData('ClassificationAssignment');
-      addRows(list, 'ClassificationAssignment');
-      list = getTableData('ContractedProduct');
-      addRows(list, 'ContractedProduct');
-      list = getTableData('ProductRelations');
-      addRows(list, 'ProductRelations');
-      list = getTableData('Product');
-      addRows(list, 'Product');
-
-    }
-
-    var addRows = function (list, tableName) {
-      if(list != undefined){
-        for(var j = 0; j < $scope.columnShowList.length ; j++){
-          for(var i = 0; i < list.length ; i++){
-            if(list[i] == $scope.columnShowList[j].colName) {
-              //table data
-              if($scope.tableData == undefined)
-                $scope.tableData = [];
-              var k = $scope.tableData.length++;
-              $scope.tableData[k] = {};
-              $scope.tableData[k].columnName = $scope.columnShowList[j].colName;
-              $scope.tableData[k].propName = $scope.columnShowList[j].colName;
-              $scope.tableData[k].quotes = false;
-              $scope.tableData[k].tableName = tableName;
-              $scope.tableData[k].aIndex = 1;
-            }
-          }
-        }
-      }
-    }
-
     $scope.enteredDefaultVal = function (info) {
       $scope.selectedDefaultVal = info;
     }
@@ -309,89 +272,97 @@ app
         $scope.selectedTable = undefined;
         $scope.selectedProperty = undefined;
       }
+      else {
+        growl.error('Select column, table and property names to map');
+      }  
     }
 
     $scope.mapAttribute = function () {
-      if(($scope.selectedColumn == "gross_price") || ($scope.selectedColumn == "retail_price") 
-        || ($scope.selectedColumn == "grossprice") || ($scope.selectedColumn == "retailprice")){
-        $scope.pickedTable = "price";
-        $scope.passingList = $scope.tableLists.PricesList;
-      } else {
-        $scope.pickedTable = "attributeValue";
-        $scope.passingList = $scope.tableLists.ProductAttributeValuesList;
-      }
-        $scope.addToList();
-        if($scope.selectedColumn){
-          if($scope.tableData == undefined){
-            $scope.tableData = [];
-          } 
-          var dummy = {"columnName": null, "propName": null, 
-                          "tableName": null, "aIndex": 0, "quotes": false, "rowId":0, "ma":true };
-          var i = $scope.tableData.length++;
-          var j = $scope.tableData.length++;
-          for(var k = $scope.tableData.length ; k > 0; k--){
-            if(i == k-2){
-              $scope.tableData[i] = angular.copy(dummy);
-              $scope.tableData[i].columnName = $scope.selectedColumn;
-              $scope.tableData[i].tableName = $scope.pickedTable;
-              $scope.tableData[i].quotes = true;
-              if($scope.tableData[i].tableName == $scope.pickedTable){
-                $scope.tableData[i].aIndex++;
-              }
-              if($scope.pickedTable == "price"){
-                $scope.tableData[i].rowId = $scope.tableLists.PricesList.length;
-                for(var q = 0 ; q < $scope.property.pricePropertyList.length ; q++) {
-                  if( $scope.property.pricePropertyList[q].field == 'priceUnit'){
-                    $scope.tableData[i].propName = {};
-                    $scope.tableData[i].propName = $scope.property.pricePropertyList[q];
+      if($scope.selectedColumn){
+        if(($scope.selectedColumn == "gross_price") || ($scope.selectedColumn == "retail_price") 
+          || ($scope.selectedColumn == "grossprice") || ($scope.selectedColumn == "retailprice")){
+          $scope.pickedTable = "price";
+          $scope.passingList = $scope.tableLists.PricesList;
+        } else {
+          $scope.pickedTable = "attributeValue";
+          $scope.passingList = $scope.tableLists.ProductAttributeValuesList;
+        }
+          $scope.addToList();
+          if($scope.selectedColumn){
+            if($scope.tableData == undefined){
+              $scope.tableData = [];
+            } 
+            var dummy = {"columnName": null, "propName": null, 
+                            "tableName": null, "aIndex": 0, "quotes": false, "rowId":0, "ma":true };
+            var i = $scope.tableData.length++;
+            var j = $scope.tableData.length++;
+            for(var k = $scope.tableData.length ; k > 0; k--){
+              if(i == k-2){
+                $scope.tableData[i] = angular.copy(dummy);
+                $scope.tableData[i].columnName = $scope.selectedColumn;
+                $scope.tableData[i].tableName = $scope.pickedTable;
+                $scope.tableData[i].quotes = true;
+                if($scope.tableData[i].tableName == $scope.pickedTable){
+                  $scope.tableData[i].aIndex++;
+                }
+                if($scope.pickedTable == "price"){
+                  $scope.tableData[i].rowId = $scope.tableLists.PricesList.length;
+                  for(var q = 0 ; q < $scope.property.pricePropertyList.length ; q++) {
+                    if( $scope.property.pricePropertyList[q].field == 'priceUnit'){
+                      $scope.tableData[i].propName = {};
+                      $scope.tableData[i].propName = $scope.property.pricePropertyList[q];
+                    }
+                  }
+                } else {
+                  $scope.tableData[i].rowId = $scope.tableLists.ProductAttributeValuesList.length;
+                  for(var q = 0 ; q < $scope.property.attributePropertyList.length ; q++){
+                    if( $scope.property.attributePropertyList[q].field == 'attribute'){
+                      $scope.tableData[i].propName = {};
+                      $scope.tableData[i].propName = $scope.property.attributePropertyList[q];
+                    }
                   }
                 }
-              } else {
-                $scope.tableData[i].rowId = $scope.tableLists.ProductAttributeValuesList.length;
-                for(var q = 0 ; q < $scope.property.attributePropertyList.length ; q++){
-                  if( $scope.property.attributePropertyList[q].field == 'attribute'){
-                    $scope.tableData[i].propName = {};
-                    $scope.tableData[i].propName = $scope.property.attributePropertyList[q];
+              }
+              if(j == k-1){
+                // console.log('j value', j);
+                $scope.tableData[j] = angular.copy(dummy);
+                $scope.tableData[j].columnName = $scope.selectedColumn;
+                $scope.tableData[j].tableName = $scope.pickedTable;
+                if($scope.pickedTable == "price"){
+                  $scope.tableData[j].rowId = $scope.tableLists.PricesList.length;
+                  for(var q=0 ; q < $scope.property.pricePropertyList.length ; q++){
+                    if( $scope.property.pricePropertyList[q].field == 'priceTypeId'){
+                      $scope.tableData[j].propName = {};
+                      $scope.tableData[j].propName = $scope.property.pricePropertyList[q];
+                    }
                   }
+                } else {
+                  $scope.tableData[j].rowId = $scope.tableLists.ProductAttributeValuesList.length;
+                  for(var q=0 ; q < $scope.property.attributePropertyList.length; q++){
+                    if( $scope.property.attributePropertyList[q].field == 'value'){
+                      $scope.tableData[j].propName = {};
+                      $scope.tableData[j].propName = $scope.property.attributePropertyList[q];
+                    }
+                  }
+                }
+                if($scope.tableData[j].tableName == $scope.pickedTable){
+                  $scope.tableData[j].aIndex = $scope.tableData[j].aIndex+2;
                 }
               }
             }
-            if(j == k-1){
-              // console.log('j value', j);
-              $scope.tableData[j] = angular.copy(dummy);
-              $scope.tableData[j].columnName = $scope.selectedColumn;
-              $scope.tableData[j].tableName = $scope.pickedTable;
-              if($scope.pickedTable == "price"){
-                $scope.tableData[j].rowId = $scope.tableLists.PricesList.length;
-                for(var q=0 ; q < $scope.property.pricePropertyList.length ; q++){
-                  if( $scope.property.pricePropertyList[q].field == 'priceTypeId'){
-                    $scope.tableData[j].propName = {};
-                    $scope.tableData[j].propName = $scope.property.pricePropertyList[q];
-                  }
-                }
-              } else {
-                $scope.tableData[j].rowId = $scope.tableLists.ProductAttributeValuesList.length;
-                for(var q=0 ; q < $scope.property.attributePropertyList.length; q++){
-                  if( $scope.property.attributePropertyList[q].field == 'value'){
-                    $scope.tableData[j].propName = {};
-                    $scope.tableData[j].propName = $scope.property.attributePropertyList[q];
-                  }
-                }
-              }
-              if($scope.tableData[j].tableName == $scope.pickedTable){
-                $scope.tableData[j].aIndex = $scope.tableData[j].aIndex+2;
-              }
-            }
-          }
 
-        mappedColumns($scope.selectedColumn);
-        mappedPropColumns($scope.pickedTable);
-        // console.log($scope.tableData);
-        $scope.defaultVal.val = '';
-        $scope.selectedColumn = undefined;
-        $scope.selectedTable = undefined;
-        $scope.selectedProperty = undefined;
+          mappedColumns($scope.selectedColumn);
+          mappedPropColumns($scope.pickedTable);
+          // console.log($scope.tableData);
+          $scope.defaultVal.val = '';
+          $scope.selectedColumn = undefined;
+          $scope.selectedTable = undefined;
+          $scope.selectedProperty = undefined;
+        }
       }
+      else {
+        growl.error('Select column name');
+      }  
     }
 
     //automatic mapping
