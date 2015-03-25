@@ -542,7 +542,8 @@ app
       var selectedColumns = [];
       for (var i = 0; i < list.length; i++) {
         selectedColumns[i] = {"colName":null, "isSelect":null};
-        selectedColumns[i].colName = $filter('smallize')(list[i]);
+        // selectedColumns[i].colName = $filter('smallize')(list[i]);
+        selectedColumns[i].colName = list[i];
         selectedColumns[i].isSelect = false;
       };
       $scope.columnShowList = selectedColumns;  
