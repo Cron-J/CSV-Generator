@@ -45,11 +45,7 @@ app
     $scope.saveTransformationInfo = function(){
       for(var i=0;i<$scope.transInfo.pushable.length;i++){
           delete $scope.transInfo.pushable[i].def.category;
-          //delete $scope.transInfo.pushable[i].def;
-          //delete $scope.transInfo.pushable[i].params;
-          //delete $scope.transInfo.pushable[i].added;
       }
-      //transValue=$scope.transInfo.transVal
       $scope.tableData[rowIndex].transformations=$scope.transInfo.pushable;
       $scope.tableData[rowIndex].transVal=angular.copy($scope.transInfo.transVal);
       
@@ -141,7 +137,6 @@ app
             break;
         }
         if($scope.propertyList){
-          // console.log('$scope.propertyList1', $scope.propertyList);
           var modifiedList = $scope.propertyList;
           $scope.propertyList = [];
           for(var i = 0; i < modifiedList.length ; i++){  
@@ -149,7 +144,6 @@ app
             $scope.propertyList[i] = modifiedList[i];
             $scope.propertyList[i].isSelect = false;
           }
-          // console.log('$scope.propertyList', $scope.propertyList);
           mappedPropColumns(originalTName);
         } 
         
@@ -324,7 +318,6 @@ app
                 }
               }
               if(j == k-1){
-                // console.log('j value', j);
                 $scope.tableData[j] = angular.copy(dummy);
                 $scope.tableData[j].columnName = $scope.selectedColumn;
                 $scope.tableData[j].tableName = $scope.pickedTable;
@@ -353,7 +346,6 @@ app
 
           mappedColumns($scope.selectedColumn);
           mappedPropColumns($scope.pickedTable);
-          // console.log($scope.tableData);
           $scope.defaultVal.val = '';
           $scope.selectedColumn = undefined;
           $scope.selectedTable = undefined;
@@ -420,10 +412,10 @@ app
     }
 
     $scope.selectedDateFormat = function (format) {
-      var list1 = angular.copy($scope.orginalImportedDatar1);
-      var list2 = angular.copy($scope.orginalImportedDatar2);
-      $scope.importedDatar1 = changeDateFormat(list1, format);
-      $scope.importedDatar2 = changeDateFormat(list2, format);
+      var list1 = angular.copy($scope.uploadedDataDump.rowOne);
+      var list2 = angular.copy($scope.uploadedDataDump.rowTwo);
+      $scope.uploadedData.rowOne = changeDateFormat(list1, format);
+      $scope.uploadedData.rowTwo = changeDateFormat(list2, format);
     }
 
     var changeDateFormat = function (list, format) {
@@ -449,10 +441,10 @@ app
     }
 
     $scope.selectedNumberFormat = function (format) {
-      var list1 = angular.copy($scope.orginalImportedDatar1);
-      var list2 = angular.copy($scope.orginalImportedDatar2);
-      $scope.importedDatar1 = changeNumberFormat(list1, format);
-      $scope.importedDatar2 = changeNumberFormat(list2, format);
+      var list1 = angular.copy($scope.uploadedDataDump.rowOne);
+      var list2 = angular.copy($scope.uploadedDataDump.rowTwo);
+      $scope.uploadedData.rowOne = changeNumberFormat(list1, format);
+      $scope.uploadedData.rowTwo = changeNumberFormat(list2, format);
     }
 
     var changeNumberFormat = function (list, format) {
@@ -500,200 +492,63 @@ app
       return list;
     }
 
-    $scope.startRead = function(files, option) {
-      // $scope.secondStep();
-      $scope.columnShowList = [];
-      $scope.selectedFiles = files;
-      if(option == '.')
-        var file = $scope.selectedFiles[0];
-      else 
-        var file = files[0];
-      if (file) {
-        var name = file.name.split(".");
-        if(name[name.length - 1] == "csv" ){
-          $scope.uploadedFileType = 'csv';
-          $scope.selectedOption = option;
-          getData(file);
+    $scope.changeDelimiterFormat = function (format) {
+      if(format == '.'){ 
+        if($scope.uploadedDataDump.headers != "") {
+          $scope.uploadedData.headers = angular.copy($scope.uploadedDataDump.headers[0]).split(".");
         }
-        else if(name[name.length - 1] == "xlsx"){
-          $scope.uploadedFileType = 'xlsx';
-          fileChanged(files);
-          updateJSONString(); 
-          showPreviewChanged();
-        } 
-        else{
-          $scope.uploadedFileType = 'xls';
-          readXls(file);
-          // console.log('entered file type is otherthan csv or xls');
+        if($scope.uploadedDataDump.rowOne != undefined) {
+          $scope.uploadedData.rowOne = angular.copy($scope.uploadedDataDump.rowOne[0]).split(".");
         }
-      }
-    }
-
-    //reading csv file
-    var getData = function (readFile) {
-      var reader = new FileReader();
-      reader.readAsText(readFile);
-      reader.onload = processData;
-    }
-
-    var processData = function (allText) {
-      var result=allText.srcElement.result;
-      var allTextLines = result.split('+/\r\n|\n/+');
-      var headers = allTextLines[0].split("\n")[0];
-      var tableData = allTextLines[0].split("\n");
-      var dumpTable =[];
-      var k=0;
-      for (var i = 0; i < tableData.length; i++) {
-        if(tableData[i] != "\r"){
-          dumpTable[k] = tableData[i];
-          k++;
-        }
-      };
-      $scope.importedData = tableData;
-      
-      if(headers == "" && dumpTable[1] == undefined){
-        growl.error('Empty file is uploaded please upload another file');
-        $scope.stopStep = true;
-      }
-      if (headers != "" && dumpTable[1] == undefined) {
-         growl.warning('There are no data rows');
-         $scope.stopStep = false;
-      }
-      if($scope.selectedOption == '.'){
-        if(headers != "") {
-          $scope.columnList = headers.split(".");
-          $scope.stopStep = false;
-        }
-        if(dumpTable[1] != undefined) {
-          $scope.importedDatar1 = dumpTable[1].split(".");
-          $scope.orginalImportedDatar1 =dumpTable[1].split(".");
-        }
-        if(dumpTable[2] != undefined) {
-          $scope.importedDatar2 = dumpTable[2].split(".");
-          $scope.orginalImportedDatar2 = dumpTable[2].split(".");
+        if($scope.uploadedDataDump.rowTwo != undefined) {
+          $scope.uploadedData.rowTwo = angular.copy($scope.uploadedDataDump.rowTwo[0]).split(".");
         }
       } else {
-        if(headers != undefined)
-          $scope.columnList = headers.split(",");
-        if(dumpTable[1] != undefined) {
-          $scope.importedDatar1 = dumpTable[1].split(",");
-          $scope.orginalImportedDatar1 = dumpTable[1].split(",");
+        if($scope.uploadedDataDump.headers != "") {
+          $scope.uploadedData.headers = angular.copy($scope.uploadedDataDump.headers[0]).split(",");
         }
-        if(dumpTable[2] != undefined) {
-          $scope.importedDatar2 = dumpTable[2].split(",");
-          $scope.orginalImportedDatar2 = dumpTable[2].split(",");
+        if($scope.uploadedDataDump.rowOne != undefined) {
+          $scope.uploadedData.rowOne = angular.copy($scope.uploadedDataDump.rowOne[0]).split(",");
+        }
+        if($scope.uploadedDataDump.rowTwo != undefined) {
+          $scope.uploadedData.rowTwo = angular.copy($scope.uploadedDataDump.rowTwo[0]).split(",");
         }
       }
-      // loading columns
-      loadingColumns();
-      $scope.selectedDateFormat('dd-MM-yyyy');
     }
 
-    var loadingColumns = function () {
+    $scope.startRead = function(files) {
+      var data = {};
+      data.file = files[0];
+      data.file_name = files[0].name;
+      var fd = new FormData();
+      angular.forEach(data, function(value, key) {
+        fd.append(key,value);
+      });
+      $http.post('/uploadedFileData', fd, {
+        transformRequest: angular.identity,
+        headers: {'Content-Type': undefined}
+      })
+      .success(function (data, status) {
+          $scope.uploadedData = data;
+          $scope.uploadedDataDump = data;
+          loadingColumns(data.headers);
+      })
+      .error(function(){
+        growl.error("Unable to upload file");
+      });
+    }
+
+    var loadingColumns = function (list) {
       var selectedColumns = [];
-      for (var i = 0; i < $scope.columnList.length; i++) {
+      for (var i = 0; i < list.length; i++) {
         selectedColumns[i] = {"colName":null, "isSelect":null};
-        selectedColumns[i].colName = $filter('smallize')($scope.columnList[i]);
+        selectedColumns[i].colName = $filter('smallize')(list[i]);
         selectedColumns[i].isSelect = false;
       };
       $scope.columnShowList = selectedColumns;  
       $scope.secondStep(); 
+      $scope.selectedDateFormat('dd-MM-yyyy');
     }
-
-    // reading xls file
-    var readXls = function (readFile) {
-      var reader = new FileReader();
-      var name = readFile.name;
-      reader.onload = function(e) {
-        var data = e.target.result;
-        /* if binary string, read with type 'binary' */
-        var workbook = XLS.read(data, {type: 'binary'});
-        /* DO SOMETHING WITH workbook HERE */
-        var result = {};
-        var sheetName = workbook.SheetNames[0];
-
-        // workbook.SheetNames.forEach(function(sheetName) {
-            var roa = XLS.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
-            if (roa) {
-                $scope.resultXls = roa;
-            }
-        // }); 
-        if($scope.resultXls.headerColNames){
-          $scope.stopStep = false;
-          $scope.columnList = $scope.resultXls.headerColNames;
-          if($scope.resultXls.rowOne.length > 0) { 
-            $scope.orginalImportedDatar1 = $scope.resultXls.rowOne;
-            $scope.importedDatar1 = $scope.orginalImportedDatar1;
-          } else {
-            growl.warning('There are no data rows');
-          }
-          if($scope.resultXls.rowTwo) { 
-            $scope.orginalImportedDatar2 = $scope.resultXls.rowTwo;
-            $scope.importedDatar2 = $scope.orginalImportedDatar2;
-          }
-          loadingColumns();
-          $scope.selectedDateFormat('dd-MM-yyyy');
-        } else {
-          $scope.stopStep = true;
-          growl.error('Empty file is uploaded please upload another file');
-        }
-
-      }
-        reader.readAsBinaryString(readFile);
-        $scope.secondStep();
-    }
-
-    //reading xlsx file
-    $scope.showPreview = false;
-    $scope.showJSONPreview = true;
-    $scope.json_string = "";
-
-    var fileChanged = function(files) {
-        $scope.isProcessing = true;
-        $scope.sheets = [];
-        $scope.excelFile = files[0];
-        XLSXReaderService.readFile($scope.excelFile, $scope.showPreview, $scope.showJSONPreview).then(function(xlsxData) {
-            $scope.sheets = xlsxData.sheets;
-            $scope.isProcessing = false;
-        });
-    }
-
-    var updateJSONString = function() {
-      $scope.showPreview = true;
-      $scope.selectedSheetName = 'Sheet1'
-      $scope.json_string = JSON.stringify($scope.sheets[$scope.selectedSheetName], null, 2);
-      $scope.secondStep();
-    }
-
-    var showPreviewChanged = function() {
-        if ($scope.showPreview) {
-            $scope.showJSONPreview = false;
-            $scope.isProcessing = true;
-            XLSXReaderService.readFile($scope.excelFile, $scope.showPreview, $scope.showJSONPreview).then(function(xlsxData) {
-                $scope.sheets = xlsxData.sheets;
-                if($scope.sheets.Sheet1.data.length > 0) {
-                  $scope.stopStep = false;
-                  $scope.columnList = $scope.sheets.Sheet1.data[0];
-                  if($scope.sheets.Sheet1.data.length > 1) {
-                    $scope.orginalImportedDatar1 = $scope.sheets.Sheet1.data[1];
-                    $scope.importedDatar1 = $scope.orginalImportedDatar1;
-                    $scope.orginalImportedDatar2 = $scope.sheets.Sheet1.data[2];
-                    $scope.importedDatar2 = $scope.orginalImportedDatar2;
-                  } else {
-                    growl.warning('There are no data rows');
-                  }
-                  loadingColumns();
-                }
-                else {
-                  $scope.stopStep = true;
-                  growl.error('Empty file is uploaded please upload another file');
-                }
-                $scope.selectedDateFormat('dd-MM-yyyy');
-                $scope.isProcessing = false;
-            });
-        }
-    }
-
     //check required fields mapping is done or not
     var checkMapping = function (tableInfo) {
       var reqFieldList = [];
@@ -747,7 +602,6 @@ app
       $http.get('/getMappingData/'+tenantId+'/'+mappingId)
         .success(function(data){
           $scope.mappedJson = data;
-          console.log("mappingId",$scope.mappedJson);
         })
         .error(function(){
           growl.error("Unable to get mapping list");
@@ -800,6 +654,7 @@ app
           if(valid == true){
             var mappingDetails = {};
             mappingDetails.tenantId = 1;
+            mappingDetails.fileName = $scope.uploadedData.fileName;
             mappingDetails.mappingName = map.name;
             mappingDetails.mappingInfo = [];
             for (var i = 0; i < tableInfo.length; i++) {
@@ -826,7 +681,6 @@ app
                 };
               }
             };
-            // console.log('mappingDetails', mappingDetails);
             saveMapping(mappingDetails);
             //reset newmap
             $scope.newMap = false;
@@ -896,15 +750,6 @@ app.directive('context', [
                 });
                 last = event.timeStamp;
               });
-              //$(iElement).click(function(event) {
-              //  ul.css({
-              //    position: "fixed",
-              //    display: "block",
-              //    left: event.clientX + 'px',
-              //    top: event.clientY + 'px'
-              //  });
-              //  last = event.timeStamp;
-              //});
 
               $(document).click(function(event) {
                 var target = $(event.target);

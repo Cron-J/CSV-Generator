@@ -13,6 +13,8 @@ var MappingSchema = new Schema({
 
   mappingName : { type: String, required: true },
 
+  fileName : { type: String, required: true },
+
   mappingInfo : [mapinfo]
 
 

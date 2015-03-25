@@ -36,8 +36,8 @@
         <div class="form-group">
           <label class="col-sm-4 control-label">Delimiter Format</label>
           <div class="col-sm-8">
-            <select name="decimalSeparator" ng-model="fileStyle.decimalSeparator" class="form-control" ng-change="startRead(selectedFiles, fileStyle.decimalSeparator)">
-              <option value=".">Dot(.)</option>
+            <select name="decimalSeparator" ng-model="fileStyle.decimalSeparator" class="form-control" >
+              <!-- <option value=".">Dot(.)</option> -->
               <option value=",">Comma(,)</option>
             </select>
           </div>
@@ -49,21 +49,21 @@
   <table class="table table-bordered">
     <thead ng-show="fileStyle.isHeader">
       <tr>
-        <th ng-repeat="col in columnShowList track by $index">{{col.colName}}</th>
+        <th ng-repeat="col in uploadedData.headers track by $index">{{col}}</th>
       </tr>
     </thead>
     <tbody>
       <tr >
-        <td ng-repeat="row in importedDatar1 track by $index">{{row}}</td>
+        <td ng-repeat="row in uploadedData.rowOne track by $index">{{row}}</td>
       </tr>
       <tr >
-        <td ng-repeat="row in importedDatar2 track by $index">{{row}}</td>
+        <td ng-repeat="row in uploadedData.rowTwo track by $index">{{row}}</td>
       </tr>
     </tbody>
   </table>
-  <div class="col-lg-3 col-lg-offset-9 btn-set button-container">
+  <div class="col-lg-2 col-lg-offset-10 btn-set button-container">
     <button class="btn btn-primary"  ng-click="firstStep()">Back</button>
     <button class="btn btn-primary"  ng-show="!stopStep" ng-click="thirdStep(fileStyle)">Next</button>
-    <button class="btn btn-primary"  ng-show="stopStep" ng-click="reloadStep()">Upload File</button>
+    <button class="btn btn-primary"  ng-show="stopStep" ng-click="reloadStep()">Upload</button>
   </div>
 </div>
