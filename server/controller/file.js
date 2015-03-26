@@ -44,9 +44,9 @@ function csvJSON(csv, fileName) {
     var lines = csv.split("\n");
     var result = {
         "fileName": fileName,
-        "headers": lines[0].split(","),
-        "rowOne": lines[1].split(","),
-        "rowTwo": lines[2].split(",")
+        "headers": lines[0].split("\r")[0].split(","),
+        "rowOne": lines[1].split("\r")[0].split(","),
+        "rowTwo": lines[2].split("\r")[0].split(",")
     };
 
     return JSON.stringify(result); //JSON

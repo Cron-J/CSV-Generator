@@ -60,31 +60,40 @@ exports.getMappingData = {
                                         case "attributeValues":
                                             if (!convertedJson[key].attributeValues)
                                                 convertedJson[key].attributeValues = [];
-                                            check = checkAlDuplicate(mappings[0].mappingInfo[i].values[j].userFieldName.split('\r')[0], convertedJson[key].attributeValues);
+                                            check = checkAlDuplicate(mappings[0].mappingInfo[i].values[j].userFieldName, convertedJson[key].attributeValues);
                                             if (check != false) {
                                                 convertedJson[key].attributeValues.push({
-                                                    "attributeId": mappings[0].mappingInfo[i].values[j].userFieldName.split('\r')[0],
-                                                    "attributeValue": jsonObj[g][mappings[0].mappingInfo[i].values[j].userFieldName.split('\r')[0]]
+                                                    "attributeId": mappings[0].mappingInfo[i].values[j].userFieldName,
+                                                    "attributeValue": jsonObj[g][mappings[0].mappingInfo[i].values[j].userFieldName]
                                                 });
                                             }
                                             break;
                                         case "prices":
                                             if (!convertedJson[key].prices)
                                                 convertedJson[key].prices = [];
-                                            check = checkPDuplicate(mappings[0].mappingInfo[i].values[j].userFieldName.split('_')[0].split('\r')[0], convertedJson[key].prices);
+                                            check = checkPDuplicate(mappings[0].mappingInfo[i].values[j].userFieldName.split('_')[0], convertedJson[key].prices);
                                             if (check != false) {
-                                                convertedJson[key].prices.push({
-                                                    "pricetype": mappings[0].mappingInfo[i].values[j].userFieldName.split('_')[0].split('\r')[0],
-                                                    "price": jsonObj[g][mappings[0].mappingInfo[i].values[j].userFieldName]
-                                                });
+                                                if(mappings[0].mappingInfo[i].values[j].userFieldName == "gross_price" ||
+                                                    mappings[0].mappingInfo[i].values[j].userFieldName == "retail_price" || 
+                                                    mappings[0].mappingInfo[i].values[j].userFieldName == "grossprice" || 
+                                                    mappings[0].mappingInfo[i].values[j].userFieldName == "retailprice") {
+                                                        convertedJson[key].prices.push({
+                                                         "pricetype": mappings[0].mappingInfo[i].values[j].userFieldName.split('_')[0],
+                                                         "price": jsonObj[g][mappings[0].mappingInfo[i].values[j].userFieldName]
+                                                        });
+                                                } else {
+                                                    obj[mappings[0].mappingInfo[i].values[j].userFieldName] =
+                                                        jsonObj[g][mappings[0].mappingInfo[i].values[j].userFieldName];
+                                                    convertedJson[key].prices.push(obj);
+                                                }     
                                             }
                                             break;
                                         case "productRelations":
                                             if (!convertedJson[key].productRelations)
                                                 convertedJson[key].productRelations = [];
 
-                                            obj[mappings[0].mappingInfo[i].values[j].userFieldName.split('\r')[0]] =
-                                                jsonObj[g][mappings[0].mappingInfo[i].values[j].userFieldName.split('\r')[0]];
+                                            obj[mappings[0].mappingInfo[i].values[j].userFieldName] =
+                                                jsonObj[g][mappings[0].mappingInfo[i].values[j].userFieldName];
                                             convertedJson[key].productRelations.push(obj);
 
                                             break;
@@ -92,16 +101,16 @@ exports.getMappingData = {
                                             if (!convertedJson[key].contractedProducts)
                                                 convertedJson[key].contractedProducts = [];
 
-                                            obj[mappings[0].mappingInfo[i].values[j].userFieldName.split('\r')[0]] =
-                                                jsonObj[g][mappings[0].mappingInfo[i].values[j].userFieldName.split('\r')[0]];
+                                            obj[mappings[0].mappingInfo[i].values[j].userFieldName] =
+                                                jsonObj[g][mappings[0].mappingInfo[i].values[j].userFieldName];
                                             convertedJson[key].contractedProducts.push(obj);
                                             break;
                                         case "classificationGroupAssociations":
                                             if (!convertedJson[key].classificationGroupAssociations)
                                                 convertedJson[key].classificationGroupAssociations = [];
 
-                                            obj[mappings[0].mappingInfo[i].values[j].userFieldName.split('\r')[0]] =
-                                                jsonObj[g][mappings[0].mappingInfo[i].values[j].userFieldName.split('\r')[0]];
+                                            obj[mappings[0].mappingInfo[i].values[j].userFieldName] =
+                                                jsonObj[g][mappings[0].mappingInfo[i].values[j].userFieldName];
 
                                             convertedJson[key].classificationGroupAssociations.push(obj);
                                             break;

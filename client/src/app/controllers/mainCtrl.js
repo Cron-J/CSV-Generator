@@ -492,28 +492,25 @@ app
       return list;
     }
 
-    $scope.changeDelimiterFormat = function (format) {
-      if(format == '.'){ 
-        if($scope.uploadedDataDump.headers != "") {
-          $scope.uploadedData.headers = angular.copy($scope.uploadedDataDump.headers[0]).split(".");
+    $scope.selectedDelimiterFormat = function (format) {
+      var list = {
+          "list0" : angular.copy($scope.uploadedDataDump.headers).join(),
+          "list1" : angular.copy($scope.uploadedDataDump.rowOne).join(),
+          "list2" : angular.copy($scope.uploadedDataDump.rowTwo).join()
         }
-        if($scope.uploadedDataDump.rowOne != undefined) {
-          $scope.uploadedData.rowOne = angular.copy($scope.uploadedDataDump.rowOne[0]).split(".");
-        }
-        if($scope.uploadedDataDump.rowTwo != undefined) {
-          $scope.uploadedData.rowTwo = angular.copy($scope.uploadedDataDump.rowTwo[0]).split(".");
-        }
-      } else {
-        if($scope.uploadedDataDump.headers != "") {
-          $scope.uploadedData.headers = angular.copy($scope.uploadedDataDump.headers[0]).split(",");
-        }
-        if($scope.uploadedDataDump.rowOne != undefined) {
-          $scope.uploadedData.rowOne = angular.copy($scope.uploadedDataDump.rowOne[0]).split(",");
-        }
-        if($scope.uploadedDataDump.rowTwo != undefined) {
-          $scope.uploadedData.rowTwo = angular.copy($scope.uploadedDataDump.rowTwo[0]).split(",");
-        }
-      }
+        console.log('list', list);
+      $scope.uploadedData.headers = changeDelimiterFormat(list.list0, format);
+      $scope.uploadedData.rowOne = changeDelimiterFormat(list.list1, format);
+      $scope.uploadedData.rowTwo = changeDelimiterFormat(list.list2, format);
+    }
+
+    var changeDelimiterFormat = function (list, format) {
+      var dump;
+      if(format == '.' && list)
+          dump = list.split(".");
+      else 
+          dump = list.split(",");
+      return dump;
     }
 
     $scope.startRead = function(files) {
@@ -529,8 +526,8 @@ app
         headers: {'Content-Type': undefined}
       })
       .success(function (data, status) {
+          $scope.uploadedDataDump = angular.copy(data);
           $scope.uploadedData = data;
-          $scope.uploadedDataDump = data;
           loadingColumns(data.headers);
       })
       .error(function(){
