@@ -451,14 +451,14 @@ app
       for (var i = 0; i < list.length; i++) {
         if(!isNaN(list[i])) {
           if(format == '#,##'){
-            var str = list[i].toString().split('.');
-            if (str[0].length >= 3) {
-                str[0] = str[0].replace(/(\d)(?=(\d{2})+$)/g, '$1,');
-            }
-            // if (str[1] && str[1].length >= 3) {
-            //     str[1] = str[1].replace(/(\d{2})/g, '$1 ');
+            var str = list[i].slice(0, -2)+','+list[i].slice(-2);
+            // if (str[0].length >= 3) {
+            //     str[0] = str[0].replace(/(\d)(?=(\d{2})+$)/g, '$1,');
             // }
-             list[i] = str.join('.');
+            // // if (str[1] && str[1].length >= 3) {
+            // //     str[1] = str[1].replace(/(\d{2})/g, '$1 ');
+            // // }
+            list[i] = str;
           }
           if(format == '#.##'){
             list[i] = (list[i] / 100);
@@ -478,12 +478,14 @@ app
 
           }
           if(format == '#.###,##'){
-            if(list[i].toString().length > 5){
-              var dec = (list[i] % 100000);
-              list[i] = (list[i] / 100000);
-              var str = list[i].toString();
-              var index = str.length-2;
-              str = str.slice(0,index)+ "," + str.slice(index);  
+            var str = list[i].toString();
+            if(str.length > 5){
+              str = list[i].slice(0, -5)+'.'+list[i].slice(-3)+','+list[i].slice(-2);
+              // var dec = (list[i] % 100000);
+              // list[i] = (list[i] / 100000);
+              // var str = list[i].toString();
+              // var index = str.length-2;
+              // str = str.slice(0,index)+ "," + str.slice(index);  
               list[i] = str;  
             }
           }
