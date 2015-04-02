@@ -3,8 +3,8 @@
 		<div class="form-group">
 			<label for="x" class="col-sm-2 control-label">Mapping Name</label>
 			<div class="col-sm-3">
-				<input name="jobId" class="form-control" placeholder="Choose Mapping Name" id="x" type="text" ng-model="map.name" required>
-				<span style="color:red" ng-show="form-mapForm.$invalid && submitted">please enter mapping name</span>
+				<input name="jobId" class="form-control" placeholder="Choose Mapping Name" id="mapName" type="text" ng-model="map.name" required>
+				<span style="color:red" id="error" ng-show="form-mapForm.$invalid && submitted">please enter mapping name</span>
 			</div>
 		</div>
 	</form>
@@ -34,7 +34,7 @@
 		</div>
 		<div class="col-md-2">
 			<div class="btn-group btn-group-justified">
-				<a href="" class="btn btn-default" ng-click="mapping();">Map <span class="glyphicon glyphicon-chevron-right"></span></a>
+				<a href="" class="btn btn-default" ng-click="mapping()">Map <span class="glyphicon glyphicon-chevron-right"></span></a>
 			</div><br>
 			<div class="btn-group btn-group-justified">
 				<a class="btn btn-default" ng-click="mapAttribute()">Auto Add Attribute <span class="glyphicon glyphicon-chevron-right"></span></a>
