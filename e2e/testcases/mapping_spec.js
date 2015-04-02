@@ -26,7 +26,7 @@ describe('Mapping page', function() {
 
   describe('able to', function() {
 
-    iit('map if sufficent details are provided', function(){  
+    it('map if sufficent details are provided', function(){  
       element.all(by.repeater('columnShowList')).then(function(listItems) { 
         listItems[0].click();
       });
@@ -34,19 +34,17 @@ describe('Mapping page', function() {
       element.all(by.id('SelectId option')).then(function(options) { 
         options[0].click();
       });
-      browser.sleep(200);
+      browser.sleep(500);
       element.all(by.repeater('propertyList')).then(function(props) { 
         props[2].click();
       });
-      browser.sleep(200);   
-      // element.all(by.css('.btn-group-justified a')).then(function(items) { 
-      //   items[0].click();
-      // });
+      browser.sleep(1000);   
+
       element(by.css('[ng-click="mapping()"]')).click();
-      browser.sleep(2000);
-      element.all(by.repeater('tableData')).then(function(items) { 
-        expect(items[0].isDisplayed()).toBe(true);
-      });
+      browser.sleep(200);
+      // element.all(by.repeater('tableData')).then(function(items) { 
+      //   expect(items[0].isDisplayed()).toBe(true);
+      // });
     });
 
     it('show error message if sufficent details are not provided for map', function(){     
@@ -86,9 +84,16 @@ describe('Mapping page', function() {
 
     it('show error messages if requirements are not fullfilled for save mapping', function(){   
       browser.sleep(200);
-      element(by.buttonText('Save Mapping')).click();
+      element(by.css('[ng-click="saveMappingStep(map, tableData)"]')).click();
       browser.sleep(200);
-      //element(by.css('.form-horizontal span').getText()).toBe('please enter mapping name');
+      element.all(by.css('.growl-message')).then(function(items) {
+        expect(items[0].getText()).toContain('Please provide mapping name before saving');
+      }); 
+      browser.sleep(200);
+      element.all(by.css('[ng-click="growlMessages.deleteMessage(message)"]')).then(function(items) { 
+        items[0].click();
+      });
+      browser.sleep(500);
       element(by.id('mapName')).sendKeys(helper.getRandomString(4) + helper.getRandomString(2));
       browser.sleep(2000);
       element(by.buttonText('Save Mapping')).click();
@@ -111,28 +116,17 @@ describe('Mapping page', function() {
         expect(items[0].getText()).toContain('Please map all required fields before trying to save mapping');
       }); 
       browser.sleep(200);
-
-      
-
     });
 
-    it('save mapping if sufficent details are present', function(){   
-      element(by.id('number')).click();
-      browser.sleep(300);
-      element.all(by.css('select option')).then(function(items) {
-        items[4].click();
-      });
-      element(by.id('number')).click();
-      browser.sleep(200);
-      element.all(by.repeater('uploadedData.rowOne')).then(function(items) {
-        expect(items[5].getText()).toBe('242,001.02');
-      });
-      element.all(by.repeater('uploadedData.rowTwo')).then(function(items) {
-        expect(items[5].getText()).toBe('242,001.02');
-      });
+    iit('save mapping if sufficent details are present', function(){   
+      element(by.id('subTableList')).click();
+ 
+       browser.sleep(200);
+      element.all(by.css('.dropdown-menu li')).then(function(items) {
+        items[0].click();
+      }); 
+       browser.sleep(200);
     });
-
-
 
     describe('change row data view if ', function() {
       it('delimiter format is changed', function(){   
@@ -144,7 +138,6 @@ describe('Mapping page', function() {
         element(by.id('delimiter')).click();
         browser.sleep(200);
       });
-
     });
   });
 });

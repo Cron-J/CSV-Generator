@@ -694,6 +694,7 @@ app
         }
       } else {
         $scope.submitted = true;
+        growl.error("Please provide mapping name before saving");
       }
     }
 

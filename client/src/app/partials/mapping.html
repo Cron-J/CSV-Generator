@@ -47,7 +47,7 @@
 			<select class="mapping-select" id="SelectId"  name="classesList" size="20" >
 			<!-- <option value="? string:{{selectedTable}} ?" style="display:none"></option> -->
 			<!-- <option value="" style="display:none" ></option> -->
-			<option value="product" ng-click="selectTable('product', 'product')">product</option>
+			<option value="product" ng-click="selectTable('product', 'product')" selected>product</option>
 			<optgroup style="font-style: normal;" label="prices">
 						<option value="{{pa.table}}" id="com.jcatalog.product.Prices:{{$index}}" ng-repeat="pa in tableLists.PricesList track by $index" ng-click="selectTable('prices', 'price', $index, tableLists.PricesList)">
 							{{pa.table}}({{$index+1}})
@@ -99,7 +99,7 @@
 		<div class="col-md-4 col-md-offset-2">
 			<div class="btn-group">
 				<div class="btn-group">
-					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+					<button type="button" id="subTable" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 						<span ng-show="pickedTable">{{pickedTable}}</span>
 						<span ng-hide="pickedTable">Select</span>
 						<span class="caret"></span>
