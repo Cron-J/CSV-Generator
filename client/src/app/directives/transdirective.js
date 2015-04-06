@@ -2,7 +2,7 @@ angular
     .module('app')
     .directive('graphiteAddFunc', function($compile,gfunc) {
       var inputTemplate = '<input type="text"'+
-                            ' class="tight-form-input input-medium tight-form-input"' +
+                            ' class="tight-form-input input-medium"' +
                             ' spellcheck="false" style="display:none"></input>';
 
       var buttonTemplate = '<a  class="tight-form-item tight-form-func dropdown-toggle"' +

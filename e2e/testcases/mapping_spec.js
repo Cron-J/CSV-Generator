@@ -25,7 +25,6 @@ describe('Mapping page', function() {
   });
 
   describe('able to', function() {
-
     it('map if sufficent details are provided', function(){  
       helper.mapFunction(); 
       element.all(by.repeater('tableData')).then(function(items) { 
@@ -46,6 +45,8 @@ describe('Mapping page', function() {
     it('save mapping if sufficent details are present', function(){  
       //map
       helper.mapFunction(); 
+      //add transformation to row one
+      transform(0);
       //map attribute
       element.all(by.repeater('columnShowList')).then(function(listItems) { 
         listItems[3].click();
@@ -179,6 +180,23 @@ describe('Mapping page', function() {
 
     }); 
 
+
   });
+  var transform = function (id) {
+    browser.executeScript('window.scrollTo(500,500)');
+    element.all(by.css('[ng-click="saveIndex($index)"]')).then(function(listItems) { 
+      listItems[id].click();
+    });
+    browser.sleep(200);
+    var plus = element.all(by.id('addFunction li')).get(1);
+    plus.click();
+    browser.sleep(200);
+    var ele = element.all(by.id('functionsList ul li')).get(0);
+    browser.actions().mouseMove(ele).perform();
+    element.all(by.id('functionsList ul li ul li')).then(function(listItems) { 
+      listItems[0].click();
+    });
+    browser.sleep(200);
+  }
 
 });

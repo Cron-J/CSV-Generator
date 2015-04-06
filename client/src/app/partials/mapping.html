@@ -256,12 +256,12 @@
 
             <input type="text" class="tight-form-clear-input span10" ng-model="target.target" focus-me="showTextEditor" spellcheck='false' ng-model-onblur ng-change="targetTextChanged()" ng-show="showTextEditor" />
 
-            <ul class="tight-form-list" role="menu" ng-hide="showTextEditor" >
+            <ul class="tight-form-list" id="addFunction" role="menu" ng-hide="showTextEditor" >
                 <li ng-repeat="segment in segments" role="menuitem" graphite-segment></li>
                 <li ng-repeat="func in functions">
                     <span graphite-func-editor class="tight-form-item tight-form-func"></span>
                 </li>
-                <li class="dropdown" graphite-add-func >
+                <li class="dropdown" id="functionsList" graphite-add-func >
                 </li>
             </ul>
 
