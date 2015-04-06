@@ -25,7 +25,7 @@ You can see the port number in command prompt after sucessfull run
 
 You can change the settings in server/config/config.js file
 
-### Run an test cases
+### Run test cases
 ###### *How to run angular test*
 
 1. *Initial setup*
