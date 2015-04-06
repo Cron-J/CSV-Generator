@@ -27,24 +27,11 @@ describe('Mapping page', function() {
   describe('able to', function() {
 
     it('map if sufficent details are provided', function(){  
-      element.all(by.repeater('columnShowList')).then(function(listItems) { 
-        listItems[0].click();
+      helper.mapFunction(); 
+      element.all(by.repeater('tableData')).then(function(items) { 
+        expect(items[0].isDisplayed()).toBe(true);
       });
       browser.sleep(200);
-      element.all(by.id('SelectId option')).then(function(options) { 
-        options[0].click();
-      });
-      browser.sleep(500);
-      element.all(by.repeater('propertyList')).then(function(props) { 
-        props[2].click();
-      });
-      browser.sleep(1000);   
-
-      element(by.css('[ng-click="mapping()"]')).click();
-      browser.sleep(200);
-      // element.all(by.repeater('tableData')).then(function(items) { 
-      //   expect(items[0].isDisplayed()).toBe(true);
-      // });
     });
 
     it('show error message if sufficent details are not provided for map', function(){     
@@ -118,26 +105,62 @@ describe('Mapping page', function() {
       browser.sleep(200);
     });
 
-    iit('save mapping if sufficent details are present', function(){   
-      element(by.id('subTableList')).click();
- 
-       browser.sleep(200);
-      element.all(by.css('.dropdown-menu li')).then(function(items) {
-        items[0].click();
+    it('save mapping if sufficent details are present', function(){  
+      //map
+      helper.mapFunction(); 
+      //map attribute
+      element.all(by.repeater('columnShowList')).then(function(listItems) { 
+        listItems[3].click();
+      });
+      element(by.css('[ng-click="mapAttribute()"]')).click();
+      browser.sleep(200);
+      element.all(by.repeater('columnShowList')).then(function(listItems) { 
+        listItems[5].click();
+      });
+      element(by.css('[ng-click="mapAttribute()"]')).click();
+      browser.sleep(200);
+
+      element.all(by.repeater('columnShowList')).then(function(listItems) { 
+        listItems[5].click();
+      });
+      element(by.css('[ng-click="mapAttribute()"]')).click();
+      //delete rows
+      element(by.id('subTable')).click();
+      browser.sleep(200);
+      element.all(by.id('subtableList li')).then(function(items) {
+        items[1].click();
       }); 
-       browser.sleep(200);
+      element(by.css('[ng-click="addToList()"]')).click();
+      browser.sleep(200);
+      var ele = element.all(by.repeater('tableLists.ProductAttributeValuesList')).get(1);
+      browser.actions().doubleClick(ele).perform();
+      browser.sleep(200);
+      element(by.css('[ng-click="removeProperty()"]')).click();
+      browser.sleep(300);
+      element(by.css('[ng-click="acceptDelete()"]')).click();
+      browser.sleep(300);
+      //add transformation for one element
+      
+      // browser.executeScript('window.scrollTo(500,500);').then(function () {
+      //   element.all(by.css('[ng-click="saveIndex($index)"]')).then(function(listItems) { 
+      //     listItems[0].click();
+      //   });
+      //   browser.sleep(500);
+      //   // element.all(by.css('.dropdown tight-form-item tight-form-func')).then(function(items) { 
+      //   //   items[0].click();
+      //   // });
+      //   // browser.sleep(200);
+      //   element.all(by.css('.tight-form-clear-input input-medium')).then(function(listItems) { 
+      //     listItems[0].sendKeys('upperCase'+protractor.Key.ENTER).perform();
+      //   });
+      browser.sleep(500);
+      element.all(by.id('mapName')).sendKeys(helper.getRandomString(3)+helper.getRandomNumber(2));
+      element(by.css('[ng-click="saveMappingStep(map, tableData)"]')).click();
+      browser.sleep(200);
+      element(by.buttonText('Create Mapping')).click();
+      
     });
 
-    describe('change row data view if ', function() {
-      it('delimiter format is changed', function(){   
-        element(by.id('delimiter')).click();
-        browser.sleep(300);
-        element.all(by.css('select option')).then(function(items) {
-          items[8].click();
-        });
-        element(by.id('delimiter')).click();
-        browser.sleep(200);
-      });
-    });
   });
+
 });

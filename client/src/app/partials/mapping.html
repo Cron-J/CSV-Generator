@@ -98,13 +98,13 @@
 		</div>
 		<div class="col-md-4 col-md-offset-2">
 			<div class="btn-group">
-				<div class="btn-group">
-					<button type="button" id="subTable" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+				<div class="btn-group" id="subTable">
+					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 						<span ng-show="pickedTable">{{pickedTable}}</span>
 						<span ng-hide="pickedTable">Select</span>
 						<span class="caret"></span>
 					</button>
-					<ul class="dropdown-menu" role="menu">
+					<ul class="dropdown-menu" role="menu" id="subtableList">
 						<li><a ng-click="selectnewPropTable('price', tableLists.PricesList)">price</a></li>
 						<li><a ng-click="selectnewPropTable('attributeValue', tableLists.ProductAttributeValuesList)">attributeValue</a></li>
 						<li><a ng-click="selectnewPropTable('classificationGroupAssociation', tableLists.ClassificationAssignmentsList)">classificationGroupAssociation</a></li>
@@ -170,7 +170,7 @@
       <label>Mapping Id</label>
     </div>
     <div class="col-lg-3">
-      <select class="form-control" ng-model="selectedMapping" ng-options="item._id as item.mappingName for item in mappingList">
+      <select class="form-control" id="mapId" ng-model="selectedMapping" ng-options="item._id as item.mappingName for item in mappingList">
         <option value="">Select mapping id</option>
       </select>
     </div>

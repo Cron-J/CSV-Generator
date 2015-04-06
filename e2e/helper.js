@@ -23,3 +23,17 @@ exports.uploadFile = function (file_path) {
     });
     browser.sleep(500);
 };
+
+exports.mapFunction = function () {
+	var col = element.all(by.repeater('columnShowList')).get(0);
+  browser.actions().doubleClick(col).perform();
+  browser.sleep(200);
+  var table = element.all(by.id('SelectId option')).get(0);
+  browser.actions().doubleClick(table).perform();
+  browser.sleep(500);
+  var prop = element.all(by.repeater('propertyList')).get(13);
+  browser.actions().doubleClick(prop).perform();
+  browser.sleep(300);   
+  element(by.css('[ng-click="mapping()"]')).click();
+  browser.sleep(200);
+}
