@@ -166,11 +166,15 @@ app
     }
 
     $scope.addToList = function () {
-      $scope.passingList.length ++;
-      for(var i = 0; i < $scope.passingList.length ; i++){   
-          $scope.passingList[i] = {};
-          $scope.passingList[i].table = $scope.pickedTable; 
-          $scope.passingList[i].rowId = i+1;     
+      if($scope.passingList){
+        $scope.passingList.length ++;
+        for(var i = 0; i < $scope.passingList.length ; i++){   
+            $scope.passingList[i] = {};
+            $scope.passingList[i].table = $scope.pickedTable; 
+            $scope.passingList[i].rowId = i+1;     
+        }
+      } else {
+         growl.error("Please select table name to add");
       }
     }
 
