@@ -1,13 +1,12 @@
 module.exports = {
-    server: {
-        
-            host: '0.0.0.0',
+    server: {   
+            host: 'localhost',
             port: 8000
     },
     database: {
         host: '127.0.0.1',
         port: 27017,
-        db: 'DatabaseName',
+        db: 'csvGenerator',
         username: '',
         password: ''
     }

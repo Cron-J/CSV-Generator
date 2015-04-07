@@ -9,4 +9,4 @@ db.once('open', function callback() {
 });
 
 exports.Mongoose = Mongoose;  
-exports.db = db;  
+exports.db = db;
