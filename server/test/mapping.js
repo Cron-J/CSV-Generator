@@ -31,11 +31,7 @@ describe("mapping controller test", function() {
   describe("create mapping", function() {
 
     it("successfully create", function(done) {
-      var validCredentials = {
-        tenantId : "1",
-        mappingName : "first_mapping",
-        fileName : "first_mapping"
-      };
+      var validCredentials = testCommon.successData();
       request(url).post("/createMapping").send(validCredentials).expect(200).end(function(error) {
         if (error) {
           throw error;
@@ -45,10 +41,7 @@ describe("mapping controller test", function() {
     });
 
     it("create mapping without tenant id", function(done) {
-      var validCredentials = {
-        mappingName : "first_mapping",
-        fileName : "first_mapping"
-      };
+      var validCredentials = testCommon.dataWithoutTenant();
       request(url).post("/createMapping").send(validCredentials).expect(403).end(function(error) {
         if (error) {
           throw error;
@@ -58,10 +51,7 @@ describe("mapping controller test", function() {
     });
 
     it("create mapping without mapping name", function(done) {
-      var validCredentials = {
-        tenantId : "1",
-        fileName : "first_mapping"
-      };
+      var validCredentials = testCommon.dataWithoutMapping();
       request(url).post("/createMapping").send(validCredentials).expect(403).end(function(error) {
         if (error) {
           throw error;
@@ -71,10 +61,7 @@ describe("mapping controller test", function() {
     });
 
     it("create mapping without file name", function(done) {
-      var validCredentials = {
-        tenantId : "1",
-        mappingName : "first_mapping"
-      };
+      var validCredentials = testCommon.dataWithoutFileName();
       request(url).post("/createMapping").send(validCredentials).expect(403).end(function(error) {
         if (error) {
           throw error;
@@ -87,11 +74,7 @@ describe("mapping controller test", function() {
   describe("get mapping list", function() {
 
     it("successfully get mapping list based on tenant id", function(done) {
-      var validCredentials = {
-        tenantId : "1",
-        mappingName : "first_mapping",
-        fileName : "first_mapping"
-      };
+      var validCredentials = testCommon.successData();
       /**
        * @param {string} method_name
        * @return {undefined}
@@ -113,11 +96,7 @@ describe("mapping controller test", function() {
     });
 
     it("get mapping list without tenant id", function(done) {
-      var validCredentials = {
-        tenantId : "1",
-        mappingName : "first_mapping",
-        fileName : "first_mapping"
-      };
+      var validCredentials = testCommon.successData();
       /**
        * @return {undefined}
        */
@@ -138,11 +117,7 @@ describe("mapping controller test", function() {
     });
 
     it("get mapping list based on non existing tenant id", function(done) {
-      var validCredentials = {
-        tenantId : "1",
-        mappingName : "first_mapping",
-        fileName : "first_mapping"
-      };
+      var validCredentials = testCommon.successData();
       /**
        * @param {string} options
        * @return {undefined}
@@ -168,18 +143,14 @@ describe("mapping controller test", function() {
   describe("get mapping data", function() {
 
     it("successfully get mapping data based on tenant id and mapping id", function(done) {
-      var validCredentials = {
-        tenantId : "1",
-        mappingName : "first_mapping",
-        fileName : "CatalogProductTemplate"
-      };
+      var validCredentials = testCommon.successData();
       /**
        * @param {string} event
        * @param {string} num
        * @return {undefined}
        */
       var getMappingData = function(event, num) {
-        request(url).get("/getMappingData/" + event + "/" + num).expect(500).end(function(error) {
+        request(url).get("/getMappingData/" + event + "/" + num).expect(200).end(function(error) {
           if (error) {
             throw error;
           }
@@ -195,11 +166,7 @@ describe("mapping controller test", function() {
     });
 
     it("get mapping data based on tenant id only", function(done) {
-      var validCredentials = {
-        tenantId : "1",
-        mappingName : "first_mapping",
-        fileName : "CatalogProductTemplate"
-      };
+      var validCredentials = testCommon.successData();
       /**
        * @param {string} method_name
        * @return {undefined}
@@ -221,11 +188,7 @@ describe("mapping controller test", function() {
     });
 
     it("get mapping data based on mapping id only", function(done) {
-      var validCredentials = {
-        tenantId : "1",
-        mappingName : "first_mapping",
-        fileName : "CatalogProductTemplate"
-      };
+      var validCredentials = testCommon.successData();
       /**
        * @param {string} method_name
        * @return {undefined}
