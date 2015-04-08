@@ -3,7 +3,7 @@
 var Common     = require('./controller/common'),
 	Mapping = require('./controller/mapping'),
 	File = require('./controller/file'),
-  Static    = require('./static');
+  	Static    = require('./static');
 
 // API Server Endpoints
 exports.endpoints = [
