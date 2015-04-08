@@ -1,7 +1,7 @@
-var Mongoose = require("mongoose");
-var Config = require("../config/config");
-var request = require("supertest");
-var db;
+var Mongoose = require("mongoose"),
+    Config = require("../config/config"),
+    request = require("supertest"),
+    db;
 
 describe("mapping controller test", function() {
   before(function(ready) {

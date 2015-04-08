@@ -1,11 +1,9 @@
-var assert = require('chai').assert;
-var Mongoose = require("mongoose");
-var Config = require("../config/config");
-var request = require("supertest");
-var testCommon = require("./commonHelper");
-/** @type {string} */
-var url = Config.server.host + ":" + Config.server.port;
-var db;
+var Mongoose = require("mongoose"),
+    Config = require("../config/config"),
+    request = require("supertest"),
+    testCommon = require("./commonHelper"),
+    url = Config.server.host + ":" + Config.server.port,
+    db;
 
 describe("mapping controller test", function() {
   before(function(ready) {
