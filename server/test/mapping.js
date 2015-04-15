@@ -1,20 +1,12 @@
 var Mongoose = require("mongoose"),
+    Db = require('../config/db'),
     Config = require("../config/config"),
     request = require("supertest"),
     testCommon = require("./commonHelper"),
-    url = Config.server.host + ":" + Config.server.port,
-    db;
+    url = Config.server.host + ":" + Config.server.port;
+
 
 describe("mapping controller test", function() {
-  before(function(ready) {
-    Mongoose.connect("mongodb://" + Config.database.host + "/" + Config.database.db);
-    db = Mongoose.connection;
-    db.on("error", console.error.bind(console, "DB connection error"));
-    db.once("open", function completed() {
-      ready();
-    });
-  });
-
   beforeEach(function(done) {
     testCommon.removeCollections(Mongoose, function(error) {
       if (error) {
@@ -24,9 +16,6 @@ describe("mapping controller test", function() {
     });
   });
 
-  after(function(res) {
-    Mongoose.connection.close(res);
-  });
 
   describe("create mapping", function() {
 
