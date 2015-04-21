@@ -506,6 +506,7 @@ app
         }
         console.log('list', list);
       $scope.uploadedData.headers = changeDelimiterFormat(list.list0, format);
+      loadingColumns($scope.uploadedData.headers);
       $scope.uploadedData.rowOne = changeDelimiterFormat(list.list1, format);
       $scope.uploadedData.rowTwo = changeDelimiterFormat(list.list2, format);
     }
