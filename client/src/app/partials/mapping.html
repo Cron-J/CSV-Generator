@@ -139,7 +139,9 @@
 				</thead>
 				<tbody>
 					<tr ng-repeat="row in tableData">
-						<td ng-show="row.quotes == true">"{{row.columnName}}"</td>
+						<td ng-show="row.quotes == true">
+							"<span ng-if="row.defaultVal">{{row.defaultVal}}</span><span ng-if="!row.defaultVal">{{row.columnName}}</span>"
+						</td>
 						<td ng-show="row.quotes == false">{{row.columnName}}</td>
 						<!-- <td><dropdown-multiselect pre-selected="member.roles" model="selected_items" options="roles"></dropdown-multiselect></td> -->
 						<td >

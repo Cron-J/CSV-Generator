@@ -2,6 +2,7 @@
 var mongoose = require('mongoose'),
   timestamps = require('mongoose-timestamp'),
   mapinfo = require('./mapinfo').Mapinfo,
+  delimeter = require('./delimeter').Delimeter,
   Schema = mongoose.Schema,
   ObjectId = Schema.ObjectId;
 
@@ -15,7 +16,9 @@ var MappingSchema = new Schema({
 
   fileName : { type: String, required: true },
 
-  mappingInfo : [mapinfo]
+  mappingInfo : [mapinfo],
+
+  delimeter : delimeter
 
 
 });

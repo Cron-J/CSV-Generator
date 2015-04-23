@@ -24,6 +24,10 @@ var mapinfo = {
         type: String
     },
 
+    defaultValue : {
+        type: String
+    },
+
     values: [{
      
         userFieldName: {
@@ -35,6 +39,10 @@ var mapinfo = {
         }],
 
         field: {
+            type: String
+        },
+
+        defaultValue : {
             type: String
         },
 

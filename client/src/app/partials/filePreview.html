@@ -8,13 +8,13 @@
         <div class="form-group">
           <label class="col-sm-4 control-label">First line include header</label>
           <div class="col-sm-8">
-            <input type="checkbox" ng-model="fileStyle.isHeader"/>
+            <input type="checkbox" ng-model="fileStyle.includeHeader"/>
           </div>
         </div>
         <div class="form-group">
           <label class="col-sm-4 control-label">Date Format</label>
           <div class="col-sm-8">
-            <select name="datePattern" id="date" ng-model="fileStyle.datePattern" class="form-control" ng-change="selectedDateFormat(fileStyle.datePattern)">
+            <select name="datePattern" id="date" ng-model="fileStyle.dateFormat" class="form-control" ng-change="selectedDateFormat(fileStyle.dateFormat)">
               <option value="">select format</option>
               <option value="dd-MM-yyyy">dd-MM-yyyy</option>
               <option value="MM/dd/yyyy">MM/dd/yyyy</option>
@@ -24,7 +24,7 @@
         <div class="form-group">
           <label class="col-sm-4 control-label">Number Format</label>
           <div class="col-sm-8">
-            <select name="numberPattern" id="number" ng-model="fileStyle.numberPattern" class="form-control" ng-change="selectedNumberFormat(fileStyle.numberPattern)">
+            <select name="numberPattern" id="number" ng-model="fileStyle.numberFormat" class="form-control" ng-change="selectedNumberFormat(fileStyle.numberFormat)">
               <option value="">select format</option>
               <option value="#,###.##">#,###.##</option>
               <option value="#.##">#.##</option>
@@ -36,7 +36,7 @@
         <div class="form-group">
           <label class="col-sm-4 control-label">Delimiter Format</label>
           <div class="col-sm-8">
-            <select name="decimalSeparator" id="delimiter" ng-model="fileStyle.decimalSeparator" class="form-control" ng-change="selectedDelimiterFormat(fileStyle.decimalSeparator)">
+            <select name="decimalSeparator" id="delimiter" ng-model="fileStyle.delimeterFormat" class="form-control" ng-change="selectedDelimiterFormat(fileStyle.delimeterFormat)">
               <option value=".">Dot(.)</option>
               <option value=",">Comma(,)</option>
             </select>
@@ -47,7 +47,7 @@
   </div>
 
   <table class="table table-bordered">
-    <thead ng-show="fileStyle.isHeader">
+    <thead ng-show="fileStyle.includeHeader">
       <tr>
         <th ng-repeat="col in uploadedData.headers track by $index">{{col}}</th>
       </tr>

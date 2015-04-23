@@ -4,9 +4,9 @@
 
 app
 	.controller('mainCtrl',['$scope', '$rootScope', '$http', 'growl', '$location', '$timeout', 
-     '$filter', '$upload', 'XLSXReaderService', '$modal', '$log',
+     '$filter', '$upload', '$modal', '$log',
 		function($scope, $rootScope, $http, growl, $location, $timeout, $filter, $upload,  
-      XLSXReaderService, $modal, $log){
+     $modal, $log){
 		var _scope = {};
     $scope.badge={}
 		_scope.init = function(){
@@ -15,13 +15,17 @@ app
       $scope.defaultVal={
         val:null
       }
-      $scope.fileStyle = {
-        "isHeader":true,
-        "datePattern":'dd-MM-yyyy',
-        "numberPattern":'',
-        "decimalSeparator":',' 
-      }
+      defaultFilePreviewSettings();
 		}
+
+    var defaultFilePreviewSettings = function() {
+      $scope.fileStyle = {
+        "includeHeader":true,
+        "dateFormat":'dd-MM-yyyy',
+        "numberFormat":'',
+        "delimeterFormat":',' 
+      }
+    }
 
     var rowIndex;
     var transValue;
@@ -71,7 +75,13 @@ app
     }
 
     $scope.enteredDefaultVal = function (info) {
-      $scope.selectedDefaultVal = info;
+      if($scope.selectedColumn) {
+        $scope.selectedDefaultVal = info;
+      }
+      else {
+        growl.error("Please select column name to add default value");
+        $scope.defaultVal.val = null;
+      }
     }
 
     var getPropertyList = function () {
@@ -254,7 +264,8 @@ app
         $scope.tableData[i].isSelect = true;
         
         if($scope.selectedDefaultVal != null){
-          $scope.tableData[i].columnName = $scope.selectedDefaultVal;
+          // $scope.tableData[i].columnName = $scope.selectedDefaultVal;
+          $scope.tableData[i].defaultVal = $scope.selectedDefaultVal;
           $scope.selectedDefaultVal = null;
           $scope.tableData[i].quotes = true;
         }
@@ -269,6 +280,7 @@ app
         $scope.selectedColumn = undefined;
         $scope.selectedTable = undefined;
         $scope.selectedProperty = undefined;
+        $scope.selectedDefaultVal = undefined;
       }
       else {
         growl.error('Select column, table and property names to map');
@@ -299,6 +311,11 @@ app
                 $scope.tableData[i] = angular.copy(dummy);
                 $scope.tableData[i].columnName = $scope.selectedColumn;
                 $scope.tableData[i].tableName = $scope.pickedTable;
+                if($scope.selectedDefaultVal){
+                  // $scope.tableData[i].columnName = $scope.selectedDefaultVal;
+                  $scope.tableData[i].defaultVal = $scope.selectedDefaultVal;
+                  $scope.selectedDefaultVal = null;
+                }
                 $scope.tableData[i].quotes = true;
                 if($scope.tableData[i].tableName == $scope.pickedTable){
                   $scope.tableData[i].aIndex++;
@@ -522,12 +539,7 @@ app
 
     $scope.resetData = function () {
       $scope.uploadedData = angular.copy($scope.uploadedDataDump);
-      $scope.fileStyle = {
-        "isHeader":true,
-        "datePattern":'dd-MM-yyyy',
-        "numberPattern":'',
-        "decimalSeparator":',' 
-      }
+      defaultFilePreviewSettings();
     }
 
     $scope.startRead = function(files) {
@@ -659,6 +671,7 @@ app
           name:null
         }
       }
+      $scope.fileViewFormats = info;
     }
 
     $scope.saveMappingStep = function (map, tableInfo) {
@@ -671,6 +684,7 @@ app
             mappingDetails.tenantId = 1;
             mappingDetails.fileName = $scope.uploadedData.fileName;
             mappingDetails.mappingName = map.name;
+            mappingDetails.delimeter = $scope.fileViewFormats;
             mappingDetails.mappingInfo = [];
             for (var i = 0; i < tableInfo.length; i++) {
               if(tableInfo[i].tableName == 'product'){
@@ -678,6 +692,7 @@ app
                   "userFieldName": tableInfo[i].columnName,
                   "transformations": tableInfo[i].transformations,
                   "field": tableInfo[i].propName.field,
+                  "defaultValue": tableInfo[i].defaultVal,
                   "index": tableInfo[i].propName.index,
                   "instance": tableInfo[i].propName.instance,
                   "isRequired": tableInfo[i].propName.isRequired
@@ -689,12 +704,14 @@ app
                     "userFieldName": tableInfo[i].columnName,
                     "transformations": tableInfo[i].transformations,
                     "field": tableInfo[i].propName.field,
+                    "defaultValue": tableInfo[i].defaultVal,
                     "index": tableInfo[i].propName.index,
                     "instance": tableInfo[i].propName.instance,
                     "isRequired": tableInfo[i].propName.isRequired
                   }]
                 };
               }
+              console.log(mappingDetails.mappingInfo);
             };
             saveMapping(mappingDetails);
             //reset newmap
@@ -804,26 +821,6 @@ app.filter('smallize', function() {
     return input.substring(0,1).toLowerCase()+input.substring(1);
   }
 });
-
-//factory
-app.factory("XLSXReaderService", ['$q', '$rootScope',
-    function($q, $rootScope) {
-        var service = function(data) {
-            angular.extend(this, data);
-        }
-        service.readFile = function(file, readCells, toJSON) {
-            var deferred = $q.defer();
-
-            XLSXReader(file, readCells, toJSON, function(data) {
-                $rootScope.$apply(function() {
-                    deferred.resolve(data);
-                });
-            });
-            return deferred.promise;
-        }
-        return service;
-    }
-]);
 
 app.controller('confirmationModalInstanceCtrl', function($scope, 
   $modalInstance, table_scope, row_no) {
