@@ -416,8 +416,8 @@ app
     }
 
     $scope.selectedDateFormat = function (format) {
-      var list1 = angular.copy($scope.uploadedDataDump.rowOne);
-      var list2 = angular.copy($scope.uploadedDataDump.rowTwo);
+      var list1 = $scope.uploadedData.rowOne;
+      var list2 = $scope.uploadedData.rowTwo;
       $scope.uploadedData.rowOne = changeDateFormat(list1, format);
       $scope.uploadedData.rowTwo = changeDateFormat(list2, format);
     }
@@ -445,8 +445,8 @@ app
     }
 
     $scope.selectedNumberFormat = function (format) {
-      var list1 = angular.copy($scope.uploadedDataDump.rowOne);
-      var list2 = angular.copy($scope.uploadedDataDump.rowTwo);
+      var list1 = $scope.uploadedData.rowOne;
+      var list2 = $scope.uploadedData.rowTwo;
       $scope.uploadedData.rowOne = changeNumberFormat(list1, format);
       $scope.uploadedData.rowTwo = changeNumberFormat(list2, format);
     }
@@ -500,9 +500,9 @@ app
 
     $scope.selectedDelimiterFormat = function (format) {
       var list = {
-          "list0" : angular.copy($scope.uploadedDataDump.headers).join(),
-          "list1" : angular.copy($scope.uploadedDataDump.rowOne).join(),
-          "list2" : angular.copy($scope.uploadedDataDump.rowTwo).join()
+          "list0" : $scope.uploadedData.headers.join(),
+          "list1" : $scope.uploadedData.rowOne.join(),
+          "list2" : $scope.uploadedData.rowTwo.join()
         }
         console.log('list', list);
       $scope.uploadedData.headers = changeDelimiterFormat(list.list0, format);
@@ -518,6 +518,16 @@ app
       else 
           dump = list.split(",");
       return dump;
+    }
+
+    $scope.resetData = function () {
+      $scope.uploadedData = angular.copy($scope.uploadedDataDump);
+      $scope.fileStyle = {
+        "isHeader":true,
+        "datePattern":'dd-MM-yyyy',
+        "numberPattern":'',
+        "decimalSeparator":',' 
+      }
     }
 
     $scope.startRead = function(files) {
