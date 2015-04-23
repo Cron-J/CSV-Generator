@@ -12,11 +12,15 @@ app
 		_scope.init = function(){
       $scope.firstStep();
       $scope.resultXls = {};
-      $scope.defaultVal={
-        val:null
-      }
+      defaultBtn();
       defaultFilePreviewSettings();
 		}
+    var defaultBtn = function () {
+      $scope.defaultVal={
+        name:"defaultValue",
+        value:null
+      }
+    }
 
     var defaultFilePreviewSettings = function() {
       $scope.fileStyle = {
@@ -75,13 +79,7 @@ app
     }
 
     $scope.enteredDefaultVal = function (info) {
-      if($scope.selectedColumn) {
         $scope.selectedDefaultVal = info;
-      }
-      else {
-        growl.error("Please select column name to add default value");
-        $scope.defaultVal.val = null;
-      }
     }
 
     var getPropertyList = function () {
@@ -256,17 +254,19 @@ app
       if(($scope.selectedColumn || $scope.selectedDefaultVal) && $scope.selectedTable && $scope.selectedProperty){
         var i = $scope.tableData.length++;
         $scope.tableData[i] = {"columnName": null, "propName": null, "isSelect":false,
-                        "tableName": null, "aIndex": 0, "quotes": false , "rowId":0,"transformations":[]};
+                        "tableName": null, "defaultVal": null, "aIndex": 0, "quotes": false , "rowId":0,"transformations":[]};
         $scope.tableData[i].columnName = $scope.selectedColumn;
         $scope.tableData[i].propName = $scope.selectedProperty;
         $scope.tableData[i].tableName = $scope.selectedTable;
         $scope.tableData[i].rowId = $scope.rowId;
         $scope.tableData[i].isSelect = true;
-        
+              console.log($scope.selectedDefaultVal);
         if($scope.selectedDefaultVal != null){
-          // $scope.tableData[i].columnName = $scope.selectedDefaultVal;
-          $scope.tableData[i].defaultVal = $scope.selectedDefaultVal;
+          $scope.tableData[i].columnName = $scope.selectedDefaultVal.name;
+          $scope.tableData[i].defaultVal = $scope.selectedDefaultVal.value;
+          console.log( $scope.tableData[i]);
           $scope.selectedDefaultVal = null;
+          defaultBtn();
           $scope.tableData[i].quotes = true;
         }
         for(var j = 0; j < $scope.tableData.length; j++){
@@ -276,7 +276,7 @@ app
         }
         mappedColumns($scope.selectedColumn);
         mappedPropColumns($scope.selectedTable);
-        $scope.defaultVal.val = '';
+        $scope.defaultVal.value = '';
         $scope.selectedColumn = undefined;
         $scope.selectedTable = undefined;
         $scope.selectedProperty = undefined;
@@ -311,11 +311,13 @@ app
                 $scope.tableData[i] = angular.copy(dummy);
                 $scope.tableData[i].columnName = $scope.selectedColumn;
                 $scope.tableData[i].tableName = $scope.pickedTable;
-                if($scope.selectedDefaultVal){
-                  // $scope.tableData[i].columnName = $scope.selectedDefaultVal;
-                  $scope.tableData[i].defaultVal = $scope.selectedDefaultVal;
-                  $scope.selectedDefaultVal = null;
-                }
+                console.log($scope.selectedDefaultVal);
+                // if($scope.selectedDefaultVal != null){
+                //   $scope.tableData[i].columnName = $scope.selectedDefaultVal.name;
+                //   $scope.tableData[i].defaultVal = $scope.selectedDefaultVal.value;
+                //   $scope.selectedDefaultVal = null;
+                //   defaultBtn();
+                // }
                 $scope.tableData[i].quotes = true;
                 if($scope.tableData[i].tableName == $scope.pickedTable){
                   $scope.tableData[i].aIndex++;
@@ -367,7 +369,7 @@ app
 
           mappedColumns($scope.selectedColumn);
           mappedPropColumns($scope.pickedTable);
-          $scope.defaultVal.val = '';
+          $scope.defaultVal.value = '';
           $scope.selectedColumn = undefined;
           $scope.selectedTable = undefined;
           $scope.selectedProperty = undefined;

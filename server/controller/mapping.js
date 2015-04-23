@@ -51,9 +51,13 @@ exports.getMappingData = {
                                 convertedJson[key] = {};
 
                             if (mappings[0].mappingInfo[i].userFieldName) {
-                                convertedJson[key][mappings[0].mappingInfo[i].userFieldName] =
+                                if(mappings[0].mappingInfo[i].defaultValue != undefined) {
+                                    convertedJson[key][mappings[0].mappingInfo[i].userFieldName] = 
+                                    mappings[0].mappingInfo[i].defaultValue;
+                                } else {
+                                    convertedJson[key][mappings[0].mappingInfo[i].userFieldName] =
                                     jsonObj[g][mappings[0].mappingInfo[i].userFieldName];
-
+                                }
                             } else {
                                 for (var j = 0; j < mappings[0].mappingInfo[i].values.length; j++) {
                                     switch (mappings[0].mappingInfo[i].field) {
@@ -62,12 +66,19 @@ exports.getMappingData = {
                                                 convertedJson[key].attributeValues = [];
                                             check = checkAlDuplicate(mappings[0].mappingInfo[i].values[j].userFieldName, convertedJson[key].attributeValues);
                                             if (check != false) {
-                                                convertedJson[key].attributeValues.push({
-                                                    "attributeId": mappings[0].mappingInfo[i].values[j].userFieldName,
-                                                    "attributeValue": jsonObj[g][mappings[0].mappingInfo[i].values[j].userFieldName]
-                                                });
+                                                if(mappings[0].mappingInfo[i].values[j].defaultValue) {
+                                                    obj[mappings[0].mappingInfo[i].values[j].userFieldName] =
+                                                            mappings[0].mappingInfo[i].values[j].defaultValue;
+                                                    convertedJson[key].attributeValues.push(obj);
+                                                } else {
+                                                    convertedJson[key].attributeValues.push({
+                                                        "attributeId": mappings[0].mappingInfo[i].values[j].userFieldName,
+                                                        "attributeValue":jsonObj[g][mappings[0].mappingInfo[i].values[j].userFieldName]
+                                                    });
+                                                }
                                             }
                                             break;
+
                                         case "prices":
                                             if (!convertedJson[key].prices)
                                                 convertedJson[key].prices = [];
@@ -81,37 +92,56 @@ exports.getMappingData = {
                                                          "pricetype": mappings[0].mappingInfo[i].values[j].userFieldName.split('_')[0],
                                                          "price": jsonObj[g][mappings[0].mappingInfo[i].values[j].userFieldName]
                                                         });
-                                                } else {
-                                                    obj[mappings[0].mappingInfo[i].values[j].userFieldName] =
-                                                        jsonObj[g][mappings[0].mappingInfo[i].values[j].userFieldName];
+                                                } 
+                                                else { 
+                                                    if(mappings[0].mappingInfo[i].values[j].defaultValue) {
+                                                         obj[mappings[0].mappingInfo[i].values[j].userFieldName] = mappings[0].mappingInfo[i].values[j].defaultValue
+                                                    } else {
+                                                        obj[mappings[0].mappingInfo[i].values[j].userFieldName] =
+                                                            jsonObj[g][mappings[0].mappingInfo[i].values[j].userFieldName];
+                                                    } 
                                                     convertedJson[key].prices.push(obj);
                                                 }     
                                             }
                                             break;
+
                                         case "productRelations":
                                             if (!convertedJson[key].productRelations)
                                                 convertedJson[key].productRelations = [];
-
-                                            obj[mappings[0].mappingInfo[i].values[j].userFieldName] =
+                                            if(mappings[0].mappingInfo[i].values[j].defaultValue) {
+                                                obj[mappings[0].mappingInfo[i].values[j].userFieldName] =
+                                                mappings[0].mappingInfo[i].values[j].defaultValue;
+                                            } else {
+                                                obj[mappings[0].mappingInfo[i].values[j].userFieldName] =
                                                 jsonObj[g][mappings[0].mappingInfo[i].values[j].userFieldName];
+                                            }
                                             convertedJson[key].productRelations.push(obj);
-
                                             break;
+
                                         case "contractedProducts":
                                             if (!convertedJson[key].contractedProducts)
                                                 convertedJson[key].contractedProducts = [];
 
-                                            obj[mappings[0].mappingInfo[i].values[j].userFieldName] =
+                                            if(mappings[0].mappingInfo[i].values[j].defaultValue){
+                                                obj[mappings[0].mappingInfo[i].values[j].userFieldName] =
+                                                mappings[0].mappingInfo[i].values[j].defaultValue;
+                                            }else{
+                                                obj[mappings[0].mappingInfo[i].values[j].userFieldName] =
                                                 jsonObj[g][mappings[0].mappingInfo[i].values[j].userFieldName];
+                                            }
                                             convertedJson[key].contractedProducts.push(obj);
                                             break;
+
                                         case "classificationGroupAssociations":
                                             if (!convertedJson[key].classificationGroupAssociations)
                                                 convertedJson[key].classificationGroupAssociations = [];
-
-                                            obj[mappings[0].mappingInfo[i].values[j].userFieldName] =
-                                                jsonObj[g][mappings[0].mappingInfo[i].values[j].userFieldName];
-
+                                            if(mappings[0].mappingInfo[i].values[j].defaultValue) {
+                                                obj[mappings[0].mappingInfo[i].values[j].userFieldName] =
+                                                mappings[0].mappingInfo[i].values[j].defaultValue;
+                                            } else {
+                                                obj[mappings[0].mappingInfo[i].values[j].userFieldName] =
+                                                    jsonObj[g][mappings[0].mappingInfo[i].values[j].userFieldName];
+                                            }
                                             convertedJson[key].classificationGroupAssociations.push(obj);
                                             break;
 
