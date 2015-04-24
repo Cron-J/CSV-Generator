@@ -1,4 +1,7 @@
 <div class="row" ng-hide="isMapSaved">
+	<div class="upload-container">
+      <legend>Mapping</legend>
+  </div>
 	<form class="form-horizontal" role="form" name="mapForm">
 		<div class="form-group">
 			<label for="x" class="col-sm-2 control-label">Mapping Name</label>
@@ -8,7 +11,7 @@
 			</div>
 		</div>
 	</form>
-	<hr><!-- mapping editor -->
+	<!-- <hr> --><!-- mapping editor -->
 	<div class="bs-callout bs-callout-info">
 		<p><span style="color:#428bca"><b>Required properties</b> are displayed in blue.</span><br>
 		<span style="color:green"><b>Mapped properties</b> are marked with green color.</span></p>
@@ -26,10 +29,9 @@
 	</div>
 	<div class="row">
 		<div class="col-md-3">
-			<select class="mapping-select" id="columns1" name="columns" ng-model="column" size="20" ng-click="selectColumn(column)">
-			<option value="" style="display:none">select option</option>
+			<select class="mapping-select" id="columns1" name="columns" size="20" >
 			<!-- removed from here -->
-			<option  ng-repeat="col in columnShowList" ng-class="{mapped: col.isSelect}">{{col.colName}}</option>
+			<option  ng-repeat="col in columnShowList" ng-class="{mapped: col.isSelect}" ng-click="selectColumn(col.colName)">{{col.colName}}</option>
 			</select>
 		</div>
 		<div class="col-md-2">
@@ -168,7 +170,7 @@
 		</div>
 	</div>
 </div>
-<div class="row" ng-show="isMapSaved">
+<div class="row btn-set" ng-show="isMapSaved">
   <p>Please specify the mapping before you start the import. If you have already created a valid mapping then you can start import directly.</p>
   <div class="row">
     <div class="col-lg-2">

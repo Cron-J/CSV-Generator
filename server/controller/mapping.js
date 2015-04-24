@@ -56,7 +56,7 @@ exports.getMappingData = {
                                     mappings[0].mappingInfo[i].defaultValue;
                                 } else {
                                     convertedJson[key][mappings[0].mappingInfo[i].userFieldName] =
-                                    jsonObj[g][mappings[0].mappingInfo[i].userFieldName];
+                                    changeFormat(jsonObj[g][mappings[0].mappingInfo[i].userFieldName], mappings[0].delimeter);
                                 }
                             } else {
                                 for (var j = 0; j < mappings[0].mappingInfo[i].values.length; j++) {
@@ -73,7 +73,7 @@ exports.getMappingData = {
                                                 } else {
                                                     convertedJson[key].attributeValues.push({
                                                         "attributeId": mappings[0].mappingInfo[i].values[j].userFieldName,
-                                                        "attributeValue":jsonObj[g][mappings[0].mappingInfo[i].values[j].userFieldName]
+                                                        "attributeValue":changeFormat(jsonObj[g][mappings[0].mappingInfo[i].values[j].userFieldName], mappings[0].delimeter)
                                                     });
                                                 }
                                             }
@@ -98,7 +98,7 @@ exports.getMappingData = {
                                                          obj[mappings[0].mappingInfo[i].values[j].userFieldName] = mappings[0].mappingInfo[i].values[j].defaultValue
                                                     } else {
                                                         obj[mappings[0].mappingInfo[i].values[j].userFieldName] =
-                                                            jsonObj[g][mappings[0].mappingInfo[i].values[j].userFieldName];
+                                                            changeFormat(jsonObj[g][mappings[0].mappingInfo[i].values[j].userFieldName], mappings[0].delimeter);
                                                     } 
                                                     convertedJson[key].prices.push(obj);
                                                 }     
@@ -113,7 +113,7 @@ exports.getMappingData = {
                                                 mappings[0].mappingInfo[i].values[j].defaultValue;
                                             } else {
                                                 obj[mappings[0].mappingInfo[i].values[j].userFieldName] =
-                                                jsonObj[g][mappings[0].mappingInfo[i].values[j].userFieldName];
+                                                changeFormat(jsonObj[g][mappings[0].mappingInfo[i].values[j].userFieldName], mappings[0].delimeter);
                                             }
                                             convertedJson[key].productRelations.push(obj);
                                             break;
@@ -127,7 +127,7 @@ exports.getMappingData = {
                                                 mappings[0].mappingInfo[i].values[j].defaultValue;
                                             }else{
                                                 obj[mappings[0].mappingInfo[i].values[j].userFieldName] =
-                                                jsonObj[g][mappings[0].mappingInfo[i].values[j].userFieldName];
+                                                changeFormat(jsonObj[g][mappings[0].mappingInfo[i].values[j].userFieldName], mappings[0].delimeter);
                                             }
                                             convertedJson[key].contractedProducts.push(obj);
                                             break;
@@ -140,7 +140,7 @@ exports.getMappingData = {
                                                 mappings[0].mappingInfo[i].values[j].defaultValue;
                                             } else {
                                                 obj[mappings[0].mappingInfo[i].values[j].userFieldName] =
-                                                    jsonObj[g][mappings[0].mappingInfo[i].values[j].userFieldName];
+                                                    changeFormat(jsonObj[g][mappings[0].mappingInfo[i].values[j].userFieldName], mappings[0].delimeter);
                                             }
                                             convertedJson[key].classificationGroupAssociations.push(obj);
                                             break;
@@ -161,6 +161,57 @@ exports.getMappingData = {
     }
 }
 
+//format change
+var changeFormat = function (item, format){
+    if(isNaN(item)) { 
+        var d = new Date(item);
+        if(d != "Invalid Date"){
+          var date = d.getDate();
+          if(date < 10) date = "0"+date;
+          var month = d.getMonth()+1;
+          if(month < 10) month = "0"+month;
+          var year = d.getFullYear();
+          if(format.dateFormat == "MM/dd/yyyy") {
+            item = month+"/"+date+"/"+year;
+          }  
+          else
+            item = date+"-"+month+"-"+year;
+        }
+    }
+
+    if(!isNaN(item)) {
+      if(format.numberFormat == '#,##'){
+        var str = item.slice(0, -2)+','+item.slice(-2);
+        item = str;
+      }
+      else if(format.numberFormat == '#.##'){
+        list[i] = (item / 100);
+      }
+      else if(format.numberFormat == '#,###.##'){
+        if(item.toString().length > 5){
+          item = (item / 100);
+          var str = item.toString().split('.');
+          if (str[0].length >= 4) {
+            str[0] = str[0].replace(/(\d)(?=(\d{3})+$)/g, '$1,');
+          }
+          if (str[1] && str[1].length >= 4) {
+              str[1] = str[1].replace(/(\d{3})/g, '$1 ');
+          }
+          item = str.join('.');
+        }
+      }
+      else if(format.numberFormat == '#.###,##'){
+        var str = item.toString();
+        if(str.length > 5){
+          str = list[i].slice(0, -5)+'.'+item.slice(-3)+','+item.slice(-2);
+          item = str;  
+        }
+      }
+    }
+    
+ return item;
+}
+
 //checking duplicates
 var checkAlDuplicate = function(name, arr) {
     for (var i = 0; i < arr.length; i++) {
@@ -175,3 +226,4 @@ var checkPDuplicate = function(name, arr) {
     };
 
 }
+
