@@ -29,6 +29,9 @@ font-weight: 100 !important;
   display: inline-block;
 }
 
+.btn-margin {
+  margin-bottom: 10px;
+}
 
 /* .popover {
     max-width: none!important;

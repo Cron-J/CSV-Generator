@@ -42,12 +42,14 @@ exports.uploadFile = {
 function csvJSON(csv, fileName) {
 
     var lines = csv.split("\n");
-    var result = {
-        "fileName": fileName,
-        "headers": lines[0].split("\r")[0].split(","),
-        "rowOne": lines[1].split("\r")[0].split(","),
-        "rowTwo": lines[2].split("\r")[0].split(",")
-    };
+    var result = {};
+    result.fileName = fileName;
+    if(lines[0])
+        result.headers = lines[0].split("\r")[0].split(",")
+    if(lines[1])
+        result.rowOne = lines[1].split("\r")[0].split(",")
+    if(lines[2])
+        result.rowTwo = lines[2].split("\r")[0].split(",")
 
     return JSON.stringify(result); //JSON
 }

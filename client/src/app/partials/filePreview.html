@@ -44,6 +44,9 @@
         </div> 
       </form>
     </div>
+    <div class="row btn-margin">
+      <button class="btn btn-primary"  ng-click="resetData()">Reset Preview Settings</button>
+    </div>
   </div>
 
   <table class="table table-bordered">
@@ -61,7 +64,6 @@
       </tr>
     </tbody>
   </table>
-  <button class="btn btn-primary"  ng-click="resetData()">Reset Table Data</button>
   <div class="btn-set button-container pull-right">
     <button class="btn btn-primary"  ng-click="firstStep()">Back</button>
     <button class="btn btn-primary"  ng-show="!stopStep" ng-click="thirdStep(fileStyle)">Next</button>

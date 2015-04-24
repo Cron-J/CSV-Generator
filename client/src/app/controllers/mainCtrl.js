@@ -25,8 +25,8 @@ app
     var defaultFilePreviewSettings = function() {
       $scope.fileStyle = {
         "includeHeader":true,
-        "dateFormat":'dd-MM-yyyy',
-        "numberFormat":'',
+        // "dateFormat":'',
+        // "numberFormat":'',
         "delimeterFormat":',' 
       }
     }
@@ -260,11 +260,9 @@ app
         $scope.tableData[i].tableName = $scope.selectedTable;
         $scope.tableData[i].rowId = $scope.rowId;
         $scope.tableData[i].isSelect = true;
-              console.log($scope.selectedDefaultVal);
         if($scope.selectedDefaultVal != null){
           $scope.tableData[i].columnName = $scope.selectedDefaultVal.name;
           $scope.tableData[i].defaultVal = $scope.selectedDefaultVal.value;
-          console.log( $scope.tableData[i]);
           $scope.selectedDefaultVal = null;
           defaultBtn();
           $scope.tableData[i].quotes = true;
@@ -311,7 +309,6 @@ app
                 $scope.tableData[i] = angular.copy(dummy);
                 $scope.tableData[i].columnName = $scope.selectedColumn;
                 $scope.tableData[i].tableName = $scope.pickedTable;
-                console.log($scope.selectedDefaultVal);
                 // if($scope.selectedDefaultVal != null){
                 //   $scope.tableData[i].columnName = $scope.selectedDefaultVal.name;
                 //   $scope.tableData[i].defaultVal = $scope.selectedDefaultVal.value;
@@ -523,7 +520,6 @@ app
           "list1" : $scope.uploadedData.rowOne.join(),
           "list2" : $scope.uploadedData.rowTwo.join()
         }
-        console.log('list', list);
       $scope.uploadedData.headers = changeDelimiterFormat(list.list0, format);
       loadingColumns($scope.uploadedData.headers);
       $scope.uploadedData.rowOne = changeDelimiterFormat(list.list1, format);
@@ -561,7 +557,7 @@ app
           $scope.uploadedData = data;
           loadingColumns(data.headers);
       })
-      .error(function(){
+      .error(function(data){
         growl.error("Unable to upload file");
       });
     }
@@ -713,7 +709,6 @@ app
                   }]
                 };
               }
-              console.log(mappingDetails.mappingInfo);
             };
             saveMapping(mappingDetails);
             //reset newmap
