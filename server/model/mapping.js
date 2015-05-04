@@ -41,6 +41,10 @@ MappingSchema.statics.getMappedData = function(tenantId, mappingId, callback) {
     this.find({_id:mappingId,'tenantId': tenantId}, callback);
 };
 
+MappingSchema.statics.updateMapping = function(id, mapping, callback) {
+    this.update({'_id': id}, mapping, callback);
+};
+
 // export
 var mapping = mongoose.model('Mapping', MappingSchema);
 

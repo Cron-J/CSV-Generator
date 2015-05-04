@@ -16,9 +16,33 @@ exports.createMapping = {
     }
 }
 
+exports.updateMapping = {
+    handler: function(request, reply) {
+        Mapping.updateMapping(request.params.mappingId, request.payload, function(err, mapping) {
+            if (!err) {
+                reply(mapping);
+            } else {
+                reply(Boom.forbidden(err));
+            }
+        });
+    }
+}
+
 exports.getMappingList = {
     handler: function(request, reply) {
         Mapping.getMappingList(request.params.tenantId, function(err, mappings) {
+            if (!err) {
+                reply(mappings);
+            } else {
+                reply(Boom.forbidden(err));
+            }
+        });
+    }
+}
+
+exports.getMappingForEdit = {
+    handler: function(request, reply) {
+        Mapping.getMappedData(request.params.tenantId, request.params.mappingId, function(err, mappings) {
             if (!err) {
                 reply(mappings);
             } else {
