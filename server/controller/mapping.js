@@ -163,6 +163,7 @@ exports.getMappingData = {
 
 //format change
 var changeFormat = function (item, format){
+    var list;
     if(isNaN(item)) { 
         var d = new Date(item);
         if(d != "Invalid Date"){
@@ -185,7 +186,7 @@ var changeFormat = function (item, format){
         item = str;
       }
       else if(format.numberFormat == '#.##'){
-        list[i] = (item / 100);
+        list = (item / 100);
       }
       else if(format.numberFormat == '#,###.##'){
         if(item.toString().length > 5){
