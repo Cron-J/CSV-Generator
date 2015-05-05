@@ -14,7 +14,7 @@
         <div class="form-group">
           <label class="col-sm-4 control-label">Date Format</label>
           <div class="col-sm-8">
-            <select name="datePattern" id="date" ng-model="fileStyle.dateFormat" class="form-control" ng-change="selectedDateFormat(fileStyle.dateFormat)" ng-init="fileStyle.dateFormat='dd-MM-yyyy'">
+            <select name="datePattern" id="date" ng-model="fileStyle.dateFormat" class="form-control" ng-change="changeFormat(fileStyle.dateFormat)" ng-init="fileStyle.dateFormat='dd-MM-yyyy'">
               <option value="">select format</option>
               <option value="dd-MM-yyyy">dd-MM-yyyy</option>
               <option value="MM/dd/yyyy">MM/dd/yyyy</option>
@@ -24,7 +24,7 @@
         <div class="form-group">
           <label class="col-sm-4 control-label">Number Format</label>
           <div class="col-sm-8">
-            <select name="numberPattern" id="number" ng-model="fileStyle.numberFormat" class="form-control" ng-change="selectedNumberFormat(fileStyle.numberFormat)" ng-init="fileStyle.numberFormat='#,###.##'">
+            <select name="numberPattern" id="number" ng-model="fileStyle.numberFormat" class="form-control" ng-change="changeFormat()" ng-init="fileStyle.numberFormat='#,###.##'">
               <option value="">select format</option>
               <option value="#,###.##">#,###.##</option>
               <option value="#.##">#.##</option>
@@ -52,15 +52,15 @@
   <table class="table table-bordered">
     <thead ng-show="fileStyle.includeHeader">
       <tr>
-        <th ng-repeat="col in uploadedData.headers track by $index">{{col}}</th>
+        <th ng-repeat="col in dupUploadedData.headers track by $index">{{col}}</th>
       </tr>
     </thead>
     <tbody>
       <tr >
-        <td ng-repeat="row in uploadedData.rowOne track by $index">{{row}}</td>
+        <td ng-repeat="row in dupUploadedData.rowOne track by $index">{{row}}</td>
       </tr>
       <tr >
-        <td ng-repeat="row in uploadedData.rowTwo track by $index">{{row}}</td>
+        <td ng-repeat="row in dupUploadedData.rowTwo track by $index">{{row}}</td>
       </tr>
     </tbody>
   </table>

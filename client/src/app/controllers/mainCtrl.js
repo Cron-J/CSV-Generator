@@ -437,12 +437,32 @@ app
       }
     }
 
-    $scope.selectedDateFormat = function (format) {
-      var list1 = $scope.uploadedData.rowOne;
-      var list2 = $scope.uploadedData.rowTwo;
-      $scope.uploadedData.rowOne = changeDateFormat(list1, format);
-      $scope.uploadedData.rowTwo = changeDateFormat(list2, format);
+    $scope.changeFormat=function(){
+      $scope.dupUploadedData=angular.copy($scope.uploadedData);
+
+      $scope.dupUploadedData.rowOne = changeDateFormat($scope.dupUploadedData.rowOne, $scope.fileStyle.dateFormat);
+      $scope.dupUploadedData.rowTwo = changeDateFormat($scope.dupUploadedData.rowTwo, $scope.fileStyle.dateFormat);
+      $scope.dupUploadedData.rowOne = changeNumberFormat($scope.dupUploadedData.rowOne, $scope.fileStyle.numberFormat);
+      $scope.dupUploadedData.rowTwo = changeNumberFormat($scope.dupUploadedData.rowTwo, $scope.fileStyle.numberFormat);
+      // var list = {
+      //     "list0" : $scope.dupUploadedData.headers.join(),
+      //     "list1" : $scope.dupUploadedData.rowOne.join(),
+      //     "list2" : $scope.dupUploadedData.rowTwo.join()
+      //   }
+      // $scope.dupUploadedData.headers = changeDelimiterFormat(list.list0, $scope.fileStyle.delimeterFormat);
+      // loadingColumns($scope.dupUploadedData.headers);
+      // $scope.dupUploadedData.rowOne = changeDelimiterFormat(list.list1, $scope.fileStyle.delimeterFormat);
+      // $scope.dupUploadedData.rowTwo = changeDelimiterFormat(list.list2, $scope.fileStyle.delimeterFormat);
+    
     }
+
+    // $scope.selectedDateFormat = function (format) {
+
+    //   var list1 = $scope.dupUploadedData.rowOne;
+    //   var list2 = $scope.dupUploadedData.rowTwo;
+    //   $scope.dupUploadedData.rowOne = changeDateFormat(list1, format);
+    //   $scope.dupUploadedData.rowTwo = changeDateFormat(list2, format);
+    // }
 
     var changeDateFormat = function (list, format) {
       if(list){
@@ -466,12 +486,12 @@ app
       }
     }
 
-    $scope.selectedNumberFormat = function (format) {
-      var list1 = $scope.uploadedData.rowOne;
-      var list2 = $scope.uploadedData.rowTwo;
-      $scope.uploadedData.rowOne = changeNumberFormat(list1, format);
-      $scope.uploadedData.rowTwo = changeNumberFormat(list2, format);
-    }
+    // $scope.selectedNumberFormat = function (format) {
+    //   var list1 = $scope.dupUploadedData.rowOne;
+    //   var list2 = $scope.dupUploadedData.rowTwo;
+    //   $scope.dupUploadedData.rowOne = changeNumberFormat(list1, format);
+    //   $scope.dupUploadedData.rowTwo = changeNumberFormat(list2, format);
+    // }
 
     var changeNumberFormat = function (list, format) {
       for (var i = 0; i < list.length; i++) {
@@ -522,14 +542,14 @@ app
 
     $scope.selectedDelimiterFormat = function (format) {
       var list = {
-          "list0" : $scope.uploadedData.headers.join(),
-          "list1" : $scope.uploadedData.rowOne.join(),
-          "list2" : $scope.uploadedData.rowTwo.join()
+          "list0" : $scope.dupUploadedData.headers.join(),
+          "list1" : $scope.dupUploadedData.rowOne.join(),
+          "list2" : $scope.dupUploadedData.rowTwo.join()
         }
-      $scope.uploadedData.headers = changeDelimiterFormat(list.list0, format);
-      loadingColumns($scope.uploadedData.headers);
-      $scope.uploadedData.rowOne = changeDelimiterFormat(list.list1, format);
-      $scope.uploadedData.rowTwo = changeDelimiterFormat(list.list2, format);
+      $scope.dupUploadedData.headers = changeDelimiterFormat(list.list0, format);
+      loadingColumns($scope.dupUploadedData.headers);
+      $scope.dupUploadedData.rowOne = changeDelimiterFormat(list.list1, format);
+      $scope.dupUploadedData.rowTwo = changeDelimiterFormat(list.list2, format);
     }
 
     var changeDelimiterFormat = function (list, format) {
@@ -542,7 +562,7 @@ app
     }
 
     $scope.resetData = function () {
-      $scope.uploadedData = angular.copy($scope.uploadedDataDump);
+      $scope.dupUploadedData = angular.copy($scope.uploadedData);
       defaultFilePreviewSettings();
     }
 
@@ -562,6 +582,7 @@ app
           $scope.uploadedDataDump = angular.copy(data);
           $scope.uploadedData = data;
           loadingColumns(data.headers);
+          $scope.changeFormat();
       })
       .error(function(data){
         growl.error("Unable to upload file");
@@ -578,7 +599,7 @@ app
       };
       $scope.columnShowList = selectedColumns;  
       $scope.secondStep(); 
-      $scope.selectedDateFormat('dd-MM-yyyy');
+      
     }
     //check required fields mapping is done or not
     var checkMapping = function (tableInfo) {
