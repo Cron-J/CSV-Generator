@@ -12,7 +12,7 @@ var MappingSchema = new Schema({
   /** tenant id is indexed */
   tenantId : { type: String, required: true, index: true },
 
-  mappingName : { type: String, required: true },
+  mappingName : { type: String, required: true, unique: true },
 
   fileName : { type: String, required: true },
 
@@ -34,7 +34,7 @@ MappingSchema.statics.createMapping = function(mapping, callback) {
 };
 
 MappingSchema.statics.getMappingList = function(tenantId, callback) {
-    this.find({'tenantId': tenantId}, {mappingName: 1}, callback);
+    this.find({'tenantId': tenantId}, {mappingName: 1, tenantId: 1}, callback);
 };
 
 MappingSchema.statics.getMappedData = function(tenantId, mappingId, callback) {

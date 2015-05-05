@@ -145,16 +145,25 @@
 				<tbody>
 					<tr ng-repeat="row in tableData">
 						<td ng-show="row.quotes == true">
-							"<span ng-if="row.defaultVal">{{row.defaultVal}}</span><span ng-if="!row.defaultVal">{{row.columnName}}</span>"
+							"<span ng-if="row.defaultVal ">{{row.defaultVal}}</span><span ng-if="!row.defaultVal">{{row.columnName}}</span>"
 						</td>
-						<td ng-show="row.quotes == false">{{row.columnName}}</td>
+						<td ng-show="row.quotes == false ">{{row.columnName}}</td>
+						
 						<!-- <td><dropdown-multiselect pre-selected="member.roles" model="selected_items" options="roles"></dropdown-multiselect></td> -->
 						<td >
 							<div class="truncate" popover-placement="top" popover="{{row.transVal}}" popover-trigger="mouseenter">{{row.transVal}}</div>
        				<button class="btn btn-primary btn-xxs" context="context1" ng-click="saveIndex($index)"><span class="glyphicon glyphicon-edit"></span></button>
        			</td>
-						<td><span ng-show="row.tableName != 'product'">product.</span>{{row.tableName}}<span ng-show="row.rowId > 0">({{row.rowId}})</span>.{{row.propName.field}}</td>
-						<td>{{row.propName.field}}</td>
+						<td>
+							
+							<span ng-show="row.tableName != 'product'">product.</span>{{row.tableName}}
+							<span ng-show="row.rowId > 0">({{row.rowId}})</span>.{{row.propName.field}}
+							
+						</td>
+						<td>
+							<span >{{row.propName.field}}</span>
+							
+						</td>
 						<td>{{row.aIndex}}</td>
 						<td>
 							<button class="btn btn-default btn-xs" ng-click="removeRow(row.propName.field, row.columnName, row.tableName, $index)"><span class="glyphicon glyphicon-remove"></span> Remove</button>
@@ -177,16 +186,18 @@
       <label>Mapping Id</label>
     </div>
     <div class="col-lg-3">
-      <select class="form-control" id="mapId" ng-model="selectedMapping" ng-options="item._id as item.mappingName for item in mappingList">
+      <select class="form-control" id="mapId" ng-model="selectedMapping" ng-options="item as item.mappingName for item in mappingList" >
         <option value="">Select mapping id</option>
       </select>
     </div>
+   
     <div class="col-lg-5">
     	<!-- <button class="btn btn-primary btn-sm" ng-click="editMapping(selectedMapping)">Edit Mapping</button> -->
       <button class="btn btn-primary btn-sm" ng-click="newMapping();firstStep()">Create Mapping</button>
+      <!-- <button class="btn btn-primary btn-sm" ng-click="editMapping(selectedMapping);">Edit Mapping</button> -->
     </div>
   </div>
-  <div class="row" ng-show="selectedMapping">
+  <div class="row" ng-show="selectedMapping._id">
 	  <div class="col-lg-12 btn-set">
 	  	<button class="btn btn-primary" ng-click="fourthStep(selectedMapping)">Next</button>
 	  </div>

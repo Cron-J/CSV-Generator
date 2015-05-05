@@ -9,6 +9,7 @@ app
      $modal, $log){
 		var _scope = {};
     $scope.badge={}
+    $scope.clear={};
 		_scope.init = function(){
       $scope.firstStep();
       $scope.resultXls = {};
@@ -282,7 +283,9 @@ app
       }
       else {
         growl.error('Select column, table and property names to map');
-      }  
+      } 
+
+      $("option:selected").removeAttr("selected");
     }
 
     $scope.mapAttribute = function () {
@@ -605,9 +608,15 @@ app
           .success(function(data){
             $scope.isMapSaved = true;
             growl.success("Mapping has been saved successfully");
+            getMappingList(1);
           })
-          .error(function(){
-            growl.error("Unable to save Mapping");
+          .error(function(err){
+
+            if(err.statusCode==403){
+               growl.error("Mapping name already exist.");
+            }
+            else
+                growl.error("Unable to save Mapping");
           });
     }
 
@@ -616,6 +625,11 @@ app
       $http.get('/getMappingList/'+ tenantId)
         .success(function(data){
           $scope.mappingList = data;
+          angular.forEach($scope.mappingList,function(value,key){
+            if(value.mappingName==$scope.map.name){
+              $scope.selectedMapping=value;
+            }
+          })
         })
         .error(function(){
           growl.error("Unable to get mapping list");
@@ -671,6 +685,28 @@ app
       }
       $scope.fileViewFormats = info;
     }
+    // $scope.edit=false;
+    // $scope.editMapping = function (map) {
+    //   $scope.edit=true;
+    //   $scope.badge.step = "three";
+    //   $scope.isMapSaved=false;
+    //   $http.get('/getMapping/'+map.tenantId+'/'+map._id)
+    //     .success(function(data){
+    //       $scope.tableData={};
+    //       $scope.uploadedData={};
+    //       $scope.map={};
+    //       $scope.tableData=data[0].mappingInfo;
+    //       angular.forEach($scope.tableData,function(val,key){
+            
+    //       })
+    //       $scope.uploadedData.fileName=data[0].fileName;
+    //       $scope.map.name=data[0].mappingName;
+    //       $scope.fileViewFormats=data[0].delimeter;
+          
+          
+    //     })
+      
+    // }
 
     $scope.saveMappingStep = function (map, tableInfo) {
       if(map.name){
@@ -714,7 +750,7 @@ app
             //reset newmap
             $scope.newMap = false;
             //get list
-            getMappingList(1);
+            //getMappingList(1);
           } else {
             growl.error("Please map all required fields before trying to save mapping");
           }        
@@ -733,7 +769,7 @@ app
 
     $scope.fourthStep = function (selectedMapping) {
       $scope.badge.step = "four";
-      getMappingJson(1, selectedMapping);
+      getMappingJson(1, selectedMapping._id);
     }
 
     _scope.init();
