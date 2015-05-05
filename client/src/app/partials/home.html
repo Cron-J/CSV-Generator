@@ -1,12 +1,12 @@
 <div class="container" ng-controller="mainCtrl">
   <div class="btn-group btn-group-justified btn-group-wizard">
-    <a class="btn btn-wizard" ng-class="{'active':badge.step == 'one'}"><span class="badge">1</span>Upload</a>
+    <a class="btn btn-wizard" ng-class="{'active':badge.step == 'one'}" ng-click="badge.step = 'one';clearData();"><span class="badge">1</span>Upload</a>
     <a class="btn btn-wizard" ng-class="{'active':badge.step == 'two'}"><span class="badge">2</span>Preview</a>
     <a class="btn btn-wizard" ng-class="{'active':badge.step == 'three'}"><span class="badge">3</span>Map</a>
     <a class="btn btn-wizard" ng-class="{'active':badge.step == 'four'}"><span class="badge">4</span>Import</a>
   </div>
 
-  <div ng-show="badge.step == 'one'">
+  <div ng-show="badge.step == 'one'" >
     <div class="col-lg-12">
       <div ng-include="'app/partials/uploadFile.html'"></div>
     </div> 

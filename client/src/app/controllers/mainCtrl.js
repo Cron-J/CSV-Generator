@@ -4,9 +4,9 @@
 
 app
 	.controller('mainCtrl',['$scope', '$rootScope', '$http', 'growl', '$location', '$timeout', 
-     '$filter', '$upload', '$modal', '$log',
+     '$filter', '$upload', '$modal', '$log','$route',
 		function($scope, $rootScope, $http, growl, $location, $timeout, $filter, $upload,  
-     $modal, $log){
+     $modal, $log,$route){
 		var _scope = {};
     $scope.badge={}
     $scope.clear={};
@@ -16,6 +16,9 @@ app
       defaultBtn();
       defaultFilePreviewSettings();
 		}
+    $scope.clearData=function(){
+      $route.reload();
+    }
     var defaultBtn = function () {
       $scope.defaultVal={
         name:"defaultValue",
