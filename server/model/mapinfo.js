@@ -16,9 +16,9 @@ var mapinfo = {
       transformations. transformation applied on fields.
     */
 
-    transformations: [{
-        type: String
-    }],
+    transformations: {
+        type: Object
+    },
 
     field: {
         type: String
@@ -34,9 +34,9 @@ var mapinfo = {
             type: String
         },
 
-        transformations: [{
-            type: String
-        }],
+        transformations: {
+            type: Object
+        },
 
         field: {
             type: String

@@ -6,6 +6,9 @@ var Joi = require('joi'),
 
 exports.createMapping = {
     handler: function(request, reply) {
+        //console.log(request.payload.mappingInfo[0].transformations);
+        //request.payload.mappingInfo[0].transformations = request.payload.mappingInfo[0].transformations.toArray();
+        console.log(typeof (request.payload.mappingInfo[0].transformations));
         Mapping.createMapping(request.payload, function(err, mapping) {
             if (!err) {
                 reply(mapping);
