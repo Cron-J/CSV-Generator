@@ -41,16 +41,24 @@ app
 
     $scope.clicked = '';
     var contextIndex;
-    $scope.saveIndex=function(ind){
+    $scope.saveIndex=function(ind,type){
       rowIndex=ind;
       if($scope.tableData[rowIndex].transformations && $scope.tableData[rowIndex].transformations.length>=0){
         $scope.transInfo.pushable=$scope.tableData[rowIndex].transformations;
-        $rootScope.$broadcast("transformation",$scope.transInfo.pushable);
+        if(type=='edit')
+          $rootScope.$broadcast("edittransformation",$scope.transInfo.pushable);
+        else{
+          $rootScope.$broadcast("transformation",$scope.transInfo.pushable);
+        }
       }
       else{
         $scope.tableData[rowIndex].transformations=[];
         $scope.transInfo.pushable=$scope.tableData[rowIndex].transformations;
-        $rootScope.$broadcast("transformation",$scope.transInfo.pushable);
+        if(type=='edit')
+          $rootScope.$broadcast("edittransformation",$scope.transInfo.pushable);
+        else{
+          $rootScope.$broadcast("transformation",$scope.transInfo.pushable);
+        }
       }
     }
 
@@ -288,7 +296,7 @@ app
         growl.error('Select column, table and property names to map');
       } 
 
-      $("option:selected").removeAttr("selected");
+      $("option:selected").not("#SelectId option:selected").removeAttr("selected");
     }
 
     $scope.mapAttribute = function () {
@@ -619,7 +627,7 @@ app
           }
         }
       };
-      if(clength == reqFieldList.length)
+      if(clength >= reqFieldList.length)
         return true;
       else {
         return false;
@@ -709,28 +717,62 @@ app
       }
       $scope.fileViewFormats = info;
     }
-    // $scope.edit=false;
-    // $scope.editMapping = function (map) {
-    //   $scope.edit=true;
-    //   $scope.badge.step = "three";
-    //   $scope.isMapSaved=false;
-    //   $http.get('/getMapping/'+map.tenantId+'/'+map._id)
-    //     .success(function(data){
-    //       $scope.tableData={};
-    //       $scope.uploadedData={};
-    //       $scope.map={};
-    //       $scope.tableData=data[0].mappingInfo;
-    //       angular.forEach($scope.tableData,function(val,key){
-            
-    //       })
-    //       $scope.uploadedData.fileName=data[0].fileName;
-    //       $scope.map.name=data[0].mappingName;
-    //       $scope.fileViewFormats=data[0].delimeter;
+    $scope.edit=false;
+    $scope.editMapping = function (map) {
+      $scope.edit=true;
+      $scope.badge.step = "three";
+      $scope.isMapSaved=false;
+      $http.get('/getMapping/'+map.tenantId+'/'+map._id)
+        .success(function(data){
+          $scope.tableData={};
+          $scope.uploadedData={};
+          $scope.map={};
+          $scope.tableData=data[0].mappingInfo;
+          $scope.mapid=data[0]._id;
+          /*this is hardcode but in feature it will dynamic*/
+          
+          angular.forEach($scope.tableData,function(val,key){
+            $scope.saveIndex(key,'edit');
+            $scope.tableData[key].tableName == 'product';
+            val.propName={};
+            val.propName.field = val.field;
+            val.propName.index = val.index;
+            val.propName.instance = val.instance;
+            val.propName.isRequired = val.isRequired;
+            delete val.field;
+            delete val.index;
+            delete val.instance;
+            delete val.isRequired;
+            // angular.forEach(val.transformations,function(val1,key1){
+              
+            // })
+          })
+          $scope.uploadedData.fileName=data[0].fileName;
+          $scope.map.name=data[0].mappingName;
+          $scope.fileViewFormats=data[0].delimeter;
           
           
-    //     })
+        })
       
+    }
+
+    // $scope.savemap = function(map, tableInfo) {
+
     // }
+
+    var saveEditedMapping=function (data) {
+
+      $http.post('/updateMapping/'+$scope.mapid,data).then(function(data){
+          $scope.mapid=null;
+          $scope.isMapSaved = true;
+          growl.success("Mapping has been saved successfully");
+          getMappingList(1);
+      })
+      .catch(function(err){
+
+      })
+    }
+
 
     $scope.saveMappingStep = function (map, tableInfo) {
       if(map.name){
@@ -739,6 +781,7 @@ app
           var valid = checkMapping(tableInfo);
           if(valid == true){
             var mappingDetails = {};
+           // mappingDetails._id = tableInfo._id :
             mappingDetails.tenantId = 1;
             mappingDetails.fileName = $scope.uploadedData.fileName;
             mappingDetails.mappingName = map.name;
@@ -748,7 +791,7 @@ app
               if(tableInfo[i].tableName == 'product'){
                  mappingDetails.mappingInfo[i] = {
                   "userFieldName": tableInfo[i].columnName,
-                  "transformations": tableInfo[i].transformations,
+                  "transformations":tableInfo[i].transformations,
                   "field": tableInfo[i].propName.field,
                   "defaultValue": tableInfo[i].defaultVal,
                   "index": tableInfo[i].propName.index,
@@ -770,7 +813,13 @@ app
                 };
               }
             };
-            saveMapping(mappingDetails);
+            if($scope.mapid){
+              saveEditedMapping(mappingDetails);
+            }
+            else{
+              saveMapping(mappingDetails);
+            }
+            
             //reset newmap
             $scope.newMap = false;
             //get list

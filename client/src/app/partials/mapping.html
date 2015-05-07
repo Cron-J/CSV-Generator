@@ -1,300 +1,293 @@
 <div class="row" ng-hide="isMapSaved">
-	<div class="upload-container">
+   <div class="upload-container">
       <legend>Mapping</legend>
-  </div>
-	<form class="form-horizontal" role="form" name="mapForm">
-		<div class="form-group">
-			<label for="x" class="col-sm-2 control-label">Mapping Name</label>
-			<div class="col-sm-3">
-				<input name="jobId" class="form-control" placeholder="Choose Mapping Name" id="mapName" type="text" ng-model="map.name" required>
-				<span style="color:red" id="error" ng-show="form-mapForm.$invalid && submitted">please enter mapping name</span>
-			</div>
-		</div>
-	</form>
-	<!-- <hr> --><!-- mapping editor -->
-	<div class="bs-callout bs-callout-info">
-		<p><span style="color:#428bca"><b>Required properties</b> are displayed in blue.</span><br>
-		<span style="color:green"><b>Mapped properties</b> are marked with green color.</span></p>
-	</div>
-	<div class="row">
-		<div class="col-md-3">
-			<h4><a href="#" prev-default>Columns from input file</a> <a class="btn btn-default"><span class="glyphicon glyphicon-question-sign"></span></a></h4>
-		</div>
-		<div class="col-md-4 col-md-offset-2">
-			<h4>Tables <a class="btn btn-default"><span class="glyphicon glyphicon-question-sign"></span></a></h4>
-		</div>
-		<div class="col-md-3">
-			<h4><a href="#">Properties</a></h4>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-md-3">
-			<select class="mapping-select" id="columns1" name="columns" size="20" >
-			<!-- removed from here -->
-			<option  ng-repeat="col in columnShowList" ng-class="{mapped: col.isSelect}" ng-click="selectColumn(col.colName)">{{col.colName}}</option>
-			</select>
-		</div>
-		<div class="col-md-2">
-			<div class="btn-group btn-group-justified">
-				<a href="" class="btn btn-default" ng-click="mapping()">Map <span class="glyphicon glyphicon-chevron-right"></span></a>
-			</div><br>
-			<div class="btn-group btn-group-justified">
-				<a class="btn btn-default" ng-click="mapAttribute()">Auto Add Attribute <span class="glyphicon glyphicon-chevron-right"></span></a>
-			</div><br>
-			<!-- <div class="btn-group btn-group-justified">
-				<a class="btn btn-default" ng-click="automaticMap()">Automatic Mapping</a>
-			</div> -->
-		</div>
-		<div class="col-md-4">
-			<select class="mapping-select" id="SelectId"  name="classesList" size="20" >
-			<!-- <option value="? string:{{selectedTable}} ?" style="display:none"></option> -->
-			<!-- <option value="" style="display:none" ></option> -->
-			<option value="product" ng-click="selectTable('product', 'product')" selected>product</option>
-			<optgroup style="font-style: normal;" label="prices">
-						<option value="{{pa.table}}" id="com.jcatalog.product.Prices:{{$index}}" ng-repeat="pa in tableLists.PricesList track by $index" ng-click="selectTable('prices', 'price', $index, tableLists.PricesList)">
-							{{pa.table}}({{$index+1}})
-						</option>
-			</optgroup>
-			<optgroup style="font-style: normal;" label="attributeValues">
-						<option value="{{pav.table}}" id="com.jcatalog.product.ProductAttributeValue:{{$index}}" ng-repeat="pav in tableLists.ProductAttributeValuesList track by $index" ng-click="selectTable('attributeValues', 'attributeValue', $index, tableLists.ProductAttributeValuesList)">
-							{{pav.table}}({{$index+1}})
-						</option>
-				</optgroup>
-				<optgroup style="font-style: normal;" label="classificationGroupAssociations">
-						<option value="{{cg.table}}" id="com.jcatalog.product.ClassificationAssignment:{{$index}}" ng-repeat="cg in tableLists.ClassificationAssignmentsList track by $index" ng-click="selectTable('classificationGroupAssociations', 'classificationGroupAssociation', $index, tableLists.ClassificationAssignmentsList)">
-							{{cg.table}}({{$index+1}})
-						</option>
-				</optgroup>
-				<optgroup style="font-style: normal;" label="productRelations">
-						<option value="{{pr.table}}" id="com.jcatalog.product.ProductRelations:{{$index}}" ng-repeat="pr in tableLists.ProductRelationsList track by $index" ng-click="selectTable('productRelations', 'productRelation', $index, tableLists.ProductRelationsList)">
-							{{pr.table}}({{$index+1}})
-						</option>
-				</optgroup>
-				<optgroup style="font-style: normal;" label="contractedProducts">
-						<option value="{{cp.table}}" id="com.jcatalog.product.ContractedProduct:{{$index}}" ng-repeat="cp in tableLists.ContractedProductList track by $index" ng-click="selectTable('contractedProducts', 'contractedProduct',$index, tableLists.ContractedProductList)">
-							{{cp.table}}({{$index+1}})
-						</option>
-				</optgroup>
-			</select>
-		</div>
-
-		<div class="col-md-3">
-			<select class="mapping-select" id="property" name="properties" size="20"  >
-			<option value="" style="display:none">select property</option>
-			<option value="{{info}}" ng-repeat="info in propertyList | orderBy: 'field'" ng-class="{mapped: info.isSelect, required: info.isRequired}" ng-click="selectProperty(info)">{{info.field}}</option>
-			</select>
-		</div>
-	</div>
-	<br>
-	<div class="row">
-		<div class="col-md-3">
-			<div class="btn-group">
-				<button type="button" class="btn btn-default" ng-hide="changeBtnTxt" ng-class="{active: defaultVal.value}" data-toggle="button"><span ng-if="defaultVal.name == 'defaultValue'">Default value</span><span ng-if="defaultVal.name != 'defaultValue'">{{defaultVal.name}}</span></button>
-				<input type="text" ng-model="defaultVal.name" ng-show="changeBtnTxt" class="form-control" ng-change="enteredBtnTxt(defaultVal.name)"  placeholder="">
-				<a class="btn btn-default" ng-hide="changeBtnTxt" ng-click="changeBtnTxt = true"><span class="glyphicon glyphicon-pencil"></span></a>
-				<a class="btn btn-default" ng-show="changeBtnTxt" ng-click="changeBtnTxt = false"><span class="glyphicon glyphicon-ok"></span></a>
-				<a class="btn btn-default"><span class="glyphicon glyphicon-question-sign"></span></a>
-			</div>
-			<form role="form" style="padding-top: 10px;">
-				<div class="form-group">
-					<input type="text" ng-model="defaultVal.value" class="form-control" ng-change="enteredDefaultVal(defaultVal)"  placeholder="">
-				</div>
-			</form>
-		</div>
-		<div class="col-md-4 col-md-offset-2">
-			<div class="btn-group">
-				<div class="btn-group" id="subTable">
-					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-						<span ng-show="pickedTable">{{pickedTable}}</span>
-						<span ng-hide="pickedTable">Select</span>
-						<span class="caret"></span>
-					</button>
-					<ul class="dropdown-menu" role="menu" id="subtableList">
-						<li><a ng-click="selectnewPropTable('price', tableLists.PricesList)">price</a></li>
-						<li><a ng-click="selectnewPropTable('attributeValue', tableLists.ProductAttributeValuesList)">attributeValue</a></li>
-						<li><a ng-click="selectnewPropTable('classificationGroupAssociation', tableLists.ClassificationAssignmentsList)">classificationGroupAssociation</a></li>
-						<li><a ng-click="selectnewPropTable('productRelation', tableLists.ProductRelationsList)">productRelation</a></li>
-						<li><a ng-click="selectnewPropTable('contractedProduct', tableLists.ContractedProductList)">contractedProduct</a></li>
-					</ul>
-				</div>
-				<a class="btn btn-default" ng-click="addToList()"><span class="glyphicon glyphicon-plus"></span></a>
-				<a class="btn btn-default" ng-click="removeProperty()"><span class="glyphicon glyphicon-remove"></span></a>
-				<div ng-include="'app/partials/confirmationDialogBox.html'"></div>
-			</div>
-		</div>
-		<div class="col-md-3">
-		</div>
-	</div>
-	<hr><!-- /mapping editor -->
-	<div class="button-container">
-		<div ng-show="tableData.length == 0">
-			No mapped details
-		</div>
-		<div ng-show="tableData.length > 0">
-			<table class="table" cellspacing="0">
-				<thead>
-					<tr>
-						<th prev-default>Column from import file</th>
-						<th>Transformation</th>
-						<th>Property name</th>
-						<th>Property description</th>
-						<th>Index</th>
-						<th>Actions</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr ng-repeat="row in tableData">
-						<td ng-show="row.quotes == true">
-							"<span ng-if="row.defaultVal ">{{row.defaultVal}}</span><span ng-if="!row.defaultVal">{{row.columnName}}</span>"
-						</td>
-						<td ng-show="row.quotes == false ">{{row.columnName}}</td>
-						
-						<!-- <td><dropdown-multiselect pre-selected="member.roles" model="selected_items" options="roles"></dropdown-multiselect></td> -->
-						<td >
-							<div class="truncate" popover-placement="top" popover="{{row.transVal}}" popover-trigger="mouseenter">{{row.transVal}}</div>
-       				<button class="btn btn-primary btn-xxs" context="context1" ng-click="saveIndex($index)"><span class="glyphicon glyphicon-edit"></span></button>
-       			</td>
-						<td>
-							
-							<span ng-show="row.tableName != 'product'">product.</span>{{row.tableName}}
-							<span ng-show="row.rowId > 0">({{row.rowId}})</span>.{{row.propName.field}}
-							
-						</td>
-						<td>
-							<span >{{row.propName.field}}</span>
-							
-						</td>
-						<td>{{row.aIndex}}</td>
-						<td>
-							<button class="btn btn-default btn-xs" ng-click="removeRow(row.propName.field, row.columnName, row.tableName, $index)"><span class="glyphicon glyphicon-remove"></span> Remove</button>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>		
-		<hr>
-		<div class="pull-right">
-			<button class="btn btn-primary "  ng-click="secondStep()">Back</button>
-      <button class="btn btn-primary"  ng-click="saveMappingStep(map, tableData)">Save Mapping</button>
-		</div>
-	</div>
+   </div>
+   <form class="form-horizontal" role="form" name="mapForm">
+      <div class="form-group">
+         <label for="x" class="col-sm-2 control-label">Mapping Name</label>
+         <div class="col-sm-3">
+            <input name="jobId" class="form-control" placeholder="Choose Mapping Name" id="mapName" type="text" ng-model="map.name" required>
+            <span style="color:red" id="error" ng-show="form-mapForm.$invalid && submitted">please enter mapping name</span>
+         </div>
+      </div>
+   </form>
+   <!-- <hr> --><!-- mapping editor -->
+   <div class="bs-callout bs-callout-info">
+      <p><span style="color:#428bca"><b>Required properties</b> are displayed in blue.</span><br>
+         <span style="color:green"><b>Mapped properties</b> are marked with green color.</span>
+      </p>
+   </div>
+   <div class="row">
+      <div class="col-md-3">
+         <h4><a href="#" prev-default>Columns from input file</a> <a class="btn btn-default"><span class="glyphicon glyphicon-question-sign"></span></a></h4>
+      </div>
+      <div class="col-md-4 col-md-offset-2">
+         <h4>Tables <a class="btn btn-default"><span class="glyphicon glyphicon-question-sign"></span></a></h4>
+      </div>
+      <div class="col-md-3">
+         <h4><a href="#">Properties</a></h4>
+      </div>
+   </div>
+   <div class="row">
+      <div class="col-md-3">
+         <select class="mapping-select" id="columns1" name="columns" size="20" >
+            <!-- removed from here -->
+            <option  ng-repeat="col in columnShowList" ng-class="{mapped: col.isSelect}" ng-click="selectColumn(col.colName)">{{col.colName}}</option>
+         </select>
+      </div>
+      <div class="col-md-2">
+         <div class="btn-group btn-group-justified">
+            <a href="" class="btn btn-default" ng-click="mapping()">Map <span class="glyphicon glyphicon-chevron-right"></span></a>
+         </div>
+         <br>
+         <div class="btn-group btn-group-justified">
+            <a class="btn btn-default" ng-click="mapAttribute()">Auto Add Attribute <span class="glyphicon glyphicon-chevron-right"></span></a>
+         </div>
+         <br>
+         <!-- <div class="btn-group btn-group-justified">
+            <a class="btn btn-default" ng-click="automaticMap()">Automatic Mapping</a>
+            </div> -->
+      </div>
+      <div class="col-md-4">
+         <select class="mapping-select" id="SelectId"  name="classesList" size="20" >
+            <!-- <option value="? string:{{selectedTable}} ?" style="display:none"></option> -->
+            <!-- <option value="" style="display:none" ></option> -->
+            <option value="product" ng-click="selectTable('product', 'product')" selected>product</option>
+            <optgroup style="font-style: normal;" label="prices">
+               <option value="{{pa.table}}" id="com.jcatalog.product.Prices:{{$index}}" ng-repeat="pa in tableLists.PricesList track by $index" ng-click="selectTable('prices', 'price', $index, tableLists.PricesList)">
+                  {{pa.table}}({{$index+1}})
+               </option>
+            </optgroup>
+            <optgroup style="font-style: normal;" label="attributeValues">
+               <option value="{{pav.table}}" id="com.jcatalog.product.ProductAttributeValue:{{$index}}" ng-repeat="pav in tableLists.ProductAttributeValuesList track by $index" ng-click="selectTable('attributeValues', 'attributeValue', $index, tableLists.ProductAttributeValuesList)">
+                  {{pav.table}}({{$index+1}})
+               </option>
+            </optgroup>
+            <optgroup style="font-style: normal;" label="classificationGroupAssociations">
+               <option value="{{cg.table}}" id="com.jcatalog.product.ClassificationAssignment:{{$index}}" ng-repeat="cg in tableLists.ClassificationAssignmentsList track by $index" ng-click="selectTable('classificationGroupAssociations', 'classificationGroupAssociation', $index, tableLists.ClassificationAssignmentsList)">
+                  {{cg.table}}({{$index+1}})
+               </option>
+            </optgroup>
+            <optgroup style="font-style: normal;" label="productRelations">
+               <option value="{{pr.table}}" id="com.jcatalog.product.ProductRelations:{{$index}}" ng-repeat="pr in tableLists.ProductRelationsList track by $index" ng-click="selectTable('productRelations', 'productRelation', $index, tableLists.ProductRelationsList)">
+                  {{pr.table}}({{$index+1}})
+               </option>
+            </optgroup>
+            <optgroup style="font-style: normal;" label="contractedProducts">
+               <option value="{{cp.table}}" id="com.jcatalog.product.ContractedProduct:{{$index}}" ng-repeat="cp in tableLists.ContractedProductList track by $index" ng-click="selectTable('contractedProducts', 'contractedProduct',$index, tableLists.ContractedProductList)">
+                  {{cp.table}}({{$index+1}})
+               </option>
+            </optgroup>
+         </select>
+      </div>
+      <div class="col-md-3">
+         <select class="mapping-select" id="property" name="properties" size="20"  >
+            <option value="" style="display:none">select property</option>
+            <option value="{{info}}" ng-repeat="info in propertyList | orderBy: 'field'" ng-class="{mapped: info.isSelect, required: info.isRequired}" ng-click="selectProperty(info)">{{info.field}}</option>
+         </select>
+      </div>
+   </div>
+   <br>
+   <div class="row">
+      <div class="col-md-3">
+         <div class="btn-group">
+            <button type="button" class="btn btn-default" ng-hide="changeBtnTxt" ng-class="{active: defaultVal.value}" data-toggle="button"><span ng-if="defaultVal.name == 'defaultValue'">Default value</span><span ng-if="defaultVal.name != 'defaultValue'">{{defaultVal.name}}</span></button>
+            <input type="text" ng-model="defaultVal.name" ng-show="changeBtnTxt" class="form-control" ng-change="enteredBtnTxt(defaultVal.name)"  placeholder="">
+            <a class="btn btn-default" ng-hide="changeBtnTxt" ng-click="changeBtnTxt = true"><span class="glyphicon glyphicon-pencil"></span></a>
+            <a class="btn btn-default" ng-show="changeBtnTxt" ng-click="changeBtnTxt = false"><span class="glyphicon glyphicon-ok"></span></a>
+            <a class="btn btn-default"><span class="glyphicon glyphicon-question-sign"></span></a>
+         </div>
+         <form role="form" style="padding-top: 10px;">
+            <div class="form-group">
+               <input type="text" ng-model="defaultVal.value" class="form-control" ng-change="enteredDefaultVal(defaultVal)"  placeholder="">
+            </div>
+         </form>
+      </div>
+      <div class="col-md-4 col-md-offset-2">
+         <div class="btn-group">
+            <div class="btn-group" id="subTable">
+               <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+               <span ng-show="pickedTable">{{pickedTable}}</span>
+               <span ng-hide="pickedTable">Select</span>
+               <span class="caret"></span>
+               </button>
+               <ul class="dropdown-menu" role="menu" id="subtableList">
+                  <li><a ng-click="selectnewPropTable('price', tableLists.PricesList)">price</a></li>
+                  <li><a ng-click="selectnewPropTable('attributeValue', tableLists.ProductAttributeValuesList)">attributeValue</a></li>
+                  <li><a ng-click="selectnewPropTable('classificationGroupAssociation', tableLists.ClassificationAssignmentsList)">classificationGroupAssociation</a></li>
+                  <li><a ng-click="selectnewPropTable('productRelation', tableLists.ProductRelationsList)">productRelation</a></li>
+                  <li><a ng-click="selectnewPropTable('contractedProduct', tableLists.ContractedProductList)">contractedProduct</a></li>
+               </ul>
+            </div>
+            <a class="btn btn-default" ng-click="addToList()"><span class="glyphicon glyphicon-plus"></span></a>
+            <a class="btn btn-default" ng-click="removeProperty()"><span class="glyphicon glyphicon-remove"></span></a>
+            <div ng-include="'app/partials/confirmationDialogBox.html'"></div>
+         </div>
+      </div>
+      <div class="col-md-3">
+      </div>
+   </div>
+   <hr>
+   <!-- /mapping editor -->
+   <div class="button-container">
+      <div ng-show="tableData.length == 0">
+         No mapped details
+      </div>
+      <div ng-show="tableData.length > 0">
+         <table class="table" cellspacing="0">
+            <thead>
+               <tr>
+                  <th prev-default>Column from import file</th>
+                  <th>Transformation</th>
+                  <th>Property name</th>
+                  <th>Property description</th>
+                  <th>Index</th>
+                  <th>Actions</th>
+               </tr>
+            </thead>
+            <tbody>
+               <tr ng-repeat="row in tableData">
+                  <td ng-show="row.quotes == true">
+                     "<span ng-if="row.defaultVal && !edit">{{row.defaultVal}}</span>
+                     <span ng-if="!row.defaultVal">{{row.columnName}}</span>"
+                  </td>
+                  <td ng-show="row.quotes == false && !edit">{{row.columnName}}</td>
+                  <td ng-show="edit"> 
+                     <span >{{row.userFieldName || row.values[0].userFieldName}}</span>
+                  </td>
+                  <!-- <td><dropdown-multiselect pre-selected="member.roles" model="selected_items" options="roles"></dropdown-multiselect></td> -->
+                  <td >
+                     <div class="truncate" popover-placement="top" popover="{{row.transVal}}" popover-trigger="mouseenter">{{row.transVal}}</div>
+                     <button class="btn btn-primary btn-xxs" context="context1" ng-click="saveIndex($index)"><span class="glyphicon glyphicon-edit"></span></button>
+                  </td>
+                  <td>
+                     <span ng-show="!edit">
+                     <span ng-show="row.tableName != 'product'">product.</span>{{row.tableName}}
+                     <span ng-show="row.rowId > 0">({{row.rowId}})</span>.{{row.propName.field}}
+                     </span>
+                  </td>
+                  <td>
+                     <span >{{row.propName.field}}</span>
+                     
+                  </td>
+                  <td><span ng-show="!edit">{{row.aIndex}}</span>
+                     <span ng-show="edit">{{$index+1}}</span>
+                  </td>
+                  <td>
+                     <button class="btn btn-default btn-xs" ng-click="removeRow(row.propName.field, row.columnName, row.tableName, $index)"><span class="glyphicon glyphicon-remove"></span> Remove</button>
+                  </td>
+               </tr>
+            </tbody>
+         </table>
+      </div>
+      <hr>
+      <div class="pull-right">
+         <button class="btn btn-primary "  ng-click="secondStep()">Back</button>
+         <button class="btn btn-primary"  ng-click="saveMappingStep(map, tableData)">Save Mapping</button>
+      </div>
+   </div>
 </div>
 <div class="row btn-set" ng-show="isMapSaved">
-  <p>Please specify the mapping before you start the import. If you have already created a valid mapping then you can start import directly.</p>
-  <div class="row">
-    <div class="col-lg-2">
-      <label>Mapping Id</label>
-    </div>
-    <div class="col-lg-3">
-      <select class="form-control" id="mapId" ng-model="selectedMapping" ng-options="item as item.mappingName for item in mappingList" >
-        <option value="">Select mapping id</option>
-      </select>
-    </div>
-   
-    <div class="col-lg-5">
-    	<!-- <button class="btn btn-primary btn-sm" ng-click="editMapping(selectedMapping)">Edit Mapping</button> -->
-      <button class="btn btn-primary btn-sm" ng-click="newMapping();firstStep()">Create Mapping</button>
-      <!-- <button class="btn btn-primary btn-sm" ng-click="editMapping(selectedMapping);">Edit Mapping</button> -->
-    </div>
-  </div>
-  <div class="row" ng-show="selectedMapping._id">
-	  <div class="col-lg-12 btn-set">
-	  	<button class="btn btn-primary" ng-click="fourthStep(selectedMapping)">Next</button>
-	  </div>
-  </div>
+   <p>Please specify the mapping before you start the import. If you have already created a valid mapping then you can start import directly.</p>
+   <div class="row">
+      <div class="col-lg-2">
+         <label>Mapping Id</label>
+      </div>
+      <div class="col-lg-3">
+         <select class="form-control" id="mapId" ng-model="selectedMapping" ng-options="item as item.mappingName for item in mappingList" >
+            <option value="">Select mapping id</option>
+         </select>
+      </div>
+      <div class="col-lg-5">
+         <!-- <button class="btn btn-primary btn-sm" ng-click="editMapping(selectedMapping)">Edit Mapping</button> -->
+         <button class="btn btn-primary btn-sm" ng-click="newMapping();firstStep()">Create Mapping</button>
+         <button class="btn btn-primary btn-sm" ng-click="editMapping(selectedMapping);">Edit Mapping</button>
+      </div>
+   </div>
+   <div class="row" ng-show="selectedMapping._id">
+      <div class="col-lg-12 btn-set">
+         <button class="btn btn-primary" ng-click="fourthStep(selectedMapping)">Next</button>
+      </div>
+   </div>
 </div>
-		
-		<!-- #### Dev Notes ########################################################## -->
+<!-- #### Dev Notes ########################################################## -->
 <!--
-		<div class="bs-callout">
-			<h4>ClassGrp Select Box populated with eClass L1 Grps</h4>
-			<p>This is for demo purposes, and obviously breaks the layout. &rarr; If select box is populated with more than xx options, display centered popup window instead of dropdown list.</p>
-		</div>
-		<div class="bs-callout">
-			<h4>Catalog /Browse Categories, /Browse Contracts, /Supplier Directory</h4>
-			<p>Shortened to "Categories", "Contracts", "Suppliers"</p>
-		</div>
-		<div class="bs-callout bs-callout-warning">
-			<h4>No Extended Search Yet!</h4>
-		</div>
--->
-		<!-- #### /Dev Notes ########################################################## -->
-
-
-
- <div id="context1" class="editor-row" style="z-index:99999;background: #262626;" prev-default >
-
-        <div class="tight-form" ng-class="{'tight-form-disabled': target.hide}" ng-controller="GraphiteQueryCtrl" ng-init="init()">
-            <ul class="tight-form-list pull-right">
-                <!-- <li ng-show="parserError" class="tight-form-item">
-                    <a bs-tooltip="parserError" style="color: rgb(229, 189, 28)" role="menuitem">
-                        <i class="fa fa-warning"></i>
-                    </a>
-                </li> -->
-                <!-- <li class="tight-form-item">
-                    <a class="pointer" tabindex="1" ng-click="showTextEditor = !showTextEditor">
-                        <i class="fa fa-pencil"></i>
-                    </a>
-                </li> -->
-                <li class="tight-form-item">
-                    <div class="dropdown">
-                       <!--  <a class="pointer dropdown-toggle" data-toggle="dropdown" tabindex="1">
-                            <i class="fa fa-bars"></i>
-                        </a> -->
-                        <ul class="dropdown-menu pull-right" role="menu">
-                            <li role="menuitem">
-                                <a tabindex="1" ng-click="duplicate()">Duplicate</a>
-                            </li>
-                            <li role="menuitem">
-                                <a tabindex="1" ng-click="moveMetricQuery($index, $index-1)">Move up</a>
-                            </li>
-                            <li role="menuitem">
-                                <a tabindex="1" ng-click="moveMetricQuery($index, $index+1)">Move down</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-                <li class="tight-form-item last">
-                    <a class="pointer" tabindex="1" ng-click="removeDataQuery(target)">
-                        <i class="fa fa-remove"></i>
-                    </a>
-                </li>
-            </ul>
-
-            <ul class="tight-form-list">
-                <li class="tight-form-item" style="min-width: 15px; text-align: center">
-                    {{targetLetters[$index]}}
-                </li>
-                <li>
-                    <a class="tight-form-item" ng-click="target.hide = !target.hide; get_data();" role="menuitem">
-                        <i class="fa fa-eye"></i>
-                    </a>
-                </li>
-            </ul>
-
-            <input type="text" class="tight-form-clear-input span10" ng-model="target.target" focus-me="showTextEditor" spellcheck='false' ng-model-onblur ng-change="targetTextChanged()" ng-show="showTextEditor" />
-
-            <ul class="tight-form-list" id="addFunction" role="menu" ng-hide="showTextEditor" >
-                <li ng-repeat="segment in segments" role="menuitem" graphite-segment></li>
-                <li ng-repeat="func in functions">
-                    <span graphite-func-editor class="tight-form-item tight-form-func"></span>
-                </li>
-                <li class="dropdown" id="functionsList" graphite-add-func >
-                </li>
-            </ul>
-
-            <div class="clearfix"></div>
-        </div>
-    </div>
-
-	
-    
-  <!--   <ul id="context1" class="dropdown-menu">
-      <li><a ng-click="edit()">Edit</a></li>
-      <li><a ng-click="link()">Link</a></li>
-      <li><a ng-click="delete()">Delete</a></li>
-      <li class="divider"></li>
-      <li><a ng-click="properties()">Properties</a></li>
-    </ul> -->
-
-
+   <div class="bs-callout">
+   	<h4>ClassGrp Select Box populated with eClass L1 Grps</h4>
+   	<p>This is for demo purposes, and obviously breaks the layout. &rarr; If select box is populated with more than xx options, display centered popup window instead of dropdown list.</p>
+   </div>
+   <div class="bs-callout">
+   	<h4>Catalog /Browse Categories, /Browse Contracts, /Supplier Directory</h4>
+   	<p>Shortened to "Categories", "Contracts", "Suppliers"</p>
+   </div>
+   <div class="bs-callout bs-callout-warning">
+   	<h4>No Extended Search Yet!</h4>
+   </div>
+   -->
+<!-- #### /Dev Notes ########################################################## -->
+<div id="context1" class="editor-row" style="z-index:99999;background: #262626;" prev-default >
+   <div class="tight-form" ng-class="{'tight-form-disabled': target.hide}" ng-controller="GraphiteQueryCtrl" ng-init="init()">
+      <ul class="tight-form-list pull-right">
+         <!-- <li ng-show="parserError" class="tight-form-item">
+            <a bs-tooltip="parserError" style="color: rgb(229, 189, 28)" role="menuitem">
+                <i class="fa fa-warning"></i>
+            </a>
+            </li> -->
+         <!-- <li class="tight-form-item">
+            <a class="pointer" tabindex="1" ng-click="showTextEditor = !showTextEditor">
+                <i class="fa fa-pencil"></i>
+            </a>
+            </li> -->
+         <li class="tight-form-item">
+            <div class="dropdown">
+               <!--  <a class="pointer dropdown-toggle" data-toggle="dropdown" tabindex="1">
+                  <i class="fa fa-bars"></i>
+                  </a> -->
+               <ul class="dropdown-menu pull-right" role="menu">
+                  <li role="menuitem">
+                     <a tabindex="1" ng-click="duplicate()">Duplicate</a>
+                  </li>
+                  <li role="menuitem">
+                     <a tabindex="1" ng-click="moveMetricQuery($index, $index-1)">Move up</a>
+                  </li>
+                  <li role="menuitem">
+                     <a tabindex="1" ng-click="moveMetricQuery($index, $index+1)">Move down</a>
+                  </li>
+               </ul>
+            </div>
+         </li>
+         <li class="tight-form-item last">
+            <a class="pointer" tabindex="1" ng-click="removeDataQuery(target)">
+            <i class="fa fa-remove"></i>
+            </a>
+         </li>
+      </ul>
+      <ul class="tight-form-list">
+         <li class="tight-form-item" style="min-width: 15px; text-align: center">
+            {{targetLetters[$index]}}
+         </li>
+         <li>
+            <a class="tight-form-item" ng-click="target.hide = !target.hide; get_data();" role="menuitem">
+            <i class="fa fa-eye"></i>
+            </a>
+         </li>
+      </ul>
+      <input type="text" class="tight-form-clear-input span10" ng-model="target.target" focus-me="showTextEditor" spellcheck='false' ng-model-onblur ng-change="targetTextChanged()" ng-show="showTextEditor" />
+      <ul class="tight-form-list" id="addFunction" role="menu" ng-hide="showTextEditor" >
+         <li ng-repeat="segment in segments" role="menuitem" graphite-segment></li>
+         <li ng-repeat="func in functions">
+            <span graphite-func-editor class="tight-form-item tight-form-func"></span>
+         </li>
+         <li class="dropdown" id="functionsList" graphite-add-func >
+         </li>
+      </ul>
+      <div class="clearfix"></div>
+   </div>
+</div>
+<!--   <ul id="context1" class="dropdown-menu">
+   <li><a ng-click="edit()">Edit</a></li>
+   <li><a ng-click="link()">Link</a></li>
+   <li><a ng-click="delete()">Delete</a></li>
+   <li class="divider"></li>
+   <li><a ng-click="properties()">Properties</a></li>
+   </ul> -->
