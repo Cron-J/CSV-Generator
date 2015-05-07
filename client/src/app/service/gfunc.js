@@ -139,11 +139,22 @@ angular.module('app')
 
     }, this);
 
-    if (metricExp) {
-      parameters.unshift(metricExp);
-    }
+    str=str+parameters.join(', ')+')';
 
-    return str + parameters.join(', ') + ')';
+    if (metricExp=="") {
+      return str;
+    }
+    else{
+      var strtindex = metricExp.indexOf(')');
+      if(metricExp[strtindex-1]=='('){
+          return metricExp.slice(0,strtindex) + str + metricExp.slice(strtindex,metricExp.length);
+        }
+      else if(metricExp[strtindex-1]!='('){
+        return metricExp.slice(0,strtindex) +', '+ str + metricExp.slice(strtindex,metricExp.length);
+      }
+
+    }
+    
   };
 
   FuncInstance.prototype._hasMultipleParamsInString = function(strValue, index) {
