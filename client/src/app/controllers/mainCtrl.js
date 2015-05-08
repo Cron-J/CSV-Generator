@@ -3,19 +3,19 @@
 /* Controller */
 
 app
-	.controller('mainCtrl',['$scope', '$rootScope', '$http', 'growl', '$location', '$timeout', 
+  .controller('mainCtrl',['$scope', '$rootScope', '$http', 'growl', '$location', '$timeout', 
      '$filter', '$upload', '$modal', '$log','$route',
-		function($scope, $rootScope, $http, growl, $location, $timeout, $filter, $upload,  
+    function($scope, $rootScope, $http, growl, $location, $timeout, $filter, $upload,  
      $modal, $log,$route){
-		var _scope = {};
+    var _scope = {};
     $scope.badge={}
     $scope.clear={};
-		_scope.init = function(){
+    _scope.init = function(){
       $scope.firstStep();
       $scope.resultXls = {};
       defaultBtn();
       defaultFilePreviewSettings();
-		}
+    }
     $scope.clearData=function(){
       $route.reload();
     }
@@ -447,6 +447,13 @@ app
     }
 
     $scope.changeFormat=function(){
+
+      $scope.uploadedDataDump=angular.copy($scope.unformatedData);
+      $scope.uploadedDataDump.headers = splitter($scope.uploadedDataDump.headers,$scope.fileStyle.delimeterFormat);
+      $scope.uploadedDataDump.rowOne = splitter($scope.uploadedDataDump.rowOne,$scope.fileStyle.delimeterFormat);
+      $scope.uploadedDataDump.rowTwo = splitter($scope.uploadedDataDump.rowTwo,$scope.fileStyle.delimeterFormat);
+      $scope.uploadedData = angular.copy($scope.uploadedDataDump);
+
       $scope.dupUploadedData=angular.copy($scope.uploadedData);
 
       $scope.dupUploadedData.rowOne = changeDateFormat($scope.dupUploadedData.rowOne, $scope.fileStyle.dateFormat);
@@ -462,7 +469,7 @@ app
       // loadingColumns($scope.dupUploadedData.headers);
       // $scope.dupUploadedData.rowOne = changeDelimiterFormat(list.list1, $scope.fileStyle.delimeterFormat);
       // $scope.dupUploadedData.rowTwo = changeDelimiterFormat(list.list2, $scope.fileStyle.delimeterFormat);
-    
+      loadingColumns($scope.dupUploadedData.headers);
     }
 
     // $scope.selectedDateFormat = function (format) {
@@ -549,26 +556,26 @@ app
       return list;
     }
 
-    $scope.selectedDelimiterFormat = function (format) {
-      var list = {
-          "list0" : $scope.dupUploadedData.headers.join(),
-          "list1" : $scope.dupUploadedData.rowOne.join(),
-          "list2" : $scope.dupUploadedData.rowTwo.join()
-        }
-      $scope.dupUploadedData.headers = changeDelimiterFormat(list.list0, format);
-      loadingColumns($scope.dupUploadedData.headers);
-      $scope.dupUploadedData.rowOne = changeDelimiterFormat(list.list1, format);
-      $scope.dupUploadedData.rowTwo = changeDelimiterFormat(list.list2, format);
-    }
+    // $scope.selectedDelimiterFormat = function (format) {
+    //   var list = {
+    //       "list0" : $scope.dupUploadedData.headers.join(),
+    //       "list1" : $scope.dupUploadedData.rowOne.join(),
+    //       "list2" : $scope.dupUploadedData.rowTwo.join()
+    //     }
+    //   $scope.dupUploadedData.headers = changeDelimiterFormat(list.list0, format);
+    //   loadingColumns($scope.dupUploadedData.headers);
+    //   $scope.dupUploadedData.rowOne = changeDelimiterFormat(list.list1, format);
+    //   $scope.dupUploadedData.rowTwo = changeDelimiterFormat(list.list2, format);
+    // }
 
-    var changeDelimiterFormat = function (list, format) {
-      var dump;
-      if(format == '.' && list)
-          dump = list.split(".");
-      else 
-          dump = list.split(",");
-      return dump;
-    }
+    // var changeDelimiterFormat = function (list, format) {
+    //   var dump;
+    //   if(format == '.' && list)
+    //       dump = list.split(".");
+    //   else 
+    //       dump = list.split(",");
+    //   return dump;
+    // }
 
     $scope.resetData = function () {
       $scope.dupUploadedData = angular.copy($scope.uploadedData);
@@ -588,10 +595,9 @@ app
         headers: {'Content-Type': undefined}
       })
       .success(function (data, status) {
-          $scope.uploadedDataDump = angular.copy(data);
-          $scope.uploadedData = data;
-          loadingColumns(data.headers);
-          $scope.changeFormat();
+          $scope.unformatedData=angular.copy(data);
+          
+          $scope.secondStep();
       })
       .error(function(data){
         growl.error("Unable to upload file");
@@ -607,7 +613,7 @@ app
         selectedColumns[i].isSelect = false;
       };
       $scope.columnShowList = selectedColumns;  
-      $scope.secondStep(); 
+      //$scope.secondStep(); 
       
     }
     //check required fields mapping is done or not
@@ -704,6 +710,12 @@ app
     $scope.secondStep = function () {
       $scope.badge.step = "two";
       getPropertyList();
+      $scope.changeFormat();
+      //loadingColumns($scope.uploadedData.headers);
+    }
+
+    function splitter(data,splittype) {
+      return data.split(splittype);
     }
 
     $scope.reloadStep = function () {
@@ -860,7 +872,7 @@ app
     }
 
     _scope.init();
-	}]);
+  }]);
 
 //directives
 app.directive('cellHighlight', function() {

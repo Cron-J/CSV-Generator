@@ -36,9 +36,10 @@
         <div class="form-group">
           <label class="col-sm-4 control-label">Delimiter Format</label>
           <div class="col-sm-8">
-            <select name="decimalSeparator" id="delimiter" ng-model="fileStyle.delimeterFormat" class="form-control" ng-change="selectedDelimiterFormat(fileStyle.delimeterFormat)">
-              <option value=".">Dot(.)</option>
+            <select name="decimalSeparator" id="delimiter" ng-model="fileStyle.delimeterFormat" class="form-control" ng-change="changeFormat()" ng-init="fileStyle.delimeterFormat=','">
               <option value=",">Comma(,)</option>
+              <option value=";">Semicolon(;)</option>
+              <option value="|">Pipe(|)</option>
             </select>
           </div>
         </div> 
