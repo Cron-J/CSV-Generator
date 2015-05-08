@@ -147,14 +147,18 @@
             </thead>
             <tbody>
                <tr ng-repeat="row in tableData">
-                  <td ng-show="row.quotes == true">
-                     "<span ng-if="row.defaultVal && !edit">{{row.defaultVal}}</span>
-                     <span ng-if="!row.defaultVal">{{row.columnName}}</span>"
+                  <td >
+
+                     <span ng-if="row.defaultVal && row.quotes == true">"{{row.defaultVal}}"</span>
+                     <span ng-if="!row.defaultVal && row.quotes == true">"{{row.columnName}}"</span>
+                     <span ng-show="row.quotes == false">{{row.columnName}}</span>
+                     <span ng-show="row.quotes == undefined && row.userFieldName!='defaultValue'">{{row.userFieldName || row.values[0].userFieldName}}</span>
+                     <span ng-show="row.quotes == undefined && row.userFieldName=='defaultValue'">{{row.defaultValue}}</span>
                   </td>
-                  <td ng-show="row.quotes == false && !edit">{{row.columnName}}</td>
-                  <td ng-show="edit"> 
+                  <!-- <td ng-show="row.quotes == false">{{row.columnName}}</td>
+                  <td ng-show="!row.quotes edit"> 
                      <span >{{row.userFieldName || row.values[0].userFieldName}}</span>
-                  </td>
+                  </td> -->
                   <!-- <td><dropdown-multiselect pre-selected="member.roles" model="selected_items" options="roles"></dropdown-multiselect></td> -->
                   <td >
                      <div class="truncate" popover-placement="top" popover="{{row.transVal}}" popover-trigger="mouseenter">{{row.transVal}}</div>
@@ -195,7 +199,7 @@
       </div>
       <div class="col-lg-3">
          <select class="form-control" id="mapId" ng-model="selectedMapping" ng-options="item as item.mappingName for item in mappingList" >
-            <option value="">Select mapping id</option>
+            <option value="">Select mapping id </option>
          </select>
       </div>
       <div class="col-lg-5">

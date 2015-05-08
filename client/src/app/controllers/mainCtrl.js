@@ -162,7 +162,8 @@ app
           for(var i = 0; i < modifiedList.length ; i++){  
             $scope.propertyList[i] = {};
             $scope.propertyList[i] = modifiedList[i];
-            $scope.propertyList[i].isSelect = false;
+            /*selected value get unselect using this so commented*/
+            //$scope.propertyList[i].isSelect = false;
           }
           mappedPropColumns(originalTName);
         } 
@@ -654,7 +655,8 @@ app
 
     //getMappingList
     var getMappingList = function (tenantId){
-      $http.get('/getMappingList/'+ tenantId)
+      if(!$scope.edit){
+        $http.get('/getMappingList/'+ tenantId)
         .success(function(data){
           $scope.mappingList = data;
           angular.forEach($scope.mappingList,function(value,key){
@@ -663,9 +665,13 @@ app
             }
           })
         })
-        .error(function(){
+        .error(function(err){
           growl.error("Unable to get mapping list");
         });
+      }
+      else{
+        $scope.edit=false;
+      }
     }
 
     //getMappedJson
@@ -719,6 +725,7 @@ app
     }
     $scope.edit=false;
     $scope.editMapping = function (map) {
+
       $scope.edit=true;
       $scope.badge.step = "three";
       $scope.isMapSaved=false;
@@ -743,9 +750,9 @@ app
             delete val.index;
             delete val.instance;
             delete val.isRequired;
-            // angular.forEach(val.transformations,function(val1,key1){
-              
-            // })
+            val.isEdit=true;
+            // if(val.defaultValue)
+            //     val.quotes=true;
           })
           $scope.uploadedData.fileName=data[0].fileName;
           $scope.map.name=data[0].mappingName;
@@ -756,20 +763,16 @@ app
       
     }
 
-    // $scope.savemap = function(map, tableInfo) {
-
-    // }
-
     var saveEditedMapping=function (data) {
 
-      $http.post('/updateMapping/'+$scope.mapid,data).then(function(data){
+      $http.put('/updateMapping/'+$scope.mapid,data).then(function(data){
           $scope.mapid=null;
           $scope.isMapSaved = true;
           growl.success("Mapping has been saved successfully");
           getMappingList(1);
       })
       .catch(function(err){
-
+          console.log('error',err);
       })
     }
 
@@ -788,30 +791,41 @@ app
             mappingDetails.delimeter = $scope.fileViewFormats;
             mappingDetails.mappingInfo = [];
             for (var i = 0; i < tableInfo.length; i++) {
-              if(tableInfo[i].tableName == 'product'){
-                 mappingDetails.mappingInfo[i] = {
-                  "userFieldName": tableInfo[i].columnName,
-                  "transformations":tableInfo[i].transformations,
-                  "field": tableInfo[i].propName.field,
-                  "defaultValue": tableInfo[i].defaultVal,
-                  "index": tableInfo[i].propName.index,
-                  "instance": tableInfo[i].propName.instance,
-                  "isRequired": tableInfo[i].propName.isRequired
-                };
-              } else {
-                mappingDetails.mappingInfo[i] = {
-                  "field": tableInfo[i].tableName+"s",
-                  "values": [{
+              if(!tableInfo[i].isEdit){
+                if(tableInfo[i].tableName == 'product'){
+                   mappingDetails.mappingInfo[i] = {
                     "userFieldName": tableInfo[i].columnName,
-                    "transformations": tableInfo[i].transformations,
+                    "transformations":tableInfo[i].transformations,
                     "field": tableInfo[i].propName.field,
                     "defaultValue": tableInfo[i].defaultVal,
                     "index": tableInfo[i].propName.index,
                     "instance": tableInfo[i].propName.instance,
                     "isRequired": tableInfo[i].propName.isRequired
-                  }]
-                };
+                  };
+                } else {
+                  mappingDetails.mappingInfo[i] = {
+                    "field": tableInfo[i].tableName+"s",
+                    "values": [{
+                      "userFieldName": tableInfo[i].columnName,
+                      "transformations": tableInfo[i].transformations,
+                      "field": tableInfo[i].propName.field,
+                      "defaultValue": tableInfo[i].defaultVal,
+                      "index": tableInfo[i].propName.index,
+                      "instance": tableInfo[i].propName.instance,
+                      "isRequired": tableInfo[i].propName.isRequired
+                    }]
+                  };
+                }
+
               }
+              else{
+                  mappingDetails.mappingInfo[i] = tableInfo[i];
+                  mappingDetails.mappingInfo[i].field=mappingDetails.mappingInfo[i].propName.field;
+                  mappingDetails.mappingInfo[i].index=mappingDetails.mappingInfo[i].propName.index;
+                  mappingDetails.mappingInfo[i].instance=mappingDetails.mappingInfo[i].propName.instance;
+                  mappingDetails.mappingInfo[i].isRequired=mappingDetails.mappingInfo[i].propName.isRequired;
+                  delete mappingDetails.mappingInfo[i].propName;
+                }
             };
             if($scope.mapid){
               saveEditedMapping(mappingDetails);
