@@ -225,6 +225,38 @@ var targetLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
       // }
     };
 
+    $scope.$on("edittransformation",function (data) {
+      var newFunc;
+      $scope.functions=$scope.transInfo.pushable;
+      //$scope.functions.push($scope.functions);
+      for(var i=0;i<$scope.functions.length;i++){
+        var funcDef = $scope.functions[i].def.name;
+        newFunc = gfunc.createFuncInstance(funcDef, { withDefaultParams: true });
+        //newFunc.added=true;
+        newFunc.params = $scope.functions[i].params;
+        $scope.functions[i] = newFunc;
+        $scope.moveAliasFuncLast();
+      $scope.smartlyHandleNewAliasByNode(newFunc);
+
+      if ($scope.segments.length === 1 && $scope.segments[0].value === 'select function') {
+        $scope.segments = [];
+      }
+
+      if (!newFunc.params.length && newFunc.added) {
+        $scope.targetChanged();
+      }
+      }
+      $scope.targetChanged();
+    })
+
+    // $scope.edittargetChanged = function() {
+
+    //   var target = getSegmentPathUpTo($scope.segments.length);
+    //   $scope.target.target = _.reduce($scope.functions, wrapFunction, target);
+    //   //$scope.transInfo.pushable=$scope.functions;
+    //   $scope.transInfo.transVal=$scope.target.target;
+    // }
+
     $scope.removeFunction = function(func) {
       $scope.functions = _.without($scope.functions, func);
       $scope.targetChanged();

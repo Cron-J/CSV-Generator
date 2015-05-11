@@ -3,19 +3,19 @@
 /* Controller */
 
 app
-	.controller('mainCtrl',['$scope', '$rootScope', '$http', 'growl', '$location', '$timeout', 
+  .controller('mainCtrl',['$scope', '$rootScope', '$http', 'growl', '$location', '$timeout', 
      '$filter', '$upload', '$modal', '$log','$route',
-		function($scope, $rootScope, $http, growl, $location, $timeout, $filter, $upload,  
+    function($scope, $rootScope, $http, growl, $location, $timeout, $filter, $upload,  
      $modal, $log,$route){
-		var _scope = {};
+    var _scope = {};
     $scope.badge={}
     $scope.clear={};
-		_scope.init = function(){
+    _scope.init = function(){
       $scope.firstStep();
       $scope.resultXls = {};
       defaultBtn();
       defaultFilePreviewSettings();
-		}
+    }
     $scope.clearData=function(){
       $route.reload();
     }
@@ -41,16 +41,24 @@ app
 
     $scope.clicked = '';
     var contextIndex;
-    $scope.saveIndex=function(ind){
+    $scope.saveIndex=function(ind,type){
       rowIndex=ind;
       if($scope.tableData[rowIndex].transformations && $scope.tableData[rowIndex].transformations.length>=0){
         $scope.transInfo.pushable=$scope.tableData[rowIndex].transformations;
-        $rootScope.$broadcast("transformation",$scope.transInfo.pushable);
+        if(type=='edit')
+          $rootScope.$broadcast("edittransformation",$scope.transInfo.pushable);
+        else{
+          $rootScope.$broadcast("transformation",$scope.transInfo.pushable);
+        }
       }
       else{
         $scope.tableData[rowIndex].transformations=[];
         $scope.transInfo.pushable=$scope.tableData[rowIndex].transformations;
-        $rootScope.$broadcast("transformation",$scope.transInfo.pushable);
+        if(type=='edit')
+          $rootScope.$broadcast("edittransformation",$scope.transInfo.pushable);
+        else{
+          $rootScope.$broadcast("transformation",$scope.transInfo.pushable);
+        }
       }
     }
 
@@ -154,7 +162,8 @@ app
           for(var i = 0; i < modifiedList.length ; i++){  
             $scope.propertyList[i] = {};
             $scope.propertyList[i] = modifiedList[i];
-            $scope.propertyList[i].isSelect = false;
+            /*selected value get unselect using this so commented*/
+            //$scope.propertyList[i].isSelect = false;
           }
           mappedPropColumns(originalTName);
         } 
@@ -288,7 +297,7 @@ app
         growl.error('Select column, table and property names to map');
       } 
 
-      $("option:selected").removeAttr("selected");
+      $("option:selected").not("#SelectId option:selected").removeAttr("selected");
     }
 
     $scope.mapAttribute = function () {
@@ -438,6 +447,13 @@ app
     }
 
     $scope.changeFormat=function(){
+
+      $scope.uploadedDataDump=angular.copy($scope.unformatedData);
+      $scope.uploadedDataDump.headers = splitter($scope.uploadedDataDump.headers,$scope.fileStyle.delimeterFormat);
+      $scope.uploadedDataDump.rowOne = splitter($scope.uploadedDataDump.rowOne,$scope.fileStyle.delimeterFormat);
+      $scope.uploadedDataDump.rowTwo = splitter($scope.uploadedDataDump.rowTwo,$scope.fileStyle.delimeterFormat);
+      $scope.uploadedData = angular.copy($scope.uploadedDataDump);
+
       $scope.dupUploadedData=angular.copy($scope.uploadedData);
 
       $scope.dupUploadedData.rowOne = changeDateFormat($scope.dupUploadedData.rowOne, $scope.fileStyle.dateFormat);
@@ -453,7 +469,7 @@ app
       // loadingColumns($scope.dupUploadedData.headers);
       // $scope.dupUploadedData.rowOne = changeDelimiterFormat(list.list1, $scope.fileStyle.delimeterFormat);
       // $scope.dupUploadedData.rowTwo = changeDelimiterFormat(list.list2, $scope.fileStyle.delimeterFormat);
-    
+      loadingColumns($scope.dupUploadedData.headers);
     }
 
     // $scope.selectedDateFormat = function (format) {
@@ -540,26 +556,26 @@ app
       return list;
     }
 
-    $scope.selectedDelimiterFormat = function (format) {
-      var list = {
-          "list0" : $scope.dupUploadedData.headers.join(),
-          "list1" : $scope.dupUploadedData.rowOne.join(),
-          "list2" : $scope.dupUploadedData.rowTwo.join()
-        }
-      $scope.dupUploadedData.headers = changeDelimiterFormat(list.list0, format);
-      loadingColumns($scope.dupUploadedData.headers);
-      $scope.dupUploadedData.rowOne = changeDelimiterFormat(list.list1, format);
-      $scope.dupUploadedData.rowTwo = changeDelimiterFormat(list.list2, format);
-    }
+    // $scope.selectedDelimiterFormat = function (format) {
+    //   var list = {
+    //       "list0" : $scope.dupUploadedData.headers.join(),
+    //       "list1" : $scope.dupUploadedData.rowOne.join(),
+    //       "list2" : $scope.dupUploadedData.rowTwo.join()
+    //     }
+    //   $scope.dupUploadedData.headers = changeDelimiterFormat(list.list0, format);
+    //   loadingColumns($scope.dupUploadedData.headers);
+    //   $scope.dupUploadedData.rowOne = changeDelimiterFormat(list.list1, format);
+    //   $scope.dupUploadedData.rowTwo = changeDelimiterFormat(list.list2, format);
+    // }
 
-    var changeDelimiterFormat = function (list, format) {
-      var dump;
-      if(format == '.' && list)
-          dump = list.split(".");
-      else 
-          dump = list.split(",");
-      return dump;
-    }
+    // var changeDelimiterFormat = function (list, format) {
+    //   var dump;
+    //   if(format == '.' && list)
+    //       dump = list.split(".");
+    //   else 
+    //       dump = list.split(",");
+    //   return dump;
+    // }
 
     $scope.resetData = function () {
       $scope.dupUploadedData = angular.copy($scope.uploadedData);
@@ -579,10 +595,9 @@ app
         headers: {'Content-Type': undefined}
       })
       .success(function (data, status) {
-          $scope.uploadedDataDump = angular.copy(data);
-          $scope.uploadedData = data;
-          loadingColumns(data.headers);
-          $scope.changeFormat();
+          $scope.unformatedData=angular.copy(data);
+          
+          $scope.secondStep();
       })
       .error(function(data){
         growl.error("Unable to upload file");
@@ -598,7 +613,7 @@ app
         selectedColumns[i].isSelect = false;
       };
       $scope.columnShowList = selectedColumns;  
-      $scope.secondStep(); 
+      //$scope.secondStep(); 
       
     }
     //check required fields mapping is done or not
@@ -619,7 +634,7 @@ app
           }
         }
       };
-      if(clength == reqFieldList.length)
+      if(clength >= reqFieldList.length)
         return true;
       else {
         return false;
@@ -646,7 +661,8 @@ app
 
     //getMappingList
     var getMappingList = function (tenantId){
-      $http.get('/getMappingList/'+ tenantId)
+      if(!$scope.edit){
+        $http.get('/getMappingList/'+ tenantId)
         .success(function(data){
           $scope.mappingList = data;
           angular.forEach($scope.mappingList,function(value,key){
@@ -655,9 +671,13 @@ app
             }
           })
         })
-        .error(function(){
+        .error(function(err){
           growl.error("Unable to get mapping list");
         });
+      }
+      else{
+        $scope.edit=false;
+      }
     }
 
     //getMappedJson
@@ -690,6 +710,12 @@ app
     $scope.secondStep = function () {
       $scope.badge.step = "two";
       getPropertyList();
+      $scope.changeFormat();
+      //loadingColumns($scope.uploadedData.headers);
+    }
+
+    function splitter(data,splittype) {
+      return data.split(splittype);
     }
 
     $scope.reloadStep = function () {
@@ -709,28 +735,59 @@ app
       }
       $scope.fileViewFormats = info;
     }
-    // $scope.edit=false;
-    // $scope.editMapping = function (map) {
-    //   $scope.edit=true;
-    //   $scope.badge.step = "three";
-    //   $scope.isMapSaved=false;
-    //   $http.get('/getMapping/'+map.tenantId+'/'+map._id)
-    //     .success(function(data){
-    //       $scope.tableData={};
-    //       $scope.uploadedData={};
-    //       $scope.map={};
-    //       $scope.tableData=data[0].mappingInfo;
-    //       angular.forEach($scope.tableData,function(val,key){
-            
-    //       })
-    //       $scope.uploadedData.fileName=data[0].fileName;
-    //       $scope.map.name=data[0].mappingName;
-    //       $scope.fileViewFormats=data[0].delimeter;
+    $scope.edit=false;
+    $scope.editMapping = function (map) {
+
+      $scope.edit=true;
+      $scope.badge.step = "three";
+      $scope.isMapSaved=false;
+      $http.get('/getMapping/'+map.tenantId+'/'+map._id)
+        .success(function(data){
+          $scope.tableData={};
+          $scope.uploadedData={};
+          $scope.map={};
+          $scope.tableData=data[0].mappingInfo;
+          $scope.mapid=data[0]._id;
+          /*this is hardcode but in feature it will dynamic*/
+          
+          angular.forEach($scope.tableData,function(val,key){
+            $scope.saveIndex(key,'edit');
+            $scope.tableData[key].tableName == 'product';
+            val.propName={};
+            val.propName.field = val.field;
+            val.propName.index = val.index;
+            val.propName.instance = val.instance;
+            val.propName.isRequired = val.isRequired;
+            delete val.field;
+            delete val.index;
+            delete val.instance;
+            delete val.isRequired;
+            val.isEdit=true;
+            // if(val.defaultValue)
+            //     val.quotes=true;
+          })
+          $scope.uploadedData.fileName=data[0].fileName;
+          $scope.map.name=data[0].mappingName;
+          $scope.fileViewFormats=data[0].delimeter;
           
           
-    //     })
+        })
       
-    // }
+    }
+
+    var saveEditedMapping=function (data) {
+
+      $http.put('/updateMapping/'+$scope.mapid,data).then(function(data){
+          $scope.mapid=null;
+          $scope.isMapSaved = true;
+          growl.success("Mapping has been saved successfully");
+          getMappingList(1);
+      })
+      .catch(function(err){
+          console.log('error',err);
+      })
+    }
+
 
     $scope.saveMappingStep = function (map, tableInfo) {
       if(map.name){
@@ -739,38 +796,56 @@ app
           var valid = checkMapping(tableInfo);
           if(valid == true){
             var mappingDetails = {};
+           // mappingDetails._id = tableInfo._id :
             mappingDetails.tenantId = 1;
             mappingDetails.fileName = $scope.uploadedData.fileName;
             mappingDetails.mappingName = map.name;
             mappingDetails.delimeter = $scope.fileViewFormats;
             mappingDetails.mappingInfo = [];
             for (var i = 0; i < tableInfo.length; i++) {
-              if(tableInfo[i].tableName == 'product'){
-                 mappingDetails.mappingInfo[i] = {
-                  "userFieldName": tableInfo[i].columnName,
-                  "transformations": tableInfo[i].transformations,
-                  "field": tableInfo[i].propName.field,
-                  "defaultValue": tableInfo[i].defaultVal,
-                  "index": tableInfo[i].propName.index,
-                  "instance": tableInfo[i].propName.instance,
-                  "isRequired": tableInfo[i].propName.isRequired
-                };
-              } else {
-                mappingDetails.mappingInfo[i] = {
-                  "field": tableInfo[i].tableName+"s",
-                  "values": [{
+              if(!tableInfo[i].isEdit){
+                if(tableInfo[i].tableName == 'product'){
+                   mappingDetails.mappingInfo[i] = {
                     "userFieldName": tableInfo[i].columnName,
-                    "transformations": tableInfo[i].transformations,
+                    "transformations":tableInfo[i].transformations,
                     "field": tableInfo[i].propName.field,
                     "defaultValue": tableInfo[i].defaultVal,
                     "index": tableInfo[i].propName.index,
                     "instance": tableInfo[i].propName.instance,
                     "isRequired": tableInfo[i].propName.isRequired
-                  }]
-                };
+                  };
+                } else {
+                  mappingDetails.mappingInfo[i] = {
+                    "field": tableInfo[i].tableName+"s",
+                    "values": [{
+                      "userFieldName": tableInfo[i].columnName,
+                      "transformations": tableInfo[i].transformations,
+                      "field": tableInfo[i].propName.field,
+                      "defaultValue": tableInfo[i].defaultVal,
+                      "index": tableInfo[i].propName.index,
+                      "instance": tableInfo[i].propName.instance,
+                      "isRequired": tableInfo[i].propName.isRequired
+                    }]
+                  };
+                }
+
               }
+              else{
+                  mappingDetails.mappingInfo[i] = tableInfo[i];
+                  mappingDetails.mappingInfo[i].field=mappingDetails.mappingInfo[i].propName.field;
+                  mappingDetails.mappingInfo[i].index=mappingDetails.mappingInfo[i].propName.index;
+                  mappingDetails.mappingInfo[i].instance=mappingDetails.mappingInfo[i].propName.instance;
+                  mappingDetails.mappingInfo[i].isRequired=mappingDetails.mappingInfo[i].propName.isRequired;
+                  delete mappingDetails.mappingInfo[i].propName;
+                }
             };
-            saveMapping(mappingDetails);
+            if($scope.mapid){
+              saveEditedMapping(mappingDetails);
+            }
+            else{
+              saveMapping(mappingDetails);
+            }
+            
             //reset newmap
             $scope.newMap = false;
             //get list
@@ -797,7 +872,7 @@ app
     }
 
     _scope.init();
-	}]);
+  }]);
 
 //directives
 app.directive('cellHighlight', function() {
