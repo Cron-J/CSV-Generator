@@ -4,7 +4,10 @@ var Joi = require('joi'),
 
 exports.getAll = {
   handler: function (request, reply) {
-    var obj = [];
+    var obj = {};
+        obj['modelName'] = Product.modelName;
+        obj['subdocument'] = [];
+        obj['attributes'] = [];
     var schemaPath = Product.schema.paths;
 
     for (var path in schemaPath){
@@ -14,6 +17,7 @@ exports.getAll = {
       data.field = path;    
 
       if(schemaPath[path].schema != undefined){
+       obj['subdocument'].push(path);
         data.values = [];
         for (var path1 in schemaPath[path].schema.paths){
             if(path1 === '_id' || path1 === '__v' || path1 === 'createdBy' || path1 === 'updatedBy' || path1 === 'updatedAt' || path1 === 'createdAt') continue;
@@ -30,7 +34,7 @@ exports.getAll = {
         data.instance = schemaPath[path].instance;
       }
 
-      obj.push(data);
+      obj['attributes'].push(data);
       
     }
       reply(obj);
