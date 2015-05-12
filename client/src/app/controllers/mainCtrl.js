@@ -10,22 +10,24 @@ app
     var _scope = {};
     $scope.badge={}
     $scope.clear={};
+    /*object instanciation and load first tab */
     _scope.init = function(){
-      $scope.firstStep();
+      $scope.firstStep();    // load first tab
       $scope.resultXls = {};
-      defaultBtn();
-      defaultFilePreviewSettings();
+      defaultBtn();          
+      defaultFilePreviewSettings();  // load default setting for file preview
     }
     $scope.clearData=function(){
       $route.reload();
     }
+
     var defaultBtn = function () {
       $scope.defaultVal={
         name:"defaultValue",
         value:null
       }
     }
-
+    /*load default setting for file preview */
     var defaultFilePreviewSettings = function() {
       $scope.fileStyle = {
         "includeHeader":true,
@@ -34,13 +36,14 @@ app
         "delimeterFormat":',' 
       }
     }
-
+/*-----------------------------------Transformaton Operation------------------------------*/
     var rowIndex;
     var transValue;
     $scope.transInfo={pushable:[],transVal:''};
-
     $scope.clicked = '';
     var contextIndex;
+
+    /*it load particular row transformation data and send to garafana library*/
     $scope.saveIndex=function(ind,type){
       rowIndex=ind;
       if($scope.tableData[rowIndex].transformations && $scope.tableData[rowIndex].transformations.length>=0){
@@ -61,7 +64,7 @@ app
         }
       }
     }
-
+    /*it save transformation data to datatable object*/
     $scope.saveTransformationInfo = function(){
       for(var i=0;i<$scope.transInfo.pushable.length;i++){
           delete $scope.transInfo.pushable[i].def.category;
@@ -95,39 +98,53 @@ app
     }
 
     var getPropertyList = function () {
-      $scope.property = {
-        "productPropertyList": [],
-        "pricePropertyList": [],
-        "attributePropertyList": [],
-        "prPropertyList": [],
-        "cpPropertyList": [],
-        "cgaPropertyList": []
-      };
+      // $scope.property = {
+      //   "productPropertyList": [],
+      //   "pricePropertyList": [],
+      //   "attributePropertyList": [],
+      //   "prPropertyList": [],
+      //   "cpPropertyList": [],
+      //   "cgaPropertyList": []
+      // };
       $http.get('/getAttributes') 
         .success(function(data){
           if(data){
-            var k = 0;
-            for (var i = 0; i < data.length; i++) {
-              if(!data[i].values){
-                $scope.property.productPropertyList[k] = data[i];
-                k++;
-              }
-              if(data[i].field == 'prices'){
-                $scope.property.pricePropertyList = data[i].values;
-              }
-              if(data[i].field == 'attributeValues'){
-                $scope.property.attributePropertyList = data[i].values;
-              }
-              if(data[i].field == 'productRelations'){
-                $scope.property.prPropertyList = data[i].values;
-              }
-              if(data[i].field == 'contractedProducts'){
-                $scope.property.cpPropertyList = data[i].values;
-              }
-              if(data[i].field == 'classificationGroupAssociations'){
-                $scope.property.cgaPropertyList = data[i].values;
-              }
-            };
+            $scope.property={product:[]};
+            $scope.attributeList=data;
+            angular.forEach(data.attributes,function(value,key){
+                if(!value.values){
+                  $scope.property['product'].push(value);
+                }
+                else{
+                  $scope.property[value.field]=value.values;
+                }
+            })
+            $scope.tableLists={};
+            angular.forEach($scope.property,function(value,key){
+              $scope.tableLists[key]=[];
+            })
+            // var k = 0;
+            // for (var i = 0; i < data.length; i++) {
+            //   if(!data[i].values){
+            //     $scope.property.productPropertyList[k] = data[i];
+            //     k++;
+            //   }
+            //   if(data[i].field == 'prices'){
+            //     $scope.property.pricePropertyList = data[i].values;
+            //   }
+            //   if(data[i].field == 'attributeValues'){
+            //     $scope.property.attributePropertyList = data[i].values;
+            //   }
+            //   if(data[i].field == 'productRelations'){
+            //     $scope.property.prPropertyList = data[i].values;
+            //   }
+            //   if(data[i].field == 'contractedProducts'){
+            //     $scope.property.cpPropertyList = data[i].values;
+            //   }
+            //   if(data[i].field == 'classificationGroupAssociations'){
+            //     $scope.property.cgaPropertyList = data[i].values;
+            //   }
+            // };
           }
         })
         .error(function(){
@@ -135,27 +152,29 @@ app
         });
     }
 
-    var getTableData = function (table, originalTName){
-        switch (table) {
-          case 'product':
-            $scope.propertyList = $scope.property.productPropertyList;
-            break;
-          case 'prices':
-            $scope.propertyList = $scope.property.pricePropertyList;
-            break;
-          case 'attributeValues':
-            $scope.propertyList = $scope.property.attributePropertyList;
-            break;
-          case 'productRelations':
-            $scope.propertyList = $scope.property.prPropertyList;
-            break;
-          case 'contractedProducts':
-            $scope.propertyList = $scope.property.cpPropertyList;
-            break;
-          case 'classificationGroupAssociations':
-            $scope.propertyList = $scope.property.cgaPropertyList;
-            break;
-        }
+    var getTableData = function (table){
+
+        $scope.propertyList = $scope.property[table];
+        // switch (table) {
+        //   case 'product':
+        //     $scope.propertyList = $scope.property.productPropertyList;
+        //     break;
+        //   case 'prices':
+        //     $scope.propertyList = $scope.property.pricePropertyList;
+        //     break;
+        //   case 'attributeValues':
+        //     $scope.propertyList = $scope.property.attributePropertyList;
+        //     break;
+        //   case 'productRelations':
+        //     $scope.propertyList = $scope.property.prPropertyList;
+        //     break;
+        //   case 'contractedProducts':
+        //     $scope.propertyList = $scope.property.cpPropertyList;
+        //     break;
+        //   case 'classificationGroupAssociations':
+        //     $scope.propertyList = $scope.property.cgaPropertyList;
+        //     break;
+        // }
         if($scope.propertyList){
           var modifiedList = $scope.propertyList;
           $scope.propertyList = [];
@@ -165,14 +184,15 @@ app
             /*selected value get unselect using this so commented*/
             //$scope.propertyList[i].isSelect = false;
           }
-          mappedPropColumns(originalTName);
+          mappedPropColumns(table);
         } 
         
     }
 
-    $scope.selectTable = function (tname, otname, rowNo, list) {
-      getTableData(tname, otname);
-      $scope.selectedTable = otname;
+    $scope.selectTable = function (tname, rowNo, list) {
+      //var otname = tname.slice(0,tname.length);
+      getTableData(tname);
+      $scope.selectedTable = tname;
       $scope.rowId = rowNo+1;
       $scope.selectedTableList = list;
     }
@@ -304,11 +324,11 @@ app
       if($scope.selectedColumn){
         if(($scope.selectedColumn == "gross_price") || ($scope.selectedColumn == "retail_price") 
           || ($scope.selectedColumn == "grossprice") || ($scope.selectedColumn == "retailprice")){
-          $scope.pickedTable = "price";
-          $scope.passingList = $scope.tableLists.PricesList;
+          $scope.pickedTable = "prices";
+          $scope.passingList = $scope.tableLists.prices;
         } else {
-          $scope.pickedTable = "attributeValue";
-          $scope.passingList = $scope.tableLists.ProductAttributeValuesList;
+          $scope.pickedTable = "attributeValues";
+          $scope.passingList = $scope.tableLists.attributeValues;
         }
           $scope.addToList();
           if($scope.selectedColumn){
@@ -334,20 +354,20 @@ app
                 if($scope.tableData[i].tableName == $scope.pickedTable){
                   $scope.tableData[i].aIndex++;
                 }
-                if($scope.pickedTable == "price"){
-                  $scope.tableData[i].rowId = $scope.tableLists.PricesList.length;
-                  for(var q = 0 ; q < $scope.property.pricePropertyList.length ; q++) {
-                    if( $scope.property.pricePropertyList[q].field == 'priceUnit'){
+                if($scope.pickedTable == "prices"){
+                  $scope.tableData[i].rowId = $scope.tableLists.prices.length;
+                  for(var q = 0 ; q < $scope.property.prices.length ; q++) {
+                    if( $scope.property.prices[q].field == 'priceUnit'){
                       $scope.tableData[i].propName = {};
-                      $scope.tableData[i].propName = $scope.property.pricePropertyList[q];
+                      $scope.tableData[i].propName = $scope.property.prices[q];
                     }
                   }
                 } else {
-                  $scope.tableData[i].rowId = $scope.tableLists.ProductAttributeValuesList.length;
-                  for(var q = 0 ; q < $scope.property.attributePropertyList.length ; q++){
-                    if( $scope.property.attributePropertyList[q].field == 'attribute'){
+                  $scope.tableData[i].rowId = $scope.tableLists.attributeValues.length;
+                  for(var q = 0 ; q < $scope.property.attributeValues.length ; q++){
+                    if( $scope.property.attributeValues[q].field == 'attribute'){
                       $scope.tableData[i].propName = {};
-                      $scope.tableData[i].propName = $scope.property.attributePropertyList[q];
+                      $scope.tableData[i].propName = $scope.property.attributeValues[q];
                     }
                   }
                 }
@@ -356,20 +376,20 @@ app
                 $scope.tableData[j] = angular.copy(dummy);
                 $scope.tableData[j].columnName = $scope.selectedColumn;
                 $scope.tableData[j].tableName = $scope.pickedTable;
-                if($scope.pickedTable == "price"){
-                  $scope.tableData[j].rowId = $scope.tableLists.PricesList.length;
-                  for(var q=0 ; q < $scope.property.pricePropertyList.length ; q++){
-                    if( $scope.property.pricePropertyList[q].field == 'priceTypeId'){
+                if($scope.pickedTable == "prices"){
+                  $scope.tableData[j].rowId = $scope.tableLists.prices.length;
+                  for(var q=0 ; q < $scope.property.prices.length ; q++){
+                    if( $scope.property.prices[q].field == 'priceTypeId'){
                       $scope.tableData[j].propName = {};
-                      $scope.tableData[j].propName = $scope.property.pricePropertyList[q];
+                      $scope.tableData[j].propName = $scope.property.prices[q];
                     }
                   }
                 } else {
-                  $scope.tableData[j].rowId = $scope.tableLists.ProductAttributeValuesList.length;
-                  for(var q=0 ; q < $scope.property.attributePropertyList.length; q++){
-                    if( $scope.property.attributePropertyList[q].field == 'value'){
+                  $scope.tableData[j].rowId = $scope.tableLists.attributeValues.length;
+                  for(var q=0 ; q < $scope.property.attributeValues.length; q++){
+                    if( $scope.property.attributeValues[q].field == 'value'){
                       $scope.tableData[j].propName = {};
-                      $scope.tableData[j].propName = $scope.property.attributePropertyList[q];
+                      $scope.tableData[j].propName = $scope.property.attributeValues[q];
                     }
                   }
                 }
@@ -698,13 +718,15 @@ app
       if($scope.newMap == true){
         $location.path("#/");
       }
-      $scope.tableLists = {
-        "PricesList" : [],
-        "ProductAttributeValuesList" : [],
-        "ClassificationAssignmentsList" : [],
-        "ProductRelationsList" : [],
-        "ContractedProductList" : []
-      }
+
+      
+      // $scope.tableLists = {
+      //   "PricesList" : [],
+      //   "ProductAttributeValuesList" : [],
+      //   "ClassificationAssignmentsList" : [],
+      //   "ProductRelationsList" : [],
+      //   "ContractedProductList" : []
+      // }
     } 
 
     $scope.secondStep = function () {
@@ -751,20 +773,40 @@ app
           /*this is hardcode but in feature it will dynamic*/
           
           angular.forEach($scope.tableData,function(val,key){
-            $scope.saveIndex(key,'edit');
-            $scope.tableData[key].tableName == 'product';
+            
             val.propName={};
-            val.propName.field = val.field;
-            val.propName.index = val.index;
-            val.propName.instance = val.instance;
-            val.propName.isRequired = val.isRequired;
-            delete val.field;
-            delete val.index;
-            delete val.instance;
-            delete val.isRequired;
+            if(val.values.length==0){
+              val.tableName = 'product';
+              val.propName.field = val.field;
+              val.propName.index = val.index;
+              val.propName.instance = val.instance;
+              val.propName.isRequired = val.isRequired;
+              val.columnName = val.userFieldName;
+              val.defaultVal = val.defaultValue;
+              delete val.field;
+              delete val.index;
+              delete val.instance;
+              delete val.isRequired;
+              delete val.userFieldName;
+              
+            }
+            else{
+              val.tableName = val.field;
+              val.propName.field = val.values[0].field;
+              val.propName.index = val.values[0].index;
+              val.propName.instance = val.values[0].instance;
+              val.propName.isRequired = val.values[0].isRequired;
+              val.transformations = val.values[0].transformations;
+              val.defaultVal = val.values[0].defaultValue;
+              val.columnName = val.values[0].userFieldName;
+              delete val.field;
+              delete val.values;
+      
+            }
+            $scope.saveIndex(key,'edit');
             val.isEdit=true;
-            // if(val.defaultValue)
-            //     val.quotes=true;
+             if(val.defaultVal)
+                val.quotes=true;
           })
           $scope.uploadedData.fileName=data[0].fileName;
           $scope.map.name=data[0].mappingName;
@@ -803,7 +845,7 @@ app
             mappingDetails.delimeter = $scope.fileViewFormats;
             mappingDetails.mappingInfo = [];
             for (var i = 0; i < tableInfo.length; i++) {
-              if(!tableInfo[i].isEdit){
+             // if(!tableInfo[i].isEdit){
                 if(tableInfo[i].tableName == 'product'){
                    mappingDetails.mappingInfo[i] = {
                     "userFieldName": tableInfo[i].columnName,
@@ -816,7 +858,7 @@ app
                   };
                 } else {
                   mappingDetails.mappingInfo[i] = {
-                    "field": tableInfo[i].tableName+"s",
+                    "field": tableInfo[i].tableName,
                     "values": [{
                       "userFieldName": tableInfo[i].columnName,
                       "transformations": tableInfo[i].transformations,
@@ -829,15 +871,15 @@ app
                   };
                 }
 
-              }
-              else{
-                  mappingDetails.mappingInfo[i] = tableInfo[i];
-                  mappingDetails.mappingInfo[i].field=mappingDetails.mappingInfo[i].propName.field;
-                  mappingDetails.mappingInfo[i].index=mappingDetails.mappingInfo[i].propName.index;
-                  mappingDetails.mappingInfo[i].instance=mappingDetails.mappingInfo[i].propName.instance;
-                  mappingDetails.mappingInfo[i].isRequired=mappingDetails.mappingInfo[i].propName.isRequired;
-                  delete mappingDetails.mappingInfo[i].propName;
-                }
+             // }
+              // else{
+              //     mappingDetails.mappingInfo[i] = tableInfo[i];
+              //     mappingDetails.mappingInfo[i].field=mappingDetails.mappingInfo[i].propName.field;
+              //     mappingDetails.mappingInfo[i].index=mappingDetails.mappingInfo[i].propName.index;
+              //     mappingDetails.mappingInfo[i].instance=mappingDetails.mappingInfo[i].propName.instance;
+              //     mappingDetails.mappingInfo[i].isRequired=mappingDetails.mappingInfo[i].propName.isRequired;
+              //     delete mappingDetails.mappingInfo[i].propName;
+              //   }
             };
             if($scope.mapid){
               saveEditedMapping(mappingDetails);

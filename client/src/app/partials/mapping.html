@@ -52,9 +52,20 @@
          <select class="mapping-select" id="SelectId"  name="classesList" size="20" >
             <!-- <option value="? string:{{selectedTable}} ?" style="display:none"></option> -->
             <!-- <option value="" style="display:none" ></option> -->
-            <option value="product" ng-click="selectTable('product', 'product')" selected>product</option>
+            <option value="product" ng-click="selectTable('product', 'product')" selected>       product
+            </option>
+            
+            <optgroup ng-if="key !='product'" style="font-style: normal;" ng-repeat="(key, value) in property" label="{{key}}">
+               <option value="{{pa.table}}" id="com.jcatalog.product[key]:{{$index}}" ng-repeat="pa in tableLists[key] track by $index" ng-click="selectTable(key,$index, tableLists[key])">
+                  {{pa.table}}({{$index+1}})
+               </option>
+            </optgroup>
+
+            <!-- <option value="product" ng-click="selectTable('product', 'product')" selected>       product
+            </option>
+
             <optgroup style="font-style: normal;" label="prices">
-               <option value="{{pa.table}}" id="com.jcatalog.product.Prices:{{$index}}" ng-repeat="pa in tableLists.PricesList track by $index" ng-click="selectTable('prices', 'price', $index, tableLists.PricesList)">
+               <option value="{{pa.table}}"  ng-repeat="pa in tableLists.PricesList track by $index" ng-click="selectTable('prices', 'price', $index, tableLists.PricesList)">
                   {{pa.table}}({{$index+1}})
                </option>
             </optgroup>
@@ -77,7 +88,7 @@
                <option value="{{cp.table}}" id="com.jcatalog.product.ContractedProduct:{{$index}}" ng-repeat="cp in tableLists.ContractedProductList track by $index" ng-click="selectTable('contractedProducts', 'contractedProduct',$index, tableLists.ContractedProductList)">
                   {{cp.table}}({{$index+1}})
                </option>
-            </optgroup>
+            </optgroup> -->
          </select>
       </div>
       <div class="col-md-3">
@@ -112,11 +123,15 @@
                <span class="caret"></span>
                </button>
                <ul class="dropdown-menu" role="menu" id="subtableList">
-                  <li><a ng-click="selectnewPropTable('price', tableLists.PricesList)">price</a></li>
+                  <li ng-repeat="(key, value) in property">
+                     <a ng-click="selectnewPropTable(key, tableLists[key])">{{key}}</a>
+                  </li>
+
+                 <!--  <li><a ng-click="selectnewPropTable('price', tableLists.PricesList)">price</a></li>
                   <li><a ng-click="selectnewPropTable('attributeValue', tableLists.ProductAttributeValuesList)">attributeValue</a></li>
                   <li><a ng-click="selectnewPropTable('classificationGroupAssociation', tableLists.ClassificationAssignmentsList)">classificationGroupAssociation</a></li>
                   <li><a ng-click="selectnewPropTable('productRelation', tableLists.ProductRelationsList)">productRelation</a></li>
-                  <li><a ng-click="selectnewPropTable('contractedProduct', tableLists.ContractedProductList)">contractedProduct</a></li>
+                  <li><a ng-click="selectnewPropTable('contractedProduct', tableLists.ContractedProductList)">contractedProduct</a></li> -->
                </ul>
             </div>
             <a class="btn btn-default" ng-click="addToList()"><span class="glyphicon glyphicon-plus"></span></a>
@@ -148,11 +163,10 @@
             <tbody>
                <tr ng-repeat="row in tableData">
                   <td >
-
                      <span ng-if="row.defaultVal && row.quotes == true">"{{row.defaultVal}}"</span>
                      <span ng-if="!row.defaultVal && row.quotes == true">"{{row.columnName}}"</span>
                      <span ng-show="row.quotes == false">{{row.columnName}}</span>
-                     <span ng-show="row.quotes == undefined && row.userFieldName!='defaultValue'">{{row.userFieldName || row.values[0].userFieldName}}</span>
+                     <span ng-show="row.quotes == undefined && row.userFieldName!='defaultValue'">{{row.columnName }}</span>
                      <span ng-show="row.quotes == undefined && row.userFieldName=='defaultValue'">{{row.defaultValue}}</span>
                   </td>
                   <!-- <td ng-show="row.quotes == false">{{row.columnName}}</td>
@@ -165,10 +179,16 @@
                      <sup><button class="btn btn-primary btn-xxs" context="context1" ng-click="saveIndex($index)"><span class="glyphicon glyphicon-edit"></span></button></sup>
                   </td>
                   <td>
-                     <span ng-show="!edit">
+
+                     <span >
                      <span ng-show="row.tableName != 'product'">product.</span>{{row.tableName}}
                      <span ng-show="row.rowId > 0">({{row.rowId}})</span>.{{row.propName.field}}
                      </span>
+
+                     <!-- <span ng-show="edit">
+                     <span ng-show="row.tableName != 'product'">product.</span>{{row.tableName}}
+                     <span ng-show="row.rowId > 0">({{row.rowId}})</span>.{{row.propName.field}}
+                     </span> -->
                   </td>
                   <td>
                      <span >{{row.propName.field}}</span>

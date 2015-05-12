@@ -218,7 +218,10 @@ var targetLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
       var target = getSegmentPathUpTo($scope.segments.length);
       $scope.target.target = _.reduce($scope.functions, wrapFunction, target);
       $scope.transInfo.pushable=$scope.functions;
-      $scope.transInfo.transVal=$scope.target.target;
+      if($scope.target.target =='select function')
+          $scope.transInfo.transVal='';
+      else
+          $scope.transInfo.transVal=$scope.target.target
       $scope.saveTransformationInfo();
       // if ($scope.target.target !== oldTarget) {
       //   $scope.$parent.get_data();
