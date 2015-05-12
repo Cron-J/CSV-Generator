@@ -6,9 +6,6 @@ var Joi = require('joi'),
 
 exports.createMapping = {
     handler: function(request, reply) {
-        //console.log(request.payload.mappingInfo[0].transformations);
-        //request.payload.mappingInfo[0].transformations = request.payload.mappingInfo[0].transformations.toArray();
-        console.log(typeof (request.payload.mappingInfo[0].transformations));
         Mapping.createMapping(request.payload, function(err, mapping) {
             if (!err) {
                 reply(mapping);
@@ -17,7 +14,7 @@ exports.createMapping = {
             }
         });
     }
-}
+};
 
 exports.updateMapping = {
     handler: function(request, reply) {
@@ -29,7 +26,7 @@ exports.updateMapping = {
             }
         });
     }
-}
+};
 
 exports.getMappingList = {
     handler: function(request, reply) {
@@ -41,7 +38,7 @@ exports.getMappingList = {
             }
         });
     }
-}
+};
 
 exports.getMappingForEdit = {
     handler: function(request, reply) {
@@ -53,7 +50,48 @@ exports.getMappingForEdit = {
             }
         });
     }
-}
+};
+
+exports.getTestMappingData = {
+    handler: function(request, reply) {
+        Mapping.getMappedData(request.params.tenantId, request.params.mappingId, function(err, mappings) {
+            if (!err) {
+                var upload_path = 'upload/' + mappings[0].fileName;
+                var fileStream = fs.createReadStream(upload_path);
+                //new converter instance 
+                var csvConverter = new Converter({
+                    constructResult: true
+                });
+
+                //end_parsed will be emitted once parsing finished 
+                csvConverter.on("end_parsed", function(jsonObj) {
+                    var finalJson = [];
+                    for (var i = 0; i < jsonObj.length; i++) {
+                        var temp = {};
+                        for (var key in jsonObj[i]){                            
+                            for (var j = 0; j < mappings[0].mappingInfo.length; j++) {
+                                if(mappings[0].mappingInfo[j].userFieldName == undefined){
+                                    if(key == mappings[0].mappingInfo[j].values[0].userFieldName){
+                                        if(temp[mappings[0].mappingInfo[j].field] == undefined) temp[mappings[0].mappingInfo[j].field] = {};
+                                        temp[mappings[0].mappingInfo[j].field][mappings[0].mappingInfo[j].values[0].userFieldName] = jsonObj[i][key];
+                                    };
+                                }
+                                else if(key == mappings[0].mappingInfo[j].userFieldName){
+                                    temp[mappings[0].mappingInfo[j].field] = changeFormat(jsonObj[i][key],mappings[0].delimeter);
+                                }
+                            }
+                        }
+                        finalJson.push(temp);                  
+                    }
+                    reply(finalJson);
+                });
+                fileStream.pipe(csvConverter);
+            } else {
+                reply(Boom.forbidden(err));
+            }
+        });
+    }
+};
 
 exports.getMappingData = {
     handler: function(request, reply) {
@@ -178,6 +216,7 @@ exports.getMappingData = {
                         };
                         key++;
                     };
+                    console.log(convertedJson);
                     reply(convertedJson);
                 });
                 fileStream.pipe(csvConverter);
@@ -187,6 +226,7 @@ exports.getMappingData = {
         });
     }
 }
+
 
 //format change
 var changeFormat = function (item, format){
@@ -238,20 +278,19 @@ var changeFormat = function (item, format){
     }
     
  return item;
-}
+};
 
 //checking duplicates
 var checkAlDuplicate = function(name, arr) {
     for (var i = 0; i < arr.length; i++) {
         if (arr[i].attributeId == name)
             return false;
-    };
-}
+    }
+};
 var checkPDuplicate = function(name, arr) {
     for (var i = 0; i < arr.length; i++) {
         if (arr[i].pricetype == name)
             return false;
-    };
+    }
 
-}
-
+};
