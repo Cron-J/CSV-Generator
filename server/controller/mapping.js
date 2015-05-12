@@ -71,10 +71,12 @@ exports.getTestMappingData = {
                         for (var key in jsonObj[i]){                            
                             for (var j = 0; j < mappings[0].mappingInfo.length; j++) {
                                 if(mappings[0].mappingInfo[j].userFieldName == undefined){
-                                    if(key == mappings[0].mappingInfo[j].values[0].userFieldName){
-                                        if(temp[mappings[0].mappingInfo[j].field] == undefined) temp[mappings[0].mappingInfo[j].field] = {};
-                                        temp[mappings[0].mappingInfo[j].field][mappings[0].mappingInfo[j].values[0].userFieldName] = jsonObj[i][key];
-                                    };
+                                    for (var k = 0; k < mappings[0].mappingInfo[j].values.length; k++){
+                                        if(key == mappings[0].mappingInfo[j].values[k].userFieldName){
+                                            if(temp[mappings[0].mappingInfo[j].field] == undefined) temp[mappings[0].mappingInfo[j].field] = {};
+                                            temp[mappings[0].mappingInfo[j].field][mappings[0].mappingInfo[j].values[k].userFieldName] = jsonObj[i][key];
+                                        };
+                                    }
                                 }
                                 else if(key == mappings[0].mappingInfo[j].userFieldName){
                                     temp[mappings[0].mappingInfo[j].field] = changeFormat(jsonObj[i][key],mappings[0].delimeter);
