@@ -1,6 +1,7 @@
 var Joi = require('joi'),
     formidable = require('formidable'),
     Boom = require('boom'),
+    Mapping = require('../model/mapping').Mapping,
     Converter = require("csvtojson").core.Converter,
     fs = require('fs');
 
@@ -31,7 +32,7 @@ exports.uploadFile = {
                     });
                 } else {
                     //debug
-                    console.log('------------------', e);
+                    reply(Boom.forbidden(err));
                 }
             });
 
@@ -39,8 +40,28 @@ exports.uploadFile = {
     }
 };
 
-function csvJSON(csv, fileName) {
+exports.getMappingCSVData = {
+    handler: function(request, reply) {
+        Mapping.getMappedData(request.params.tenantId, request.params.mappingId, function(err, mappings) {
+            if (!err) {
+                var path = 'upload';
+                var upload_path = path + '/' + mappings[0].fileName;
 
+                fs.readFile(upload_path, 'utf8', function(err, data) {
+                    if (err) {
+                        return console.log(err);
+                    }
+                    reply(csvJSON(data, mappings[0].fileName));
+                });
+            }
+            else {
+                reply(Boom.forbidden(err));
+            }
+        });
+    }
+};
+
+function csvJSON(csv, fileName) {
     var lines = csv.split("\n");
     var result = {};
     result.fileName = fileName;

@@ -74,7 +74,13 @@ exports.getTestMappingData = {
                                     if(temp[mappings[0].mappingInfo[j].field] == undefined) temp[mappings[0].mappingInfo[j].field] = [];
                                     for (var k = 0; k < mappings[0].mappingInfo[j].values.length; k++){
                                         if(key == mappings[0].mappingInfo[j].values[k].userFieldName){
-                                            if(temp[mappings[0].mappingInfo[j].field][k] == undefined) temp[mappings[0].mappingInfo[j].field][k] = {};
+                                            if(temp[mappings[0].mappingInfo[j].field][k] == undefined) {
+                                                console.log("I am undefined");
+                                                temp[mappings[0].mappingInfo[j].field][k] = {};
+                                            }
+                                            else{
+                                                console.log(temp[mappings[0].mappingInfo[j].field][k]);
+                                            }
                                             var field = mappings[0].mappingInfo[j].values[k].userFieldName;
                                             temp[mappings[0].mappingInfo[j].field][k][field] = jsonObj[i][key];//changeFormat(jsonObj[i][key],mappings[0].delimeter);
                                         };

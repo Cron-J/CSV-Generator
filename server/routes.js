@@ -16,5 +16,6 @@ exports.endpoints = [
     { method: 'GET', path: '/getMappingData/{tenantId}/{mappingId}', config: Mapping.getMappingData },
     { method: 'PUT', path: '/updateMapping/{mappingId}', config: Mapping.updateMapping },
     { method: 'GET', path: '/getMapping/{tenantId}/{mappingId}', config: Mapping.getMappingForEdit },
+    { method: 'GET', path: '/getMappingCSV/{tenantId}/{mappingId}', config: File.getMappingCSVData },
     { method: 'POST', path: '/createMapping', config: Mapping.createMapping }
 ];
