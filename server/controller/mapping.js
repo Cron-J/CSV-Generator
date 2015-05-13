@@ -71,10 +71,12 @@ exports.getTestMappingData = {
                         for (var key in jsonObj[i]){                            
                             for (var j = 0; j < mappings[0].mappingInfo.length; j++) {
                                 if(mappings[0].mappingInfo[j].userFieldName == undefined){
+                                    if(temp[mappings[0].mappingInfo[j].field] == undefined) temp[mappings[0].mappingInfo[j].field] = [];
                                     for (var k = 0; k < mappings[0].mappingInfo[j].values.length; k++){
                                         if(key == mappings[0].mappingInfo[j].values[k].userFieldName){
-                                            if(temp[mappings[0].mappingInfo[j].field] == undefined) temp[mappings[0].mappingInfo[j].field] = {};
-                                            temp[mappings[0].mappingInfo[j].field][mappings[0].mappingInfo[j].values[k].userFieldName] = jsonObj[i][key];
+                                            if(temp[mappings[0].mappingInfo[j].field][k] == undefined) temp[mappings[0].mappingInfo[j].field][k] = {};
+                                            var field = mappings[0].mappingInfo[j].values[k].userFieldName;
+                                            temp[mappings[0].mappingInfo[j].field][k][field] = jsonObj[i][key];//changeFormat(jsonObj[i][key],mappings[0].delimeter);
                                         };
                                     }
                                 }
@@ -218,8 +220,7 @@ exports.getMappingData = {
                         };
                         key++;
                     };
-                    console.log(convertedJson);
-                    reply(convertedJson);
+                     reply(convertedJson);
                 });
                 fileStream.pipe(csvConverter);
             } else {
