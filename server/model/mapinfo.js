@@ -29,6 +29,10 @@ var mapinfo = {
     },
 
     values: [{
+
+        rowId: {
+            type: Number
+        }, 
      
         userFieldName: {
             type: String

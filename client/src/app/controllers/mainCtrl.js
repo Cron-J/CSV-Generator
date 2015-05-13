@@ -844,32 +844,55 @@ app
             mappingDetails.mappingName = map.name;
             mappingDetails.delimeter = $scope.fileViewFormats;
             mappingDetails.mappingInfo = [];
+            var len=0;
             for (var i = 0; i < tableInfo.length; i++) {
              // if(!tableInfo[i].isEdit){
+              var isExisting=false;
                 if(tableInfo[i].tableName == 'product'){
-                   mappingDetails.mappingInfo[i] = {
+                   mappingDetails.mappingInfo[len++] = {
                     "userFieldName": tableInfo[i].columnName,
                     "transformations":tableInfo[i].transformations,
                     "field": tableInfo[i].propName.field,
                     "defaultValue": tableInfo[i].defaultVal,
                     "index": tableInfo[i].propName.index,
                     "instance": tableInfo[i].propName.instance,
-                    "isRequired": tableInfo[i].propName.isRequired
+                    "isRequired": tableInfo[i].propName.isRequired,
+                    "rowId": tableInfo[i].rowId
                   };
                 } else {
-                  mappingDetails.mappingInfo[i] = {
-                    "field": tableInfo[i].tableName,
-                    "values": [{
-                      "userFieldName": tableInfo[i].columnName,
-                      "transformations": tableInfo[i].transformations,
-                      "field": tableInfo[i].propName.field,
-                      "defaultValue": tableInfo[i].defaultVal,
-                      "index": tableInfo[i].propName.index,
-                      "instance": tableInfo[i].propName.instance,
-                      "isRequired": tableInfo[i].propName.isRequired
-                    }]
-                  };
+                    angular.forEach(mappingDetails.mappingInfo,function(val,key){
+                      if(tableInfo[i].tableName !='product' && tableInfo[i].tableName == val.field && val.values.length >0 && val.values[0].rowId == tableInfo[i].rowId){
+                         val.values.push({
+                            "userFieldName": tableInfo[i].columnName,
+                            "transformations": tableInfo[i].transformations,
+                            "field": tableInfo[i].propName.field,
+                            "defaultValue": tableInfo[i].defaultVal,
+                            "index": tableInfo[i].propName.index,
+                            "instance": tableInfo[i].propName.instance,
+                            "isRequired": tableInfo[i].propName.isRequired,
+                            "rowId": tableInfo[i].rowId
+                          })
+                         isExisting=true;
+                      }
+                    })
+                    if(isExisting == false){
+                      mappingDetails.mappingInfo[len++] = {
+                        "field": tableInfo[i].tableName,
+                        "values": [{
+                          "userFieldName": tableInfo[i].columnName,
+                          "transformations": tableInfo[i].transformations,
+                          "field": tableInfo[i].propName.field,
+                          "defaultValue": tableInfo[i].defaultVal,
+                          "index": tableInfo[i].propName.index,
+                          "instance": tableInfo[i].propName.instance,
+                          "isRequired": tableInfo[i].propName.isRequired,
+                          "rowId": tableInfo[i].rowId
+                        }]
+                      };
+                    }
+                  
                 }
+
 
              // }
               // else{

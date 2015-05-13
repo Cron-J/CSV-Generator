@@ -55,11 +55,12 @@
             <option value="product" ng-click="selectTable('product', 'product')" selected>       product
             </option>
             
-            <optgroup ng-if="key !='product'" style="font-style: normal;" ng-repeat="(key, value) in property" label="{{key}}">
+            <optgroup ng-if="key !='product'"  style="font-style: normal;" ng-repeat="(key, value) in property" label="{{key}}">
                <option value="{{pa.table}}" id="com.jcatalog.product[key]:{{$index}}" ng-repeat="pa in tableLists[key] track by $index" ng-click="selectTable(key,$index, tableLists[key])">
                   {{pa.table}}({{$index+1}})
                </option>
             </optgroup>
+
 
             <!-- <option value="product" ng-click="selectTable('product', 'product')" selected>       product
             </option>
