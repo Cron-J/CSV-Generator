@@ -771,42 +771,55 @@ app
           $scope.tableData=data[0].mappingInfo;
           $scope.mapid=data[0]._id;
           /*this is hardcode but in feature it will dynamic*/
-          
+          var duptableData = [];
+
           angular.forEach($scope.tableData,function(val,key){
-            
+            var mapper = {propName:{}};
             val.propName={};
             if(val.values.length==0){
-              val.tableName = 'product';
-              val.propName.field = val.field;
-              val.propName.index = val.index;
-              val.propName.instance = val.instance;
-              val.propName.isRequired = val.isRequired;
-              val.columnName = val.userFieldName;
-              val.defaultVal = val.defaultValue;
-              delete val.field;
-              delete val.index;
-              delete val.instance;
-              delete val.isRequired;
-              delete val.userFieldName;
-              
+              mapper.tableName = 'product';
+              mapper.propName.field = val.field;
+              mapper.propName.index = val.index;
+              mapper.propName.instance = val.instance;
+              mapper.propName.isRequired = val.isRequired;
+              mapper.columnName = val.userFieldName;
+              mapper.defaultVal = val.defaultValue;
+              //mapper.rowId = val.defaultValue;
+              mapper.transformations = val.transformations; 
+              if(val.defaultVal)
+                mapper.quotes = true;
+              //$scope.saveIndex(duptableData.length,'edit');     
+              duptableData.push(mapper);
             }
             else{
-              val.tableName = val.field;
-              val.propName.field = val.values[0].field;
-              val.propName.index = val.values[0].index;
-              val.propName.instance = val.values[0].instance;
-              val.propName.isRequired = val.values[0].isRequired;
-              val.transformations = val.values[0].transformations;
-              val.defaultVal = val.values[0].defaultValue;
-              val.columnName = val.values[0].userFieldName;
-              delete val.field;
-              delete val.values;
+              
+              angular.forEach(val.values,function(val1,key1){
+                var mapper = {propName:{}};
+                mapper.tableName = val.field;
+                mapper.propName.field = val1.field;
+                mapper.propName.index = val1.index;
+                mapper.propName.instance = val1.instance;
+                mapper.propName.isRequired = val1.isRequired;
+                mapper.transformations = val1.transformations;
+                mapper.defaultVal = val1.defaultValue;
+                mapper.columnName = val1.userFieldName;
+                mapper.rowId = val1.rowId;
+                if(val1.defaultVal)
+                  mapper.quotes = true; 
+                //$scope.saveIndex(duptableData.length,'edit');
+                duptableData.push(mapper);
+
+              })
       
             }
-            $scope.saveIndex(key,'edit');
-            val.isEdit=true;
-             if(val.defaultVal)
-                val.quotes=true;
+            //$scope.saveIndex(key,'edit');
+            //val.isEdit=true;
+             // if(val.defaultVal)
+             //    val.quotes=true;
+          })
+          $scope.tableData = duptableData;
+          angular.forEach($scope.tableData,function(val,key){
+              $scope.saveIndex(key,'edit');
           })
           $scope.uploadedData.fileName=data[0].fileName;
           $scope.map.name=data[0].mappingName;
