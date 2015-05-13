@@ -702,7 +702,7 @@ app
 
     //getMappedJson
     var getMappingJson = function (tenantId, mappingId) {
-      $http.get('/getMappingData/'+tenantId+'/'+mappingId)
+      $http.get('/getTestMappingData/'+tenantId+'/'+mappingId)
         .success(function(data){
           $scope.mappedJson = data;
         })

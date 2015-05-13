@@ -123,7 +123,7 @@
                <span class="caret"></span>
                </button>
                <ul class="dropdown-menu" role="menu" id="subtableList">
-                  <li ng-repeat="(key, value) in property">
+                  <li ng-if="key != attributeList.modelName.toLowerCase()" ng-repeat="(key, value) in property">
                      <a ng-click="selectnewPropTable(key, tableLists[key])">{{key}}</a>
                   </li>
 
@@ -181,7 +181,7 @@
                   <td>
 
                      <span >
-                     <span ng-show="row.tableName != 'product'">product.</span>{{row.tableName}}
+                     <span ng-show="row.tableName != attributeList.modelName.toLowerCase()">{{attributeList.modelName.toLowerCase()}}.</span>{{row.tableName}}
                      <span ng-show="row.rowId > 0">({{row.rowId}})</span>.{{row.propName.field}}
                      </span>
 
