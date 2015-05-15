@@ -62,10 +62,11 @@ fieldset {
 .drop-box {
   background: #F8F8F8;
   border: 5px dashed #DDD;
-  width: 200px;
+  width:  230px;
   height: 100px; 
   text-align: center;
   padding-top: 25px;
+  padding-bottom: 87px;
   float: left;
   margin-left: 20px;
 }
