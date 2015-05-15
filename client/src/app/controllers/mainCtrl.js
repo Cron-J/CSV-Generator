@@ -125,7 +125,7 @@ app
                             $scope.orgProperty = angular.copy($scope.property);
                             getTableData('product');
                             $scope.tableLists = {};
-                            angular.forEach($scope.property, function(value, key) {
+                            angular.forEach($scope.orgProperty, function(value, key) {
                                 $scope.tableLists[key] = [];
                             })
                         }
@@ -138,45 +138,37 @@ app
             var getTableData = function(table) {
 
                 $scope.propertyList = $scope.property[table];
-                // switch (table) {
-                //   case 'product':
-                //     $scope.propertyList = $scope.property.productPropertyList;
-                //     break;
-                //   case 'prices':
-                //     $scope.propertyList = $scope.property.pricePropertyList;
-                //     break;
-                //   case 'attributeValues':
-                //     $scope.propertyList = $scope.property.attributePropertyList;
-                //     break;
-                //   case 'productRelations':
-                //     $scope.propertyList = $scope.property.prPropertyList;
-                //     break;
-                //   case 'contractedProducts':
-                //     $scope.propertyList = $scope.property.cpPropertyList;
-                //     break;
-                //   case 'classificationGroupAssociations':
-                //     $scope.propertyList = $scope.property.cgaPropertyList;
-                //     break;
-                // }
-                if ($scope.propertyList) {
-                    var modifiedList = $scope.propertyList;
-                    $scope.propertyList = [];
-                    for (var i = 0; i < modifiedList.length; i++) {
-                        $scope.propertyList[i] = {};
-                        $scope.propertyList[i] = modifiedList[i];
-                        /*selected value get unselect using this so commented*/
-                        //$scope.propertyList[i].isSelect = false;
-                    }
-                    mappedPropColumns(table);
-                }
+                
+                // if ($scope.propertyList) {
+                //     var modifiedList = $scope.propertyList;
+                //     $scope.propertyList = [];
+                //     for (var i = 0; i < modifiedList.length; i++) {
+                //         $scope.propertyList[i] = {};
+                //         $scope.propertyList[i] = modifiedList[i];
+                //         /*selected value get unselect using this so commented*/
+                //         //$scope.propertyList[i].isSelect = false;
+                //     }
+                    if(table == 'product')
+                        mappedPropColumns(table,undefined,0);
+                    else
+                        mappedPropColumns(table.substring(0,table.length-1),undefined,table[table.length-1]);
+                //}
 
             }
 
             $scope.selectTable = function(tname, rowNo, list) {
                 //var otname = tname.slice(0,tname.length);
-                getTableData(tname);
+                if(tname == 'product'){
+                    getTableData(tname);
+                    $scope.rowId = rowNo;
+                }
+                    
+                else{
+                    getTableData(tname+(rowNo+1));
+                    $scope.rowId = rowNo + 1;
+                }
                 $scope.selectedTable = tname;
-                $scope.rowId = rowNo + 1;
+                
                 $scope.selectedTableList = list;
                 $scope.pickedTable = tname;
             }
@@ -198,6 +190,10 @@ app
                         $scope.passingList[i].table = $scope.pickedTable;
                         $scope.passingList[i].rowId = i + 1;
                     }
+                    var newTable = $scope.pickedTable + $scope.passingList.length;
+                    var obj = {};
+                    obj[newTable] = angular.copy($scope.orgProperty[$scope.pickedTable]);
+                    angular.extend($scope.property,obj)
                 } else {
                     growl.error("Please select table name to add");
                 }
@@ -299,7 +295,7 @@ app
                         }
                     }
                     mappedColumns($scope.selectedColumn);
-                    mappedPropColumns($scope.selectedTable);
+                    mappedPropColumns($scope.selectedTable,undefined,$scope.rowId);
                     $scope.defaultVal.value = '';
                     $scope.selectedColumn = undefined;
                     $scope.selectedTable = undefined;
@@ -442,7 +438,7 @@ app
                 }
             }
 
-            var mappedPropColumns = function(tname, propName) {
+            var mappedPropColumns = function(tname, propName, rowId) {
                 //mapped propertyList columns
                 if (propName) {
                     for (var i = 0; i < $scope.propertyList.length; i++) {
@@ -455,7 +451,7 @@ app
                     if ($scope.tableData) {
                         for (var j = 0; j < $scope.tableData.length; j++) {
                             if ($scope.propertyList[i].field == $scope.tableData[j].propName.field &&
-                                $scope.tableData[j].tableName == tname) {
+                                $scope.tableData[j].tableName == tname && $scope.tableData[j].rowId == rowId) {
                                 $scope.propertyList[i].isSelect = true;
                             }
                         }
@@ -795,6 +791,7 @@ app
                                 mapper.columnName = val.userFieldName;
                                 mapper.defaultVal = val.defaultValue;
                                 mapper.transformations = val.transformations;
+                                mapper.rowId = 0;
                                 if (val.defaultValue)
                                     mapper.quotes = true;
                                 //$scope.saveIndex(duptableData.length,'edit');     
@@ -813,10 +810,10 @@ app
                                     mapper.defaultVal = val1.defaultValue;
                                     mapper.columnName = val1.userFieldName;
                                     mapper.rowId = val1.rowId;
-                                    // $scope.tableLists[val.field] = $scope.tableLists[val.field] ? $scope.tableLists[val.field] : [];
-                                    // $scope.tableLists[val.field].push({rowId: val1.rowId,table:val.field });
-                                    // $scope.selectnewPropTable(val.field, $scope.tableLists[val.field]);
-                                    // $scope.addToList();
+                                    //$scope.tableLists[val.field] = $scope.tableLists[val.field] ? $scope.tableLists[val.field] : [];
+                                    //$scope.tableLists[val.field].push({rowId: val1.rowId,table:val.field });
+                                    $scope.selectnewPropTable(val.field, $scope.tableLists[val.field]);
+                                    $scope.addToList();
                                     if (val1.defaultValue)
                                         mapper.quotes = true;
                                     //$scope.saveIndex(duptableData.length,'edit');
@@ -846,6 +843,8 @@ app
                     $scope.uploadedData = angular.copy($scope.uploadedDataDump);
                     $scope.dupUploadedData = angular.copy($scope.uploadedData);
                     loadingColumns($scope.dupUploadedData.headers);
+                    $scope.selectTable('product');
+                    mappedColumns();
                 })
 
             }
