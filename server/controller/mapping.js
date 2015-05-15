@@ -75,19 +75,28 @@ exports.getTestMappingData = {
                                     for (var k = 0; k < mappings[0].mappingInfo[j].values.length; k++){
                                         if(key == mappings[0].mappingInfo[j].values[k].userFieldName){
                                             if(temp[mappings[0].mappingInfo[j].field][k] == undefined) {
-                                                console.log("I am undefined");
                                                 temp[mappings[0].mappingInfo[j].field][k] = {};
                                             }
-                                            else{
-                                                console.log(temp[mappings[0].mappingInfo[j].field][k]);
+                                            var field = mappings[0].mappingInfo[j].values[k].field;
+                                            if(mappings[0].mappingInfo[j].values[k].defaultValue){
+                                                console.log(mappings[0].mappingInfo[j].values[k].defaultValue);
+                                                temp[mappings[0].mappingInfo[j].field][k][field] = mappings[0].mappingInfo[j].values[k].defaultValue;//changeFormat(jsonObj[i][key],mappings[0].delimeter);
                                             }
-                                            var field = mappings[0].mappingInfo[j].values[k].userFieldName;
-                                            temp[mappings[0].mappingInfo[j].field][k][field] = jsonObj[i][key];//changeFormat(jsonObj[i][key],mappings[0].delimeter);
-                                        };
+                                            else{
+                                                temp[mappings[0].mappingInfo[j].field][k][field] = jsonObj[i][key];//changeFormat(jsonObj[i][key],mappings[0].delimeter);
+                                            }                                            
+                                        }
+                                        else if(mappings[0].mappingInfo[j].defaultValue != null){
+                                             console.log(mappings[0].mappingInfo[j].defaultValue);
+                                             temp[mappings[0].mappingInfo[j].field] = mappings[0].mappingInfo[j].defaultValue;    
+                                        }
                                     }
                                 }
-                                else if(key == mappings[0].mappingInfo[j].userFieldName){
-                                    temp[mappings[0].mappingInfo[j].field] = changeFormat(jsonObj[i][key],mappings[0].delimeter);
+                                else if(key == mappings[0].mappingInfo[j].userFieldName){                   
+                                    temp[mappings[0].mappingInfo[j].field] = jsonObj[i][key];
+                                }
+                                else if(mappings[0].mappingInfo[j].defaultValue != null){
+                                    temp[mappings[0].mappingInfo[j].field] = mappings[0].mappingInfo[j].defaultValue;
                                 }
                             }
                         }
