@@ -40,7 +40,7 @@
             <a href="" class="btn btn-default" ng-click="mapping()">Map <span class="glyphicon glyphicon-chevron-right"></span></a>
          </div>
          <br>
-         <div class="btn-group btn-group-justified">
+         <div class="btn-group btn-group-justified" ng-if="attributeList.automap">
             <a class="btn btn-default" ng-click="mapAttribute()">Auto Add Attribute <span class="glyphicon glyphicon-chevron-right"></span></a>
          </div>
          <br>
@@ -176,7 +176,7 @@
                   </td> -->
                   <!-- <td><dropdown-multiselect pre-selected="member.roles" model="selected_items" options="roles"></dropdown-multiselect></td> -->
                   <td >
-                     <div class="truncate" popover-placement="top" popover="{{row.transVal}}" popover-trigger="mouseenter">{{row.transVal}}</div>
+                     <div class="truncate" popover-placement="top" popover="{{row.transVal}}" popover-trigger="mouseenter" >{{row.transVal}}</div>
                      <sup><button class="btn btn-primary btn-xxs" context="context1" ng-click="saveIndex($index)"><span class="glyphicon glyphicon-edit"></span></button></sup>
                   </td>
                   <td>

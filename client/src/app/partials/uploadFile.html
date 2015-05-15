@@ -5,19 +5,19 @@
           <legend>Upload File</legend>
             <div class="row">
               <div class="col-lg-12 up-buttons">
-                <div ng-file-select="" ng-model="files" ng-model-rejected="rejFiles" class="btn btn-default" ng-multiple="false" ng-accept="'*.csv'"  ng-model-rejected="rejFiles" tabindex="0">Choose file</div>
+                <!-- <div ng-file-select="" ng-model="files" ng-model-rejected="rejFiles" class="btn btn-default" ng-multiple="false" ng-accept="'*.csv'"  ng-model-rejected="rejFiles" tabindex="0">Choose file</div> -->
               </div>
             </div>
-            <div class="row">
-                <div class="orClass">OR</div>
-            </div>
+            <!-- <div class="row">
+                <div class="orClass"></div>
+            </div> -->
             <div class="row">
               <div ng-file-drop="" ng-file-select=""
               ng-model="files" ng-model-rejected="rejFiles"
               drag-over-class="{accept:'dragover', reject:'dragover-err', delay:100}"
               class="drop-box"
               ng-multiple="false" ng-accept="'*.csv'">
-                Drop .CSV file <span>here</span>
+               Click here to choose file or Drop .CSV file <span>here</span>
               </div>
               <div ng-no-file-drop class="drop-box">File Darg&Drop not supported on your browser</div>
             </div>

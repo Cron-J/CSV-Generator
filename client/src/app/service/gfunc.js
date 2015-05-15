@@ -124,7 +124,44 @@ angular.module('app')
   }
 
   FuncInstance.prototype.render = function(metricExp) {
+
     var str = this.def.name + '(';
+    var parameters = _.map(this.params, function(value, index) {
+
+      var paramType = this.def.params[index].type;
+      if (paramType === 'int' || paramType === 'value_or_series' || paramType === 'boolean') {
+        return value;
+      }
+      else if (paramType === 'int_or_interval' && $.isNumeric(value)) {
+        return value;
+      }
+
+      return "'" + value + "'";
+
+    }, this);
+
+    str=str+parameters.join(', ')+')';
+    
+    if(metricExp == '')
+        return str;
+    else
+        return  metricExp + ' | '+ str;
+
+    // if (metricExp=="") {
+    //   return str;
+    // }
+    // else{
+    //   var strtindex = metricExp.indexOf(')');
+    //   if(metricExp[strtindex-1]=='('){
+    //       return metricExp.slice(0,strtindex) + str + metricExp.slice(strtindex,metricExp.length);
+    //     }
+    //   else if(metricExp[strtindex-1]!='('){
+    //     return metricExp.slice(0,strtindex) +', '+ str + metricExp.slice(strtindex,metricExp.length);
+    //   }
+
+    // }
+
+    /*var str = this.def.name + '(';
     var parameters = _.map(this.params, function(value, index) {
 
       var paramType = this.def.params[index].type;
@@ -153,7 +190,7 @@ angular.module('app')
         return metricExp.slice(0,strtindex) +', '+ str + metricExp.slice(strtindex,metricExp.length);
       }
 
-    }
+    } */
     
   };
 
