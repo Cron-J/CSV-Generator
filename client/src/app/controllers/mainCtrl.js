@@ -873,7 +873,7 @@ app
                         $scope.mapid = null;
                         $scope.isMapSaved = true;
                         growl.success("Mapping has been saved successfully");
-                        getMappingList(1);
+                        //getMappingList(1);
                     })
                     .catch(function(err) {
                         console.log('error', err);
@@ -886,7 +886,7 @@ app
                     .success(function(data) {
                         $scope.isMapSaved = true;
                         growl.success("Mapping has been saved successfully");
-                        getMappingList(1);
+                        //getMappingList(1);
                     })
                     .error(function(err) {
 
@@ -902,14 +902,17 @@ app
                 if (!$scope.edit) {
                     MapperService.getMappingList(tenantId).then(function(data) {
                             $scope.mappingList = data.data;
+                            // for(var i=0; i<$scope.mappingList.length;i++){
+                            //     if ($scope.mappingList[i].mappingName == $scope.map.name) {
+                            //         $scope.selectedMapping = $scope.mappingList[i];
+                            //     }
+                            // }
                             angular.forEach($scope.mappingList, function(value, key) {
                                 if (value.mappingName == $scope.map.name) {
                                     $scope.selectedMapping = value;
                                 }
                             })
-                            
-
-                        })
+                        }) 
                         .catch(function(err) {
                             growl.error("Unable to get mapping list");
                         });

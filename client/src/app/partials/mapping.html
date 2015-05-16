@@ -208,7 +208,10 @@
       <hr>
       <div class="pull-right">
          <button class="btn btn-primary "  ng-click="secondStep()">Back</button>
-         <button class="btn btn-primary"  ng-click="saveMappingStep(map, tableData)">Save Mapping</button>
+         <button class="btn btn-primary" ng-if="!edit"  ng-click="saveMappingStep(map, tableData)">Save Mapping</button>
+
+         <button class="btn btn-primary" ng-if="edit" ng-click="saveMappingStep(map, tableData)">Update Mapping</button>
+         
       </div>
    </div>
 </div>
@@ -219,7 +222,7 @@
          <label>Mapping Id</label>
       </div>
       <div class="col-lg-3">
-         <select class="form-control" id="mapId" ng-model="selectedMapping" ng-options="item as item.mappingName for item in mappingList" >
+         <select class="form-control"  ng-model="selectedMapping" ng-options="item as item.mappingName for item in mappingList" >
             <option value="">Select mapping id </option>
          </select>
       </div>
