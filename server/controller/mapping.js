@@ -70,16 +70,17 @@ exports.getTestMappingData = {
                         var temp = {};
                         for (var key in jsonObj[i]){                            
                             for (var j = 0; j < mappings[0].mappingInfo.length; j++) {
+                                console.log(mappings[0].mappingInfo[j].transformations);
                                 if(mappings[0].mappingInfo[j].userFieldName == undefined){
                                     if(temp[mappings[0].mappingInfo[j].field] == undefined) temp[mappings[0].mappingInfo[j].field] = [];
                                     for (var k = 0; k < mappings[0].mappingInfo[j].values.length; k++){
+                                        console.log(mappings[0].mappingInfo[j].values[k].transformations);
                                         if(key == mappings[0].mappingInfo[j].values[k].userFieldName){
                                             if(temp[mappings[0].mappingInfo[j].field][k] == undefined) {
                                                 temp[mappings[0].mappingInfo[j].field][k] = {};
                                             }
                                             var field = mappings[0].mappingInfo[j].values[k].field;
                                             if(mappings[0].mappingInfo[j].values[k].defaultValue){
-                                                console.log(mappings[0].mappingInfo[j].values[k].defaultValue);
                                                 temp[mappings[0].mappingInfo[j].field][k][field] = mappings[0].mappingInfo[j].values[k].defaultValue;//changeFormat(jsonObj[i][key],mappings[0].delimeter);
                                             }
                                             else{
@@ -87,7 +88,6 @@ exports.getTestMappingData = {
                                             }                                            
                                         }
                                         else if(mappings[0].mappingInfo[j].defaultValue != null){
-                                             console.log(mappings[0].mappingInfo[j].defaultValue);
                                              temp[mappings[0].mappingInfo[j].field] = mappings[0].mappingInfo[j].defaultValue;    
                                         }
                                     }
