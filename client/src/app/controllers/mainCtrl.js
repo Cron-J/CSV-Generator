@@ -103,23 +103,26 @@ app
                 MapperService.getPropertyList()
                     .then(function(data) {
                         if (data.data) {
-                            $scope.property = {
-                                product: []
-                            };
+                            $scope.property = {};
+                            $scope.modelName = data.data.modelName.toLowerCase();
+                            $scope.property[$scope.modelName] = [];
+                            // $scope.property = {
+                            //     product: []
+                            // };
                             $scope.attributeList = data.data;
                             angular.extend($scope.attributeList, {
                                 automap: true
                             });
                             angular.forEach(data.data.attributes, function(value, key) {
                                 if (!value.values) {
-                                    $scope.property['product'].push(value);
+                                    $scope.property[$scope.modelName].push(value);
                                 } else {
                                     $scope.property[value.field] = value.values;
                                 }
                                 
                             })
                             $scope.orgProperty = angular.copy($scope.property);
-                            getTableData('product');
+                            getTableData($scope.modelName);
                             $scope.tableLists = {};
                             angular.forEach($scope.orgProperty, function(value, key) {
                                 $scope.tableLists[key] = [];
@@ -134,7 +137,7 @@ app
             var getTableData = function(table) {
 
                 $scope.propertyList = angular.copy($scope.property[table]);
-                    if(table == 'product')
+                    if(table == $scope.modelName)
                         mappedPropColumns(table,undefined,0);
                     else
                         mappedPropColumns(table.substring(0,table.length-1),undefined,table[table.length-1]);
@@ -142,7 +145,7 @@ app
 
             $scope.selectTable = function(tname, rowNo, list) {
                 //var otname = tname.slice(0,tname.length);
-                if(tname == 'product'){
+                if(tname == $scope.modelName){
                     getTableData(tname);
                     $scope.rowId = rowNo;
                 }
@@ -219,7 +222,7 @@ app
             $scope.acceptDeletetion = function() {
                 var id, prevKey, flag;
                 var del = false;
-                if ($scope.selectedTable != 'product') {
+                if ($scope.selectedTable != $scope.modelName) {
                     if ($scope.selectedTable && $scope.rowId) {
                         id = $scope.rowId;
                         $scope.selectedTableList.splice(id - 1, 1);
@@ -240,7 +243,7 @@ app
                         })
                     }
                 } else {
-                    growl.error("You can't delete Product table");
+                    growl.error("You can't delete"+ $scope.modelName+ "table ");
                 }
             }
 
@@ -265,6 +268,8 @@ app
 
                 $("option:selected").removeAttr("selected");
             }
+
+
 
             $scope.mapping = function() {
                 if (($scope.selectedColumn || $scope.selectedDefaultVal) && $scope.selectedTable && $scope.selectedProperty) {
@@ -416,6 +421,20 @@ app
                 $scope.autoMap();
 
             }
+            /*tenantid mapper function*/
+            function mapTenantId () {
+                $scope.selectedColumn = $scope.columnShowList[0].colName;
+                $scope.selectTable ($scope.modelName, 0)
+                $scope.selectedProperty = 'tenantId';
+                angular.forEach($scope.property[$scope.modelName], function(value,key){
+                    if(value.field == "tenantId") {
+                        $scope.selectedProperty = value;
+                    }
+                })
+                $scope.mapping();
+            }
+
+
 
             $scope.removeRow = function(propName, colName, tname, index) {
                 $scope.tableData.splice(index, 1);
@@ -681,6 +700,7 @@ app
                     }
                 }
                 $scope.fileViewFormats = info;
+                mapTenantId();
             }
             $scope.edit = false;
             $scope.editMapping = function(map) {
@@ -712,7 +732,7 @@ app
                             };
                             val.propName = {};
                             if (val.values.length == 0) {
-                                mapper.tableName = 'product';
+                                mapper.tableName = $scope.modelName;
                                 mapper.propName.field = val.field;
                                 mapper.propName.index = val.index;
                                 mapper.propName.instance = val.instance;
@@ -772,7 +792,7 @@ app
                     $scope.uploadedData = angular.copy($scope.uploadedDataDump);
                     $scope.dupUploadedData = angular.copy($scope.uploadedData);
                     loadingColumns($scope.dupUploadedData.headers);
-                    $scope.selectTable('product');
+                    $scope.selectTable($scope.modelName);
                     mappedColumns();
                 })
 
@@ -798,7 +818,7 @@ app
                             for (var i = 0; i < tableInfo.length; i++) {
                                 // if(!tableInfo[i].isEdit){
                                 var isExisting = false;
-                                if (tableInfo[i].tableName == 'product') {
+                                if (tableInfo[i].tableName == $scope.modelName) {
                                     mappingDetails.mappingInfo[len++] = {
                                         "userFieldName": tableInfo[i].columnName,
                                         "transformations": tableInfo[i].transformations,
@@ -811,7 +831,7 @@ app
                                     };
                                 } else {
                                     angular.forEach(mappingDetails.mappingInfo, function(val, key) {
-                                        if (tableInfo[i].tableName != 'product' && tableInfo[i].tableName == val.field && val.values.length > 0 && val.values[0].rowId == tableInfo[i].rowId) {
+                                        if (tableInfo[i].tableName != $scope.modelName && tableInfo[i].tableName == val.field && val.values.length > 0 && val.values[0].rowId == tableInfo[i].rowId) {
                                             val.values.push({
                                                 "userFieldName": tableInfo[i].columnName,
                                                 "transformations": tableInfo[i].transformations,

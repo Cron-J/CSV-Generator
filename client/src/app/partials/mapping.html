@@ -52,10 +52,10 @@
          <select class="mapping-select" id="SelectId"  name="classesList" size="20" >
             <!-- <option value="? string:{{selectedTable}} ?" style="display:none"></option> -->
             <!-- <option value="" style="display:none" ></option> -->
-            <option value="product" ng-click="selectTable('product', 0)" selected>       product
+            <option value="{{modelName}}" ng-click="selectTable(modelName, 0)" selected>       {{modelName}}
             </option>
             
-            <optgroup ng-if="key !='product'"  style="font-style: normal;" ng-repeat="(key, value) in orgProperty" label="{{key}}">
+            <optgroup ng-if="key !=modelName"  style="font-style: normal;" ng-repeat="(key, value) in orgProperty" label="{{key}}">
                <option value="{{pa.table}}" id="com.jcatalog.product[key]:{{$index}}" ng-repeat="pa in tableLists[key] track by $index" ng-click="selectTable(key,$index, tableLists[key])">
                   {{pa.table}}({{$index+1}})
                </option>
