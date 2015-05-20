@@ -4,7 +4,8 @@ module.exports = {
             port: 9000
     },
     host: {
-        ModuleLinkup:'http://modulus-linkup-45480.onmodulus.net'
+        ModuleLinkup:'modulus-linkup-45480.onmodulus.net',
+        getSchema:'/getProductSchema'
     },
     database: {
         host: '127.0.0.1',

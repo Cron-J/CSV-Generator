@@ -1,8 +1,31 @@
 var Joi = require('joi'),
     Boom = require('boom'),
     fs = require('fs'),
+    http = require('http'),
+    Config = require('../config/config'),
     Converter = require("csvtojson").core.Converter,
     Mapping = require('../model/mapping').Mapping;
+
+
+exports.getSchema = {
+    handler: function (request, reply) {
+        var options = {
+            host: Config.host.ModuleLinkup,
+            path: Config.host.getSchema,
+            method: 'GET'
+        };
+        var req = http.request(options, function(res) {
+          return reply(res);
+        });
+
+        req.on('error', function(e) {
+          console.log('problem with request: ' + e.message);
+        });
+        
+        req.end();
+
+    }
+};
 
 exports.createMapping = {
     handler: function(request, reply) {
@@ -70,11 +93,9 @@ exports.getTestMappingData = {
                         var temp = {};
                         for (var key in jsonObj[i]){                            
                             for (var j = 0; j < mappings[0].mappingInfo.length; j++) {
-                                console.log(mappings[0].mappingInfo[j].transformations);
                                 if(mappings[0].mappingInfo[j].userFieldName == undefined){
                                     if(temp[mappings[0].mappingInfo[j].field] == undefined) temp[mappings[0].mappingInfo[j].field] = [];
                                     for (var k = 0; k < mappings[0].mappingInfo[j].values.length; k++){
-                                        console.log(mappings[0].mappingInfo[j].values[k].transformations);
                                         if(key == mappings[0].mappingInfo[j].values[k].userFieldName){
                                             if(temp[mappings[0].mappingInfo[j].field][k] == undefined) {
                                                 temp[mappings[0].mappingInfo[j].field][k] = {};
