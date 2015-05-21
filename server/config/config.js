@@ -1,17 +1,14 @@
 module.exports = {
     server: {   
-            host: 'localhost',
-            port: 9000
+            host: '0.0.0.0',
+            port: 8080
     },
     host: {
         ModuleLinkup:'modulus-linkup-45480.onmodulus.net',
         getSchema:'/getProductSchema'
     },
     database: {
-        host: '127.0.0.1',
-        port: 27017,
-        db: 'csvGenerator',
-        username: '',
-        password: ''
+        db: 'mongodb://127.0.0.1/csvGenerator'
+        //db: 'mongodb://gaurav:cronj123@proximus.modulusmongo.net:27017/a3reQate'
     }
 };

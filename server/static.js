@@ -7,7 +7,7 @@ var internals = {};
 exports.get = {
   handler: {
     directory: {
-      path: '../client/src',
+      path: __dirname +'/../client/src',
       index: true
     } 
   }
