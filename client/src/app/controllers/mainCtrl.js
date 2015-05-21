@@ -243,7 +243,7 @@ app
                         })
                     }
                 } else {
-                    growl.error("You can't delete"+ $scope.modelName+ "table ");
+                    growl.error("You can't delete "+ $scope.modelName+ " table ");
                 }
             }
 
@@ -272,7 +272,7 @@ app
 
 
             $scope.mapping = function() {
-                if (($scope.selectedColumn || $scope.selectedDefaultVal) && $scope.selectedTable && $scope.selectedProperty) {
+                if (($scope.selectedColumn || $scope.selectedColumn == "" || $scope.selectedDefaultVal) && $scope.selectedTable && $scope.selectedProperty) {
                     for(var i=0; i< $scope.tableData.length; i++){
                       if(($scope.tableData[i].tableName == $scope.selectedTable) && ($scope.selectedProperty.field == $scope.tableData[i].propName.field) && ($scope.rowId == $scope.tableData[i].rowId)){
                         growl.error('Mapping is declined, because you have already select column to property '+ $scope.selectedProperty.field);
@@ -429,7 +429,8 @@ app
             }
             /*tenantid mapper function*/
             function mapTenantId () {
-                $scope.selectedColumn = $scope.columnShowList[0].colName;
+                //$scope.selectedColumn = $scope.columnShowList[0].colName;
+                $scope.selectedColumn = "";
                 $scope.selectTable ($scope.modelName, 0)
                 $scope.selectedProperty = 'tenantId';
                 angular.forEach($scope.property[$scope.modelName], function(value,key){
