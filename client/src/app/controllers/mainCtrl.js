@@ -110,6 +110,10 @@ app
                             //     product: []
                             // };
                             $scope.attributeList = data.data;
+                            angular.forEach($scope.attributeList.synonyms, function(synonym, key){
+                                synonym.synonyms.push(synonym.field)
+                            })
+                            $scope.attributeList
                             angular.extend($scope.attributeList, {
                                 automap: true
                             });
@@ -432,13 +436,78 @@ app
                 //$scope.selectedColumn = $scope.columnShowList[0].colName;
                 $scope.selectedColumn = "";
                 $scope.selectTable ($scope.modelName, 0)
-                $scope.selectedProperty = 'tenantId';
+                //$scope.selectedProperty = 'tenantId';
                 angular.forEach($scope.property[$scope.modelName], function(value,key){
                     if(value.field == "tenantId") {
                         $scope.selectedProperty = value;
                     }
                 })
                 $scope.mapping();
+            }
+
+            function mapSynonyms () {
+                //$scope.columnShowList
+
+
+                for(var key in $scope.property) {
+                    angular.forEach($scope.property[key], function(property,propKey){
+                        angular.forEach($scope.attributeList.synonyms, function(synonyms,synkey){
+                            if(property.field === synonyms.field){
+                                angular.forEach(synonyms.synonyms, function(synValue){
+                                    angular.forEach($scope.columnShowList, function(column){
+                                        if(synValue == column.colName){
+                                            $scope.selectedColumn = synValue;
+                                            var orgProp = getPropertyObjByPropField(synonyms.field);
+                                            $scope.selectedProperty = orgProp.prop;
+                                            if(!$scope.property[orgProp.cat + 1] && orgProp.cat != $scope.modelName){
+                                                // $scope.pickedTable = orgProp.cat;
+                                                // $scope.passingList = [];
+                                                $scope.selectnewPropTable(orgProp.cat, $scope.tableLists[orgProp.cat])
+                                               $scope.addToList();
+                                            }
+                                            $scope.selectTable(orgProp.cat, 0, $scope.tableLists[orgProp.cat])
+                                            $scope.mapping();
+                                        }
+                                    })
+                                })
+                            }
+                                
+                        })
+                        
+                    });
+                }
+
+                // angular.forEach($scope.attributeList.synonyms, function(synonym,propKey){
+                //     angular.forEach(synonym.synonyms, function(synColumn){
+                //         angular.forEach($scope.columnShowList, function(column){
+                //             if(synColumn == column.colName){
+                //                 $scope.selectedColumn = synColumn;
+                //                 var orgProp = getPropertyObjByPropField(synonym.field);
+                //                 $scope.selectedProperty = orgProp.prop;
+                //                 $scope.selectTable(orgProp.cat, 0, $scope.tableLists[orgProp.cat])
+                //                 $scope.mapping();
+                //             }
+                //         })
+                            
+                //     });
+                        
+                // });       
+            }
+
+            function getPropertyObjByPropField (property) {
+                var retObj;
+                for(var key in $scope.property){
+                    angular.forEach($scope.orgProperty[key], function(propObj){
+                        if(propObj.field == property){
+                            retObj = {
+                                prop : propObj,
+                                cat : key
+                            }
+                        } 
+                    })
+                }
+
+                return retObj;
             }
 
 
@@ -708,6 +777,7 @@ app
                 }
                 $scope.fileViewFormats = info;
                 mapTenantId();
+                mapSynonyms();
             }
             $scope.edit = false;
             $scope.editMapping = function(map) {
