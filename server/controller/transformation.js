@@ -33,14 +33,18 @@ exports.getTransformation = function(arr, value){
 			result = last(range, result);
 		}
 		else if(arr[i].text.substring(0,6) == "regExp"){
-			console.log("i am in regExp");
+			// var test = regularExp(arr[i].params[0],parseInt(arr[i].params[1]));
+			// console.log(test);
 		}
 	}
 	return result;
 };
 
 var regularExp = function(regularExp, value){
-	return (new RegExp(/ab+c/, 'i'));
+	// console.log(regularExp+"-------------------------"+value);
+	// var  r = new RegExp(regularExp, value);
+	// r.compile("new foo", "g");
+	// return r;
 };
 
 var first = function(range, value){
