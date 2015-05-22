@@ -4,11 +4,13 @@ var Joi = require('joi'),
     http = require('http'),
     Config = require('../config/config'),
     Converter = require("csvtojson").core.Converter,
-    Mapping = require('../model/mapping').Mapping;
+    Mapping = require('../model/mapping').Mapping,
+    Transformation = require('../controller/transformation');
 
 
 exports.getSchema = {
     handler: function (request, reply) {
+        //Transformation.getTransformation();
         var options = {
             host: Config.host.ModuleLinkup,
             path: Config.host.getSchema,
@@ -105,7 +107,7 @@ exports.getTestMappingData = {
                                                 temp[mappings[0].mappingInfo[j].field][k][field] = mappings[0].mappingInfo[j].values[k].defaultValue;//changeFormat(jsonObj[i][key],mappings[0].delimeter);
                                             }
                                             else{
-                                                temp[mappings[0].mappingInfo[j].field][k][field] = jsonObj[i][key];//changeFormat(jsonObj[i][key],mappings[0].delimeter);
+                                                temp[mappings[0].mappingInfo[j].field][k][field] = Transformation.getTransformation(mappings[0].mappingInfo[j].values[k].transformations,jsonObj[i][key]);//changeFormat(jsonObj[i][key],mappings[0].delimeter);
                                             }                                            
                                         }
                                         else if(mappings[0].mappingInfo[j].defaultValue != null){
