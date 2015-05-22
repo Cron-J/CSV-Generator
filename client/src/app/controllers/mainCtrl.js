@@ -273,6 +273,12 @@ app
 
             $scope.mapping = function() {
                 if (($scope.selectedColumn || $scope.selectedDefaultVal) && $scope.selectedTable && $scope.selectedProperty) {
+                    for(var i=0; i< $scope.tableData.length; i++){
+                      if(($scope.tableData[i].tableName == $scope.selectedTable) && ($scope.selectedProperty.field == $scope.tableData[i].propName.field) && ($scope.rowId == $scope.tableData[i].rowId)){
+                        growl.error('Mapping is declined, because you have already select column to property '+ $scope.selectedProperty.field);
+                        return;
+                      }
+                    } 
                     var i = $scope.tableData.length++;
                     $scope.tableData[i] = {
                         "columnName": null,
