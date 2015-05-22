@@ -1,28 +1,60 @@
 'use strict';
 
 exports.getTransformation = function(arr, value){
+	var result = value;
 	for (var i=0; i <arr.length; i++){
-		console.log(arr[i]);
+		if(arr[i].text.substring(0,6) == "append"){
+			var appendValue = arr[i].params[0];
+			result = append(appendValue,result);
+		}
+		else if(arr[i].text.substring(0,7) == "prepend"){
+			var prependValue = arr[i].params[0];
+			result = prepend(prependValue,result);
+		}
+		else if(arr[i].text.substring(0,9) == "lowercase"){
+			result = lowercase(result);
+		}
+		else if(arr[i].text.substring(0,16) == "removeWhitespace"){
+			result = removewhitespace(result);
+		}
+		else if(arr[i].text.substring(0,15) == "removeDelimiter"){
+			var delimeter = arr[i].params[0];
+			result = removedelimeters(delimeter,result)
+		}
+		else if(arr[i].text.substring(0,9) == "uppercase"){
+			result = uppercase(result);
+		}
+		else if(arr[i].text.substring(0,5) == "first"){
+			var range = parseInt(arr[i].params[0]);
+			result = first(range, result);
+		}
+		else if(arr[i].text.substring(0,4) == "last"){
+			var range = parseInt(arr[i].params[0]);
+			result = last(range, result);
+		}
+		else if(arr[i].text.substring(0,6) == "regExp"){
+			console.log("i am in regExp");
+		}
 	}
-
+	return result;
 };
 
 var regularExp = function(regularExp, value){
 	return (new RegExp(/ab+c/, 'i'));
 };
 
-var first = function(number, value){
-	if(typeof(value) == "string" && typeof(number) == "number"){
-		 return value.substring(0, number-1);
+var first = function(range, value){
+	if(typeof(value) == "string" && typeof(range) == "number"){
+		 return value.substring(0, range-1);
 	}
 	else{
 		return value;
 	}
 };
 
-var last = function(number, value){
-	if(typeof(value) == "string" && typeof(number) == "number"){
-		 return value.substring((value.length)-number, value.length);
+var last = function(range, value){
+	if(typeof(value) == "string" && typeof(range) == "number"){
+		 return value.substring((value.length)-range, value.length);
 	}
 	else{
 		return value;

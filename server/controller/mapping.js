@@ -104,22 +104,22 @@ exports.getTestMappingData = {
                                             }
                                             var field = mappings[0].mappingInfo[j].values[k].field;
                                             if(mappings[0].mappingInfo[j].values[k].defaultValue){
-                                                temp[mappings[0].mappingInfo[j].field][k][field] = mappings[0].mappingInfo[j].values[k].defaultValue;//changeFormat(jsonObj[i][key],mappings[0].delimeter);
+                                                temp[mappings[0].mappingInfo[j].field][k][field] = Transformation.getTransformation(mappings[0].mappingInfo[j].values[k].transformations, mappings[0].mappingInfo[j].values[k].defaultValue);
                                             }
                                             else{
-                                                temp[mappings[0].mappingInfo[j].field][k][field] = Transformation.getTransformation(mappings[0].mappingInfo[j].values[k].transformations,jsonObj[i][key]);//changeFormat(jsonObj[i][key],mappings[0].delimeter);
+                                                temp[mappings[0].mappingInfo[j].field][k][field] = Transformation.getTransformation(mappings[0].mappingInfo[j].values[k].transformations,jsonObj[i][key]);
                                             }                                            
                                         }
                                         else if(mappings[0].mappingInfo[j].defaultValue != null){
-                                             temp[mappings[0].mappingInfo[j].field] = mappings[0].mappingInfo[j].defaultValue;    
+                                             temp[mappings[0].mappingInfo[j].field] = Transformation.getTransformation(mappings[0].mappingInfo[j].transformations, mappings[0].mappingInfo[j].defaultValue);    
                                         }
                                     }
                                 }
                                 else if(key == mappings[0].mappingInfo[j].userFieldName){                   
-                                    temp[mappings[0].mappingInfo[j].field] = jsonObj[i][key];
+                                    temp[mappings[0].mappingInfo[j].field] = Transformation.getTransformation(mappings[0].mappingInfo[j].transformations, jsonObj[i][key]);
                                 }
                                 else if(mappings[0].mappingInfo[j].defaultValue != null){
-                                    temp[mappings[0].mappingInfo[j].field] = mappings[0].mappingInfo[j].defaultValue;
+                                    temp[mappings[0].mappingInfo[j].field] = Transformation.getTransformation(mappings[0].mappingInfo[j].transformations, mappings[0].mappingInfo[j].defaultValue);
                                 }
                             }
                         }
