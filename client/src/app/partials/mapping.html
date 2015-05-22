@@ -135,8 +135,8 @@
                   <li><a ng-click="selectnewPropTable('contractedProduct', tableLists.ContractedProductList)">contractedProduct</a></li> -->
                </ul>
             </div>
-            <a class="btn btn-default" ng-click="addToList()"><span class="glyphicon glyphicon-plus"></span></a>
-            <a class="btn btn-default" ng-click="removeProperty()"><span class="glyphicon glyphicon-remove"></span></a>
+            <a class="btn btn-default" ng-click="addToList()" ng-disabled="pickedTable == attributeList.modelName.toLowerCase()"><span class="glyphicon glyphicon-plus"></span></a>
+            <a class="btn btn-default" ng-click="removeProperty()" ng-disabled="pickedTable == attributeList.modelName.toLowerCase()"><span class="glyphicon glyphicon-remove"></span></a>
             <div ng-include="'app/partials/confirmationDialogBox.html'"></div>
          </div>
       </div>
