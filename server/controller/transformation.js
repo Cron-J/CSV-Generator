@@ -33,8 +33,8 @@ exports.getTransformation = function(arr, value){
 			result = last(range, result);
 		}
 		else if(arr[i].text.substring(0,6) == "regExp"){
-			var re = arr[i].params[0];
-			result = re.exec(result);
+			// var re = arr[i].params[0];
+			// result = re.exec(result);
 		}
 	}
 	return result;
