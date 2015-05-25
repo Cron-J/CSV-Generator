@@ -321,9 +321,16 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                     growl.error('Select column, table and property names to map');
                 }
 
-                $("option:selected").not("#SelectId option:selected").removeAttr("selected");
-                getTableData($scope.modelName);
+                // if($scope.selectedTable == $scope.modelName){
+                //     getTableData($scope.modelName);
+                // }
+                // else{
+                //     $("option:selected").not("#SelectId option:selected").removeAttr("selected");
 
+                //     getTableData($scope.selectedTable + $scope.rowId);
+                // }
+                
+                $("option:selected").not("#SelectId option:selected").removeAttr("selected");
             }
 
             $scope.mapAttribute = function() {
@@ -476,6 +483,8 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                         
                     });
                 }
+
+                getTableData($scope.modelName);
 
                 // angular.forEach($scope.attributeList.synonyms, function(synonym,propKey){
                 //     angular.forEach(synonym.synonyms, function(synColumn){
@@ -832,6 +841,7 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                                 //$scope.saveIndex(duptableData.length,'edit');     
                                 duptableData.push(mapper);
                             } else {
+
                                 angular.forEach(val.values, function(val1, key1) {
                                     var mapper = {
                                         propName: {}
@@ -847,8 +857,11 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                                     mapper.rowId = val1.rowId;
                                     //$scope.tableLists[val.field] = $scope.tableLists[val.field] ? $scope.tableLists[val.field] : [];
                                     //$scope.tableLists[val.field].push({rowId: val1.rowId,table:val.field });
-                                    $scope.selectnewPropTable(val.field, $scope.tableLists[val.field]);
-                                    $scope.addToList();
+                                    if(!$scope.property.hasOwnProperty(val.field + val1.rowId)){
+                                        $scope.selectnewPropTable(val.field, $scope.tableLists[val.field]);
+                                        $scope.addToList();
+                                    }
+                                    
                                     if (val1.defaultValue)
                                         mapper.quotes = true;
                                     //$scope.saveIndex(duptableData.length,'edit');
