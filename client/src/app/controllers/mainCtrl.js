@@ -1,15 +1,15 @@
 'use strict';
 
 /* Controller */
-
-app
-    .controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location', '$timeout',
+app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location', '$timeout',
         '$filter', '$upload', '$modal', '$log', '$route', 'MapperService', '$q',
         function($scope, $rootScope, $http, growl, $location, $timeout, $filter, $upload,
             $modal, $log, $route, MapperService, $q) {
             var _scope = {};
             $scope.badge = {}
             $scope.clear = {};
+            $scope.setting = {isBackToSecondStep : false};
+
             /*object instanciation and load first tab */
             _scope.init = function() {
                 $scope.firstStep(); // load first tab
@@ -106,9 +106,7 @@ app
                             $scope.property = {};
                             $scope.modelName = data.data.modelName.toLowerCase();
                             $scope.property[$scope.modelName] = [];
-                            // $scope.property = {
-                            //     product: []
-                            // };
+                            
                             $scope.attributeList = data.data;
                             angular.forEach($scope.attributeList.synonyms, function(synonym, key){
                                 synonym.synonyms.push(synonym.field)
@@ -324,6 +322,8 @@ app
                 }
 
                 $("option:selected").not("#SelectId option:selected").removeAttr("selected");
+                getTableData($scope.modelName);
+
             }
 
             $scope.mapAttribute = function() {
@@ -457,7 +457,7 @@ app
                                     angular.forEach($scope.columnShowList, function(column){
                                         if(synValue == column.colName){
                                             $scope.selectedColumn = synValue;
-                                            var orgProp = getPropertyObjByPropField(synonyms.field);
+                                            var orgProp = getPropertyObjByPropField(synonyms.field, key);
                                             $scope.selectedProperty = orgProp.prop;
                                             if(!$scope.property[orgProp.cat + 1] && orgProp.cat != $scope.modelName){
                                                 // $scope.pickedTable = orgProp.cat;
@@ -494,17 +494,19 @@ app
                 // });       
             }
 
-            function getPropertyObjByPropField (property) {
+            function getPropertyObjByPropField (property,whichCategory) {
                 var retObj;
                 for(var key in $scope.property){
-                    angular.forEach($scope.orgProperty[key], function(propObj){
-                        if(propObj.field == property){
-                            retObj = {
-                                prop : propObj,
-                                cat : key
-                            }
-                        } 
-                    })
+                    if(key == whichCategory){
+                        angular.forEach($scope.orgProperty[key], function(propObj){
+                            if(propObj.field == property){
+                                retObj = {
+                                    prop : propObj,
+                                    cat : key
+                                }
+                            } 
+                        })
+                    }
                 }
 
                 return retObj;
@@ -751,8 +753,11 @@ app
 
             $scope.secondStep = function() {
                 $scope.badge.step = "two";
-                getPropertyList();
-                $scope.changeFormat();
+                if(!$scope.setting.isBackToSecondStep){
+                    getPropertyList();
+                    $scope.changeFormat();
+                }
+                
                 //loadingColumns($scope.uploadedData.headers);
             }
 
@@ -776,8 +781,12 @@ app
                     }
                 }
                 $scope.fileViewFormats = info;
-                mapTenantId();
-                mapSynonyms();
+                if(!$scope.setting.isBackToSecondStep && $scope.isMapSaved != true){
+                    mapTenantId();
+                    mapSynonyms();
+                }
+                $scope.setting.isBackToSecondStep = false;
+
             }
             $scope.edit = false;
             $scope.editMapping = function(map) {

@@ -43,8 +43,10 @@ angular.module('app')
   addFuncDef({
     name: 'removeDelimiter',
     category: categories.Transform,
-    params: [],
+    params: [{name:"removedDelimiter"}],
+    defaultParams: ['#A'],
   });
+  
 
   addFuncDef({
     name: 'removeWhitespace',
