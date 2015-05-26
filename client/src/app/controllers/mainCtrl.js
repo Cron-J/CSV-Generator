@@ -799,6 +799,10 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
             }
             $scope.edit = false;
             $scope.editMapping = function(map) {
+                if(typeof map == 'undefined'){
+                     growl.error("Please select Mapping Name");
+                     return;
+                }
                 $scope.edit = true;
                 $scope.badge.step = "three";
                 $scope.isMapSaved = false;
@@ -1114,12 +1118,12 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                             if (isNaN(word)) {
                                 var d = new Date(word);
                                 if (d != "Invalid Date") {
-                                    var patt = new RegExp("[0-9]{2}\/[0-9]{2}\/[0-9]{4}");
-                                    var patt1 = new RegExp("[d|M]{2}\/[d|M]{2}\/[y]{4}");
+                                    var patt = new RegExp("[0-9]{1,2}\/[0-9]{1,2}\/[0-9]{4}");
+                                    var patt1 = new RegExp("[d|M]{1,2}\/[d|M]{1,2}\/[y]{4}");
                                     var res1 = patt.test(word) && patt1.test(dateFormat);
 
-                                    var patt = new RegExp("[0-9]{2}\-[0-9]{2}\-[0-9]{4}");
-                                    var patt1 = new RegExp("[d|M]{2}\-[d|M]{2}\-[y]{4}");
+                                    var patt = new RegExp("[0-9]{1,2}\-[0-9]{1,2}\-[0-9]{4}");
+                                    var patt1 = new RegExp("[d|M]{1,2}\-[d|M]{1,2}\-[y]{4}");
                                     var res2 = patt.test(word) && patt1.test(dateFormat);
                                     return res1 || res2;
                                 }

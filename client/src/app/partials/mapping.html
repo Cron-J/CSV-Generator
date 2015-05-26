@@ -6,7 +6,7 @@
       <div class="form-group">
          <label for="x" class="col-sm-2 control-label">Mapping Name</label>
          <div class="col-sm-3">
-            <input name="jobId" class="form-control" placeholder="Choose Mapping Name" id="mapName" type="text" ng-model="map.name" required>
+            <input name="jobId" class="form-control" placeholder="Choose Mapping Name" id="mapName" type="text" ng-model="map.name" required ng-disabled="edit">
             <span style="color:red" id="error" ng-show="form-mapForm.$invalid && submitted">please enter mapping name</span>
          </div>
       </div>
