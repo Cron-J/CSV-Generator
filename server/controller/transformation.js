@@ -1,7 +1,8 @@
 'use strict';
 
 exports.getTransformation = function(arr, value){
-	var result = value;
+	if(arr){
+		var result = value;
 	for (var i=0; i <arr.length; i++){
 		if(arr[i].text.substring(0,6) == "append"){
 			var appendValue = arr[i].params[0];
@@ -38,6 +39,10 @@ exports.getTransformation = function(arr, value){
 		}
 	}
 	return result;
+	}
+	else{
+		return value;
+	}
 };
 
 var first = function(range, value){
