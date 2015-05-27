@@ -717,26 +717,71 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                 }
                 //check required fields mapping is done or not
             var checkMapping = function(tableInfo) {
-                var reqFieldList = [];
-                var k = 0;
-                for (var i = 0; i < $scope.propertyList.length; i++) {
-                    if ($scope.propertyList[i].isRequired) {
-                        reqFieldList[k] = $scope.propertyList[i].field;
-                        k++;
-                    }
-                };
-                var clength = 0;
-                for (var i = 0; i < tableInfo.length; i++) {
-                    for (var j = 0; j < reqFieldList.length; j++) {
-                        if (tableInfo[i].propName.field == reqFieldList[j]) {
-                            clength++;
+                // var reqFieldList = [];
+                // var k = 0;
+
+                var valid = true;
+                for(var key in $scope.property){
+                    if($scope.attributeList.subdocument.indexOf(key)<0){
+                        for(var i=0; i< $scope.property[key].length; i++){
+                        if($scope.property[key][i].isRequired == true){
+                            //isAvailableInTableInfo($scope.property[key][i], key, tableInfo)
+                            var count =0;
+                             for(var j=0; j< tableInfo.length; j++){
+                                if((key == $scope.modelName) && (tableInfo[j].tableName == key) && (tableInfo[j].propName.field == $scope.property[key][i].field)){
+                                    count++;
+                                }
+                                else if((key != $scope.modelName) &&(key == tableInfo[j].tableName + tableInfo[j].rowId) && (tableInfo[j].propName.field == $scope.property[key][i].field)){
+                                     count++;
+                                }
+                               
+                             }
+                             if(count == 0){
+                                return false;
+                             }
+                        
                         }
                     }
-                };
-                if (clength >= reqFieldList.length)
-                    return true;
-                else {
-                    return false;
+                }
+                    
+            }
+            return true;
+        
+
+                // for (var i = 0; i < $scope.propertyList.length; i++) {
+                //     if ($scope.propertyList[i].isRequired) {
+                //         reqFieldList[k] = $scope.propertyList[i].field;
+                //         k++;
+                //     }
+                // };
+                // var clength = 0;
+                // for (var i = 0; i < tableInfo.length; i++) {
+                //     for (var j = 0; j < reqFieldList.length; j++) {
+                //         if (tableInfo[i].propName.field == reqFieldList[j]) {
+                //             clength++;
+                //         }
+                //     }
+                // };
+                // if (clength >= reqFieldList.length)
+                //     return true;
+                // else {
+                //     return false;
+                // }
+            }
+
+            function isAvailableInTableInfo (){
+                for(var j=0; j< tableInfo.length; j++){
+                            // angular.forEach(tableInfo, function(tableprop, keytabprop){
+                            //     if((key == $scope.modelName) && (tableprop.tableName == key) && (tableprop.propName.field == property.field)){
+
+                            //     }
+                            //     else if((key != $scope.modelName) && (tableprop.tableName == key) && (tableprop.propName.field == property.field)){
+                            //         valid 
+                            //     }
+                            //     else{
+                            //         valid = false;
+                            //     }
+                            // })
                 }
             }
 
