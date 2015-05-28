@@ -98,20 +98,25 @@ exports.getTestMappingData = {
                                 if(mappings[0].mappingInfo[j].userFieldName == undefined){
                                     if(temp[mappings[0].mappingInfo[j].field] == undefined) temp[mappings[0].mappingInfo[j].field] = [];
                                     for (var k = 0; k < mappings[0].mappingInfo[j].values.length; k++){
-                                        if(key == mappings[0].mappingInfo[j].values[k].userFieldName){
+                                        if(mappings[0].mappingInfo[j].values[k].userFieldName == 'defaultValue'){
                                             if(temp[mappings[0].mappingInfo[j].field][k] == undefined) {
                                                 temp[mappings[0].mappingInfo[j].field][k] = {};
                                             }
                                             var field = mappings[0].mappingInfo[j].values[k].field;
-                                            if(mappings[0].mappingInfo[j].values[k].defaultValue){
-                                                temp[mappings[0].mappingInfo[j].field][k][field] = Transformation.getTransformation(mappings[0].mappingInfo[j].values[k].transformations, mappings[0].mappingInfo[j].values[k].defaultValue);
-                                            }
-                                            else{
-                                                temp[mappings[0].mappingInfo[j].field][k][field] = Transformation.getTransformation(mappings[0].mappingInfo[j].values[k].transformations,jsonObj[i][key]);
-                                            }                                            
+                                            temp[mappings[0].mappingInfo[j].field][k][field] = Transformation.getTransformation(mappings[0].mappingInfo[j].values[k].transformations, mappings[0].mappingInfo[j].values[k].defaultValue);
                                         }
-                                        else if(mappings[0].mappingInfo[j].defaultValue != null){
-                                             temp[mappings[0].mappingInfo[j].field] = Transformation.getTransformation(mappings[0].mappingInfo[j].transformations, mappings[0].mappingInfo[j].defaultValue);    
+                                        else{
+                                            if(key == mappings[0].mappingInfo[j].values[k].userFieldName){
+                                                if(temp[mappings[0].mappingInfo[j].field][k] == undefined) {
+                                                    temp[mappings[0].mappingInfo[j].field][k] = {};
+                                                }
+                                                var field = mappings[0].mappingInfo[j].values[k].field;
+                                                temp[mappings[0].mappingInfo[j].field][k][field] = Transformation.getTransformation(mappings[0].mappingInfo[j].values[k].transformations,jsonObj[i][key]);                                         
+                                            }
+                                            else if(mappings[0].mappingInfo[j].defaultValue != null){
+                                                console.log("------2--------");
+                                                temp[mappings[0].mappingInfo[j].field] = Transformation.getTransformation(mappings[0].mappingInfo[j].transformations, mappings[0].mappingInfo[j].defaultValue);    
+                                            }
                                         }
                                     }
                                 }
@@ -119,6 +124,7 @@ exports.getTestMappingData = {
                                     temp[mappings[0].mappingInfo[j].field] = Transformation.getTransformation(mappings[0].mappingInfo[j].transformations, jsonObj[i][key]);
                                 }
                                 else if(mappings[0].mappingInfo[j].defaultValue != null){
+                                    console.log("------3--------");
                                     temp[mappings[0].mappingInfo[j].field] = Transformation.getTransformation(mappings[0].mappingInfo[j].transformations, mappings[0].mappingInfo[j].defaultValue);
                                 }
                             }

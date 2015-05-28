@@ -4,20 +4,24 @@
  */
 var delimeter = {
 
- 		includeHeader: {
-        type: Boolean
+ 	includeHeader: {
+        type: Boolean,
+        required: true
     },
 
     dateFormat : {
-        type: String
+        type: String,
+        required: true
     },
 
     numberFormat : {
-        type: String
+        type: String,
+        required: true
     },
 
     delimeterFormat : {
-        type: String
+        type: String,
+        required: true
     }
 
 };
