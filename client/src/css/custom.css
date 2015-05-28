@@ -42,3 +42,10 @@ font-weight: 100 !important;
 .popover-content {
     word-wrap: break-word!important;
 }
+
+.pointer {
+  cursor: pointer;
+}
+.error{
+  color: red;
+}

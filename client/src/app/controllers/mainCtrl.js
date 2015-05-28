@@ -17,6 +17,16 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                 defaultBtn();
                 defaultFilePreviewSettings(); // load default setting for file preview
             }
+
+            $scope.$on('redirectToMappingEditor', function (event, data){
+                $scope.clearData();
+            })
+
+            $scope.$on('editMapping', function(event, data){
+                $scope.editMap();
+            })
+            
+            
             $scope.clearData = function(callback) {
                 $route.reload();
             }
@@ -583,7 +593,8 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                 $scope.dupUploadedData.rowOne = changeNumberFormat($scope.dupUploadedData.rowOne, $scope.fileStyle.numberFormat);
                 $scope.dupUploadedData.rowTwo = changeNumberFormat($scope.dupUploadedData.rowTwo, $scope.fileStyle.numberFormat);
                 
-                loadingColumns($scope.dupUploadedData.headers);
+                if(!$scope.setting.isBackToSecondStep)
+                    loadingColumns($scope.dupUploadedData.headers);
             }
 
             var changeDateFormat = function(list, format) {
@@ -692,7 +703,7 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                     .success(function(data, status) {
                         $scope.unformatedData = angular.copy(data);
                         $scope.fileStyle.delimeterFormat = guessDelimiters(angular.copy($scope.unformatedData), [',', ';', '|'])[0];
-                        $scope.fileStyle.dateFormat = guessDateFormat(angular.copy($scope.unformatedData), ["dd-MM-yyyy", "MM/dd/yyyy"], $scope.fileStyle.delimeterFormat)
+                        $scope.fileStyle.dateFormat = guessDateFormat(angular.copy($scope.unformatedData), ["dd-MM-yyyy", "MM/dd/yyyy"], $scope.fileStyle.delimeterFormat)[0];
                         $scope.secondStep();
                     })
                     .error(function(data) {
@@ -769,21 +780,21 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                 // }
             }
 
-            function isAvailableInTableInfo (){
-                for(var j=0; j< tableInfo.length; j++){
-                            // angular.forEach(tableInfo, function(tableprop, keytabprop){
-                            //     if((key == $scope.modelName) && (tableprop.tableName == key) && (tableprop.propName.field == property.field)){
+            // function isAvailableInTableInfo (){
+            //     for(var j=0; j< tableInfo.length; j++){
+            //                 // angular.forEach(tableInfo, function(tableprop, keytabprop){
+            //                 //     if((key == $scope.modelName) && (tableprop.tableName == key) && (tableprop.propName.field == property.field)){
 
-                            //     }
-                            //     else if((key != $scope.modelName) && (tableprop.tableName == key) && (tableprop.propName.field == property.field)){
-                            //         valid 
-                            //     }
-                            //     else{
-                            //         valid = false;
-                            //     }
-                            // })
-                }
-            }
+            //                 //     }
+            //                 //     else if((key != $scope.modelName) && (tableprop.tableName == key) && (tableprop.propName.field == property.field)){
+            //                 //         valid 
+            //                 //     }
+            //                 //     else{
+            //                 //         valid = false;
+            //                 //     }
+            //                 // })
+            //     }
+            // }
 
             //getMappedJson
             var getMappingJson = function(tenantId, mappingId) {
@@ -823,8 +834,10 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                 $location.path("#/");
             }
 
-            $scope.thirdStep = function(info) {
-                $scope.badge.step = "three";
+            $scope.thirdStep = function(info, form) {
+                $scope.submit = true;
+                if(form.$valid){
+                     $scope.badge.step = "three";
                 //$scope.selectTable('product');
                 if ($scope.tableData == undefined) {
                     $scope.tableData = [];
@@ -840,7 +853,9 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                     mapSynonyms();
                 }
                 $scope.setting.isBackToSecondStep = false;
-
+                $scope.submit = false;
+                }
+               
             }
             $scope.edit = false;
             $scope.editMapping = function(map) {
@@ -1067,26 +1082,30 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
 
             //getMappingList
             var getMappingList = function(tenantId) {
-                if (!$scope.edit) {
+                
+                 if (!$scope.edit) {
                     MapperService.getMappingList(tenantId).then(function(data) {
                             $scope.mappingList = data.data;
-                            // for(var i=0; i<$scope.mappingList.length;i++){
-                            //     if ($scope.mappingList[i].mappingName == $scope.map.name) {
-                            //         $scope.selectedMapping = $scope.mappingList[i];
-                            //     }
-                            // }
-                            angular.forEach($scope.mappingList, function(value, key) {
-                                if (value.mappingName == $scope.map.name) {
-                                    $scope.selectedMapping = value;
+                            for(var i=0; i<$scope.mappingList.length;i++){
+                                if ($scope.mappingList[i].mappingName == $scope.map.name) {
+                                    $scope.selectedMapping = $scope.mappingList[i];
+                                    //$scope.edit = false;
                                 }
-                            })
+                            }
+                            // angular.forEach($scope.mappingList, function(value, key) {
+                            //     if (value.mappingName == $scope.map.name) {
+                            //         //$scope.selectedMapping = value;
+                            //         angular.extend($scope.selectedMapping, value);
+                            //         $scope.edit = false;
+                            //     }
+                            // })
                         }) 
                         .catch(function(err) {
                             growl.error("Unable to get mapping list");
                         });
-                } else {
-                    $scope.edit = false;
-                }
+                 } else {
+                     $scope.edit = false;
+                 }
                 $scope.tabledata = {};
                 getPropertyList();
             }

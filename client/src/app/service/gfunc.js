@@ -126,8 +126,8 @@ angular.module('app')
   }
 
   FuncInstance.prototype.render = function(metricExp) {
-
-    var str = this.def.name + '(';
+    /*individual transformation with parameter without parenthesis start*/
+    var str = this.def.name ;
     var parameters = _.map(this.params, function(value, index) {
 
       var paramType = this.def.params[index].type;
@@ -142,13 +142,37 @@ angular.module('app')
 
     }, this);
 
-    str=str+parameters.join(', ')+')';
+    str=str+ ' '+parameters.join(' ');
     
     if(metricExp == '')
         return str;
     else
         return  metricExp + ' | '+ str;
+      /*individual transformation with parameter without parenthesis end*/
 
+    /*individual transformation with parameter start*/
+    // var str = this.def.name + '(';
+    // var parameters = _.map(this.params, function(value, index) {
+
+    //   var paramType = this.def.params[index].type;
+    //   if (paramType === 'int' || paramType === 'value_or_series' || paramType === 'boolean') {
+    //     return value;
+    //   }
+    //   else if (paramType === 'int_or_interval' && $.isNumeric(value)) {
+    //     return value;
+    //   }
+
+    //   return "'" + value + "'";
+
+    // }, this);
+
+    // str=str+parameters.join(', ')+')';
+    
+    // if(metricExp == '')
+    //     return str;
+    // else
+    //     return  metricExp + ' | '+ str;
+      /*individual transformation with parameter end*/
     // if (metricExp=="") {
     //   return str;
     // }

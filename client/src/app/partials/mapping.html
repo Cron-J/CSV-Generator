@@ -211,6 +211,8 @@
          <button class="btn btn-primary" ng-if="!edit"  ng-click="saveMappingStep(map, tableData)">Save Mapping</button>
 
          <button class="btn btn-primary" ng-if="edit" ng-click="saveMappingStep(map, tableData)">Update Mapping</button>
+
+         <button class="btn btn-primary" ng-if="edit" ng-click="editMap()">Cancel</button>
          
       </div>
    </div>
@@ -220,10 +222,11 @@
    <div class="row">
       <div class="col-lg-2">
          <label>Mapping Id</label>
+         
       </div>
       <div class="col-lg-3">
-         <select class="form-control"  ng-model="selectedMapping" ng-options="item as item.mappingName for item in mappingList" >
-            <option value="">Select mapping id </option>
+         <select name="selectedMap" class="form-control"  ng-model="selectedMapping" ng-options="map as map.mappingName for map in mappingList" >
+            <option value="" style="display:none;">Select mapping id </option>
          </select>
       </div>
       <div class="col-lg-5">

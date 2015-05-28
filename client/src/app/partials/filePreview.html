@@ -1,10 +1,11 @@
+<form class="form-horizontal" name="pattern" novalidate>
 <div class="row">
   <div class="upload-container">
       <legend>File Preview</legend>
   </div>
   <div class="col-lg-6">
     <div class="row">
-      <form class="form-horizontal">
+      
         <div class="form-group">
           <label class="col-sm-4 control-label">First line include header</label>
           <div class="col-sm-8">
@@ -12,39 +13,51 @@
           </div>
         </div>
         <div class="form-group">
-          <label class="col-sm-4 control-label">Date Format</label>
+          <label class="col-sm-4 control-label">Date Format </label>
           <div class="col-sm-8">
-            <select name="datePattern" id="date" ng-model="fileStyle.dateFormat" class="form-control" ng-change="changeFormat(fileStyle.dateFormat)" ng-init="fileStyle.dateFormat='dd-MM-yyyy'">
-              <option value="">select format</option>
+            <select name="datePattern"  ng-model="fileStyle.dateFormat" class="form-control" ng-change="changeFormat(fileStyle.dateFormat)" required>
+              <option value="" style="display:none;">select format</option>
               <option value="dd-MM-yyyy">dd-MM-yyyy</option>
               <option value="MM/dd/yyyy">MM/dd/yyyy</option>
             </select>
+
+            <div class="error" ng-show="pattern.datePattern.$error.required && submit">
+                Date Format is required field.
+            </div>
           </div>
         </div>
         <div class="form-group">
           <label class="col-sm-4 control-label">Number Format</label>
           <div class="col-sm-8">
-            <select name="numberPattern" id="number" ng-model="fileStyle.numberFormat" class="form-control" ng-change="changeFormat()" ng-init="fileStyle.numberFormat='#,###.##'">
-              <option value="">select format</option>
+            <select name="numberPattern" id="number" ng-model="fileStyle.numberFormat" class="form-control" ng-change="changeFormat()" ng-init="fileStyle.numberFormat='#,###.##'" required>
+              <option value="" style="display:none;">select format</option>
               <option value="#,###.##">#,###.##</option>
               <option value="#.##">#.##</option>
               <option value="#.###,##">#.###,##</option>
               <option value="#,##">#,##</option>
             </select>
+
+            <div class="error" ng-show="pattern.numberPattern.$error.required && submit">
+                Number Format is required field.
+            </div>
           </div>
         </div>
         <div class="form-group">
           <label class="col-sm-4 control-label">Delimiter Format</label>
           <div class="col-sm-8">
-            <select name="decimalSeparator" id="delimiter" ng-model="fileStyle.delimeterFormat" class="form-control" ng-change="changeFormat()" >
-              <option value="">select format</option>
+            <select name="decimalSeparator" id="delimiter" ng-model="fileStyle.delimeterFormat" class="form-control" ng-change="changeFormat()" required>
+              <option value="" style="display:none;">select format</option>
               <option value=",">Comma(,)</option>
               <option value=";">Semicolon(;)</option>
               <option value="|">Pipe(|)</option>
             </select>
+
+            <div class="error" ng-show="pattern.decimalSeparator.$error.required && submit">
+                Delimiter Format is required field.
+            </div>
           </div>
         </div> 
-      </form>
+      
     </div>
     <div class="row btn-margin">
       <button class="btn btn-primary"  ng-click="resetData()">Reset Preview Settings</button>
@@ -68,7 +81,8 @@
   </table>
   <div class="btn-set button-container pull-right">
     <button class="btn btn-primary"  ng-click="firstStep()">Back</button>
-    <button class="btn btn-primary"  ng-show="!stopStep" ng-click="thirdStep(fileStyle)">Next</button>
+    <button class="btn btn-primary"  ng-show="!stopStep" ng-click="thirdStep(fileStyle, pattern)">Next</button>
     <button class="btn btn-primary"  ng-show="stopStep" ng-click="reloadStep()">Upload</button>
   </div>
 </div>
+</form>

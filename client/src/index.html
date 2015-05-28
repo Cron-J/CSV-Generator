@@ -19,7 +19,7 @@
   <link rel="stylesheet" type="text/css" href="css/font-awesome/css/font-awesome.css">
   <link rel="stylesheet" type="text/css" href="bower_components/json-formatter/dist/json-formatter.min.css">
 </head>
-<body>
+<body ng-controller = "appCtrl">
 	<div class="navbar navbar-default navbar-main-menu"><!-- main nav -->
     <div class="navbar-header">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -34,13 +34,13 @@
     <div class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li class="dropdown">
-          <a class="dropdown-toggle active" data-toggle="dropdown">Import <b class="caret"></b></a>
+          <a class="dropdown-toggle active pointer" data-toggle="dropdown">Import <b class="caret"></b></a>
           <ul class="dropdown-menu">
             <li><a>Execute Import</a></li>        
-            <li><a href="/#/">Mapping Editor</a></li>
+            <li><a href="" ng-click="moveToMappingEditor()">Mapping Editor</a></li>
           </ul>
         </li> 
-        <li><a>Edit</a></li>
+        <li><a class="pointer" ng-click="moveToEditMapping()">Edit</a></li>
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown">Validate <b class="caret"></b></a>
           <ul class="dropdown-menu">
@@ -121,6 +121,8 @@
   <script type="text/javascript" src= "app/service/parser.js"></script>
   <script type="text/javascript" src= "app/service/service.js"></script>
   <script type="text/javascript" src= "app/controllers/transCtrl.js"></script>
+  <script type="text/javascript" src= "app/controllers/appCtrl.js"></script>
+
 
 
 
