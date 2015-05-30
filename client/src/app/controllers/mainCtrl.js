@@ -593,7 +593,7 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                 $scope.dupUploadedData.rowOne = changeNumberFormat($scope.dupUploadedData.rowOne, $scope.fileStyle.numberFormat);
                 $scope.dupUploadedData.rowTwo = changeNumberFormat($scope.dupUploadedData.rowTwo, $scope.fileStyle.numberFormat);
                 
-                if(!$scope.setting.isBackToSecondStep)
+                 if(!$scope.setting.isBackToSecondStep)
                     loadingColumns($scope.dupUploadedData.headers);
             }
 
@@ -603,7 +603,11 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                         if (isNaN(list[i])) {
                             var d = new Date(list[i]);
                             if (d != "Invalid Date") {
-                                var date = d.getDate();
+                               if($scope.fileStyle.dateFormat == guessDateFormat(angular.copy($scope.unformatedData), ["dd-MM-yyyy", "MM/dd/yyyy"], $scope.fileStyle.delimeterFormat)[0]){
+                                    list[i] = $filter('date')(new Date(list[i]), 'mediumDate')
+                               }
+                               else{
+                                    var date = d.getDate();
                                 if (date < 10) date = "0" + date;
                                 var month = d.getMonth() + 1;
                                 if (month < 10) month = "0" + month;
@@ -612,6 +616,7 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                                     list[i] = month + "/" + date + "/" + year;
                                 else
                                     list[i] = date + "-" + month + "-" + year;
+                               }
                             }
                         }
                     };
@@ -623,15 +628,17 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                 for (var i = 0; i < list.length; i++) {
                     if (!isNaN(list[i])) {
                         if (format == '#,##') {
-                            var str = list[i].slice(0, -2) + ',' + list[i].slice(-2);
-                            list[i] = str;
+                            if(list[i].indexOf(',')<0)
+                                list[i] = list[i] + ',00';
                         }
                         if (format == '#.##') {
-                            list[i] = (list[i] / 100);
+                            if(list[i].indexOf('.')<0)
+                                list[i] = list[i] + '.00';
                         }
+
                         if (format == '#,###.##') {
                             if (list[i].toString().length > 5) {
-                                list[i] = (list[i] / 100);
+                                list[i] = (list[i]*100 / 100);
                                 var str = list[i].toString().split('.');
                                 if (str[0].length >= 4) {
                                     str[0] = str[0].replace(/(\d)(?=(\d{3})+$)/g, '$1,');
@@ -640,20 +647,22 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                                     str[1] = str[1].replace(/(\d{3})/g, '$1 ');
                                 }
                                 list[i] = str.join('.');
+                                if(list[i].indexOf('.') < 0){
+                                    list[i] = list[i] + '.00'
+                                }
                             }
 
                         }
                         if (format == '#.###,##') {
                             var str = list[i].toString();
                             if (str.length > 5) {
-                                str = list[i].slice(0, -5) + '.' + list[i].slice(-3) + ',' + list[i].slice(-2);
-                                // var dec = (list[i] % 100000);
-                                // list[i] = (list[i] / 100000);
-                                // var str = list[i].toString();
-                                // var index = str.length-2;
-                                // str = str.slice(0,index)+ "," + str.slice(index);  
+                                str = list[i].slice(0, -5) + '.' + list[i].slice(-3) + '.' + list[i].slice(-3); 
                                 list[i] = str;
+                                if(list[i].indexOf(',') < 0){
+                                    list[i] = list[i] + ',00'
+                                }
                             }
+
                         }
                     }
                 }
@@ -704,6 +713,8 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                         $scope.unformatedData = angular.copy(data);
                         $scope.fileStyle.delimeterFormat = guessDelimiters(angular.copy($scope.unformatedData), [',', ';', '|'])[0];
                         $scope.fileStyle.dateFormat = guessDateFormat(angular.copy($scope.unformatedData), ["dd-MM-yyyy", "MM/dd/yyyy"], $scope.fileStyle.delimeterFormat)[0];
+                        $scope.fileStyle.numberFormat = guessNumberFormat(angular.copy($scope.unformatedData), ["#,###.##","#.###,##","#.##","#,##"], $scope.fileStyle.delimeterFormat)[0];
+                        
                         $scope.secondStep();
                     })
                     .error(function(data) {
@@ -723,10 +734,36 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                         selectedColumns[i].isSelect = false;
                     };
                     $scope.columnShowList = selectedColumns;
+                    $scope.orgColumnShowList = angular.copy($scope.columnShowList);
+                    if(!$scope.fileStyle.includeHeader){
+                        $scope.changeColumn($scope.fileStyle.includeHeader)
+                    }
                     //$scope.secondStep(); 
 
                 }
+
+            $scope.changeColumn = function(isHeader){
+                if(isHeader == false){
+                    angular.forEach($scope.columnShowList, function(col,colkey){
+                        $scope.columnShowList[colkey].colName = 'Column ' + colkey;
+                        $scope.columnShowList[colkey].isSelect = false;
+                    })
+
+                }
+                else{
+                    $scope.columnShowList = angular.copy($scope.orgColumnShowList)
+                }
+                if(!$scope.edit){
+                    $scope.tableLists = {};
+                    angular.forEach($scope.orgProperty, function(value, key) {
+                        $scope.tableLists[key] = [];
+                    })
+                }
+                
+                
+            }
                 //check required fields mapping is done or not
+            
             var checkMapping = function(tableInfo) {
                 // var reqFieldList = [];
                 // var k = 0;
@@ -826,6 +863,16 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                 //loadingColumns($scope.uploadedData.headers);
             }
 
+            // $scope.isBackTosecondStep = function() {
+            //     $scope.badge.step = "two";
+            //     // if(!$scope.setting.isBackToSecondStep){
+            //     //     getPropertyList();
+            //     //     $scope.changeFormat();
+            //     // }
+                
+            //     //loadingColumns($scope.uploadedData.headers);
+            // }
+
             function splitter(data, splittype) {
                 return data.split(splittype);
             }
@@ -838,20 +885,21 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                 $scope.submit = true;
                 if(form.$valid){
                      $scope.badge.step = "three";
-                //$scope.selectTable('product');
-                if ($scope.tableData == undefined) {
+                
+                // if ($scope.tableData == undefined) {
                     $scope.tableData = [];
-                }
+                // }
                 if ($scope.map == undefined) {
                     $scope.map = {
                         name: null
                     }
                 }
                 $scope.fileViewFormats = info;
-                if(!$scope.setting.isBackToSecondStep && $scope.isMapSaved != true){
+                // if(!$scope.setting.isBackToSecondStep && $scope.isMapSaved != true){
                     mapTenantId();
-                    mapSynonyms();
-                }
+                    if($scope.fileStyle.includeHeader)
+                        mapSynonyms();
+                // }
                 $scope.setting.isBackToSecondStep = false;
                 $scope.submit = false;
                 }
@@ -882,6 +930,7 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                         $scope.tableData = data.data[0].mappingInfo;
                         $scope.mapid = data.data[0]._id;
                         $scope.mapdata = data.data[0];
+
                         /*this is hardcode but in feature it will dynamic*/
                         var duptableData = [];
                         //$scope.tableLists=[];
@@ -948,6 +997,7 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                     })
 
                 ]).then(function(values) {
+
                     $scope.uploadedDataDump = angular.copy($scope.unformatedData);
                     $scope.uploadedDataDump.headers = splitter($scope.uploadedDataDump.headers, $scope.mapdata.delimeter.delimeterFormat);
                     $scope.uploadedDataDump.rowOne = splitter($scope.uploadedDataDump.rowOne, $scope.mapdata.delimeter.delimeterFormat);
@@ -955,8 +1005,10 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                     $scope.uploadedData = angular.copy($scope.uploadedDataDump);
                     $scope.dupUploadedData = angular.copy($scope.uploadedData);
                     loadingColumns($scope.dupUploadedData.headers);
+                    $scope.changeColumn($scope.mapdata.delimeter.includeHeader);
                     $scope.selectTable($scope.modelName);
                     mappedColumns();
+
                 })
 
             }
@@ -1135,6 +1187,76 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                         growl.error("Unable to get mapping list");
                     });
 
+            }
+
+            function guessNumberFormat(text, possibleNumberFormat, delimiter) {
+                return possibleNumberFormat.filter(testNumberFormat);
+
+                function testNumberFormat(numberFormat) {
+                    var textArray = [];
+                    textArray.push(text.rowOne);
+                    textArray.push(text.rowTwo);
+                    return textArray.every(splitLine);
+
+                    function splitLine(line) {
+                        var wordArray = line.split(delimiter);
+                        //return true;
+                        return wordArray.every(matchNumberFormat);
+
+                        function matchNumberFormat(word) {
+                            if (!isNaN(word)) {
+                                
+                                if(numberFormat == '#,###.##'){
+                                    var patt = new RegExp("^(([0-9]{1,3}(,[0-9]{3}){0,100}).[0-9]{2})$");
+                                    var patt1 = new RegExp("^(([#]{1,3}(,[#]{3}){0,100}).[#]{2})$");
+                                    var res1 = patt.test(word) && patt1.test(numberFormat);
+                                    if(word.length<5)
+                                        return false;
+                                    return res1;
+                                }
+
+                                if(numberFormat == '#.###,##'){
+                                    var patt = new RegExp("^(([0-9]{1,3}(.[0-9]{3}){0,100}),[0-9]{2})$");
+                                    var patt1 = new RegExp("^(([#]{1,3}(.[#]{3}){0,100}),[#]{2})$");
+                                    var res1 = patt.test(word) && patt1.test(numberFormat);
+                                    if(word.length<5)
+                                        return false;
+                                    return res1;
+                                }
+
+                                if(numberFormat == '#.##'){
+                                    var patt = new RegExp("^([0-9]{0,300}.[0-9]{2})$");
+                                    var patt1 = new RegExp("^([#]{1}.[#]{2})$");
+                                    var res1 = patt.test(word) && patt1.test(numberFormat);
+                                    return res1;
+                                }
+
+                                if(numberFormat == '#,##'){
+                                    var patt = new RegExp("^([0-9]{0,300},[0-9]{2})$");
+                                    var patt1 = new RegExp("^([#]{1},[#]{2})$");
+                                    var res1 = patt.test(word) && patt1.test(numberFormat);
+                                    return res1;
+                                }
+                                
+
+                                // var patt2 = new RegExp("^(([0-9]{1,3}(.[0-9]{3}){0,100}),[0-9]{2})$");
+                                // var res1 = patt.test(word) && patt1.test(dateFormat);
+
+                                // if (d != "Invalid Date") {
+                                //     var patt = new RegExp("[0-9]{1,2}\/[0-9]{1,2}\/[0-9]{4}");
+                                //     var patt1 = new RegExp("[d|M]{1,2}\/[d|M]{1,2}\/[y]{4}");
+                                //     var res1 = patt.test(word) && patt1.test(dateFormat);
+
+                                //     var patt = new RegExp("[0-9]{1,2}\-[0-9]{1,2}\-[0-9]{4}");
+                                //     var patt1 = new RegExp("[d|M]{1,2}\-[d|M]{1,2}\-[y]{4}");
+                                //     var res2 = patt.test(word) && patt1.test(dateFormat);
+                                //     return res1 || res2;
+                                // }
+                            }
+                            return true;
+                        }
+                    }
+                }
             }
 
             function guessDelimiters(text, possibleDelimiters) {

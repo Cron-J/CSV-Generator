@@ -207,7 +207,7 @@
       </div>
       <hr>
       <div class="pull-right">
-         <button class="btn btn-primary "  ng-click="setting.isBackToSecondStep=true; secondStep();">Back</button>
+         <button class="btn btn-primary " ng-if="!edit"  ng-click="setting.isBackToSecondStep=true; secondStep();">Back</button>
          <button class="btn btn-primary" ng-if="!edit"  ng-click="saveMappingStep(map, tableData)">Save Mapping</button>
 
          <button class="btn btn-primary" ng-if="edit" ng-click="saveMappingStep(map, tableData)">Update Mapping</button>
