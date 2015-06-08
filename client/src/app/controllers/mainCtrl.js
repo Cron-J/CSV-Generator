@@ -693,6 +693,13 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
             $scope.resetData = function() {
                 $scope.dupUploadedData = angular.copy($scope.uploadedData);
                 defaultFilePreviewSettings();
+                
+                $scope.fileStyle.delimeterFormat = guessDelimiters(angular.copy($scope.unformatedData), [',', ';', '|'])[0];
+                $scope.fileStyle.dateFormat = guessDateFormat(angular.copy($scope.unformatedData), ["dd-MM-yyyy", "MM/dd/yyyy"], $scope.fileStyle.delimeterFormat)[0];
+                $scope.fileStyle.numberFormat = "#,###.##";
+                $scope.changeFormat();
+                //$scope.fileStyle.numberFormat = guessNumberFormat(angular.copy($scope.unformatedData), ["#,###.##","#.###,##","#.##","#,##"], $scope.fileStyle.delimeterFormat)[0];
+                        
             }
 
             $scope.startRead = function(files) {
@@ -713,7 +720,7 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                         $scope.unformatedData = angular.copy(data);
                         $scope.fileStyle.delimeterFormat = guessDelimiters(angular.copy($scope.unformatedData), [',', ';', '|'])[0];
                         $scope.fileStyle.dateFormat = guessDateFormat(angular.copy($scope.unformatedData), ["dd-MM-yyyy", "MM/dd/yyyy"], $scope.fileStyle.delimeterFormat)[0];
-                        $scope.fileStyle.numberFormat = guessNumberFormat(angular.copy($scope.unformatedData), ["#,###.##","#.###,##","#.##","#,##"], $scope.fileStyle.delimeterFormat)[0];
+                        //$scope.fileStyle.numberFormat = guessNumberFormat(angular.copy($scope.unformatedData), ["#,###.##","#.###,##","#.##","#,##"], $scope.fileStyle.delimeterFormat)[0];
                         
                         $scope.secondStep();
                     })

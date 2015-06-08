@@ -29,7 +29,7 @@
         <div class="form-group">
           <label class="col-sm-4 control-label">Number Format</label>
           <div class="col-sm-8">
-            <select name="numberPattern" id="number" ng-model="fileStyle.numberFormat" class="form-control" ng-change="changeFormat()"  required>
+            <select name="numberPattern" id="number" ng-model="fileStyle.numberFormat" class="form-control" ng-change="changeFormat()" ng-init="fileStyle.numberFormat = '#,###.##'" required>
               <option value="" style="display:none;">select format</option>
               <option value="#,###.##">#,###.##</option>
               <option value="#.##">#.##</option>
@@ -78,6 +78,9 @@
     </thead>
 
     <tbody>
+      <tr ng-show="!fileStyle.includeHeader">
+        <td ng-repeat="row in dupUploadedData.headers track by $index">{{row}}</td>
+      </tr>
       <tr >
         <td ng-repeat="row in dupUploadedData.rowOne track by $index">{{row}}</td>
       </tr>
