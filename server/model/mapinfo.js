@@ -30,38 +30,41 @@ var mapinfo = {
 
     values: [{
 
-        rowId: {
-            type: Number
-        }, 
-     
-        userFieldName: {
-            type: String
-        },
+        fields: [{
 
-        transformations: {
-            type: Object
-        },
+            rowId: {
+                type: Number
+            }, 
+         
+            userFieldName: {
+                type: String
+            },
 
-        field: {
-            type: String
-        },
+            transformations: {
+                type: Object
+            },
 
-        defaultValue : {
-            type: String
-        },
+            field: {
+                type: String
+            },
 
-        index: {
-            type: Boolean
-        },
+            defaultValue : {
+                type: String
+            },
 
-        instance: {
-            type: String
-        },
+            index: {
+                type: Boolean
+            },
 
-        isRequired: {
-            type: String,
-            default: false
-        }
+            instance: {
+                type: String
+            },
+
+            isRequired: {
+                type: String,
+                default: false
+            }
+        }]
     }],
 
     index: {
