@@ -905,6 +905,9 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                 }
                
             }
+            $scope.isBackToThirdStep =function(){
+                $scope.badge.step = "three";
+            }
             $scope.edit = false;
             $scope.editMapping = function(map) {
                 if(typeof map == 'undefined'){
@@ -1089,7 +1092,7 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                             $scope.newMap = false;
                             //get list
                             $scope.tableData = {};
-                            getMappingList(1);
+                            //getMappingList(1);
                         } else {
                             growl.error("Please map all required fields before trying to save mapping");
                         }
@@ -1108,7 +1111,7 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                         $scope.mapid = null;
                         $scope.isMapSaved = true;
                         growl.success("Mapping has been saved successfully");
-                        //getMappingList(1);
+                        getMappingList(1);
                     })
                     .catch(function(err) {
                         console.log('error', err);
@@ -1121,7 +1124,7 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                     .success(function(data) {
                         $scope.isMapSaved = true;
                         growl.success("Mapping has been saved successfully");
-                        //getMappingList(1);
+                        getMappingList(1);
                     })
                     .error(function(err) {
 
