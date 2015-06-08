@@ -93,9 +93,11 @@ exports.getTestMappingData = {
                     var finalJson = [];
                     for (var i = 0; i < jsonObj.length; i++) {
                         var temp = {};
+                        if(Config.host.isProductSchema){
+                            temp[mappings[0].mappingInfo[0].field] = Transformation.getTransformation(mappings[0].mappingInfo[0].transformations, "1");
+                        }
                         for (var key in jsonObj[i]){                            
                             for (var j = 0; j < mappings[0].mappingInfo.length; j++) {
-                                //console.log(mappings[0].mappingInfo[0]);
                                 if(mappings[0].mappingInfo[j].userFieldName == undefined){
                                     if(temp[mappings[0].mappingInfo[j].field] == undefined) temp[mappings[0].mappingInfo[j].field] = [];
                                     for (var k = 0; k < mappings[0].mappingInfo[j].values.length; k++){
@@ -122,7 +124,7 @@ exports.getTestMappingData = {
                                         }
                                     }
                                 }
-                                else if(key == mappings[0].mappingInfo[j].userFieldName){
+                                else if(key == mappings[0].mappingInfo[j].userFieldName){                                    
                                     temp[mappings[0].mappingInfo[j].field] = Transformation.getTransformation(mappings[0].mappingInfo[j].transformations, jsonObj[i][key]);
                                 }
                                 else if(mappings[0].mappingInfo[j].defaultValue != null){
