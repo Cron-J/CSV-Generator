@@ -95,36 +95,37 @@ exports.getTestMappingData = {
                         var temp = {};
                         for (var key in jsonObj[i]){                            
                             for (var j = 0; j < mappings[0].mappingInfo.length; j++) {
+                                //console.log(mappings[0].mappingInfo[0]);
                                 if(mappings[0].mappingInfo[j].userFieldName == undefined){
                                     if(temp[mappings[0].mappingInfo[j].field] == undefined) temp[mappings[0].mappingInfo[j].field] = [];
                                     for (var k = 0; k < mappings[0].mappingInfo[j].values.length; k++){
-                                        if(mappings[0].mappingInfo[j].values[k].userFieldName == 'defaultValue'){
-                                            if(temp[mappings[0].mappingInfo[j].field][k] == undefined) {
-                                                temp[mappings[0].mappingInfo[j].field][k] = {};
-                                            }
-                                            var field = mappings[0].mappingInfo[j].values[k].field;
-                                            temp[mappings[0].mappingInfo[j].field][k][field] = Transformation.getTransformation(mappings[0].mappingInfo[j].values[k].transformations, mappings[0].mappingInfo[j].values[k].defaultValue);
-                                        }
-                                        else{
-                                            if(key == mappings[0].mappingInfo[j].values[k].userFieldName){
+                                        for (var l = 0; l < mappings[0].mappingInfo[j].values[k].fields.length; l++){
+                                            if(mappings[0].mappingInfo[j].values[k].fields[l].userFieldName == 'defaultValue'){
                                                 if(temp[mappings[0].mappingInfo[j].field][k] == undefined) {
                                                     temp[mappings[0].mappingInfo[j].field][k] = {};
                                                 }
-                                                var field = mappings[0].mappingInfo[j].values[k].field;
-                                                temp[mappings[0].mappingInfo[j].field][k][field] = Transformation.getTransformation(mappings[0].mappingInfo[j].values[k].transformations,jsonObj[i][key]);                                         
+                                                var field = mappings[0].mappingInfo[j].values[k].fields[l].field;
+                                                temp[mappings[0].mappingInfo[j].field][k][field] = Transformation.getTransformation(mappings[0].mappingInfo[j].values[k].fields[l].transformations, mappings[0].mappingInfo[j].values[k].fields[l].defaultValue);
                                             }
-                                            else if(mappings[0].mappingInfo[j].defaultValue != null){
-                                                console.log("------2--------");
-                                                temp[mappings[0].mappingInfo[j].field] = Transformation.getTransformation(mappings[0].mappingInfo[j].transformations, mappings[0].mappingInfo[j].defaultValue);    
+                                            else{
+                                                if(key == mappings[0].mappingInfo[j].values[k].fields[l].userFieldName){
+                                                    if(temp[mappings[0].mappingInfo[j].field][k] == undefined) {
+                                                        temp[mappings[0].mappingInfo[j].field][k] = {};
+                                                    }
+                                                    var field = mappings[0].mappingInfo[j].values[k].fields[l].field;
+                                                    temp[mappings[0].mappingInfo[j].field][k][field] = Transformation.getTransformation(mappings[0].mappingInfo[j].values[k].fields[l].transformations,jsonObj[i][key]);                                         
+                                                }
+                                                else if(mappings[0].mappingInfo[j].defaultValue != null){
+                                                    temp[mappings[0].mappingInfo[j].field] = Transformation.getTransformation(mappings[0].mappingInfo[j].fields[l].transformations, mappings[0].mappingInfo[j].fields[l].defaultValue);    
+                                                }
                                             }
                                         }
                                     }
                                 }
-                                else if(key == mappings[0].mappingInfo[j].userFieldName){                   
+                                else if(key == mappings[0].mappingInfo[j].userFieldName){
                                     temp[mappings[0].mappingInfo[j].field] = Transformation.getTransformation(mappings[0].mappingInfo[j].transformations, jsonObj[i][key]);
                                 }
                                 else if(mappings[0].mappingInfo[j].defaultValue != null){
-                                    console.log("------3--------");
                                     temp[mappings[0].mappingInfo[j].field] = Transformation.getTransformation(mappings[0].mappingInfo[j].transformations, mappings[0].mappingInfo[j].defaultValue);
                                 }
                             }
