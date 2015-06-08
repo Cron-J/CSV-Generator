@@ -958,7 +958,8 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                                 duptableData.push(mapper);
                             } else {
 
-                                angular.forEach(val.values, function(val1, key1) {
+                                angular.forEach(val.values, function(vals1, keys1) {
+                                    angular.forEach(vals1.fields, function(val1, key1) {
                                     var mapper = {
                                         propName: {}
                                     };
@@ -982,6 +983,7 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                                         mapper.quotes = true;
                                     //$scope.saveIndex(duptableData.length,'edit');
                                     duptableData.push(mapper);
+                                });
 
                                 })
                             }
@@ -1049,24 +1051,49 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                                     };
                                 } else {
                                     angular.forEach(mappingDetails.mappingInfo, function(val, key) {
-                                        if (tableInfo[i].tableName != $scope.modelName && tableInfo[i].tableName == val.field && val.values.length > 0 && val.values[0].rowId == tableInfo[i].rowId) {
-                                            val.values.push({
-                                                "userFieldName": tableInfo[i].columnName,
-                                                "transformations": tableInfo[i].transformations,
-                                                "field": tableInfo[i].propName.field,
-                                                "defaultValue": tableInfo[i].defaultVal,
-                                                "index": tableInfo[i].propName.index,
-                                                "instance": tableInfo[i].propName.instance,
-                                                "isRequired": tableInfo[i].propName.isRequired,
-                                                "rowId": tableInfo[i].rowId
+                                        if(tableInfo[i].tableName != $scope.modelName && val.field == tableInfo[i].tableName){
+                                            var isdup = true;
+                                            angular.forEach(val.values,function(inVal, inKey){
+                                                
+                                                    if(inVal.fields[0].rowId == tableInfo[i].rowId){
+                                                        inVal.fields.push({
+                                                            "userFieldName": tableInfo[i].columnName,
+                                                            "transformations": tableInfo[i].transformations,
+                                                            "field": tableInfo[i].propName.field,
+                                                            "defaultValue": tableInfo[i].defaultVal,
+                                                            "index": tableInfo[i].propName.index,
+                                                            "instance": tableInfo[i].propName.instance,
+                                                            "isRequired": tableInfo[i].propName.isRequired,
+                                                            "rowId": tableInfo[i].rowId
+                                                        })
+                                                        isExisting = true;
+                                                        isdup = false;
+                                                    }
+                                                
                                             })
-                                            isExisting = true;
+                                            if(isdup == true){
+                                                val.values.push({
+                                                            "fields":[{
+                                                            "userFieldName": tableInfo[i].columnName,
+                                                            "transformations": tableInfo[i].transformations,
+                                                            "field": tableInfo[i].propName.field,
+                                                            "defaultValue": tableInfo[i].defaultVal,
+                                                            "index": tableInfo[i].propName.index,
+                                                            "instance": tableInfo[i].propName.instance,
+                                                            "isRequired": tableInfo[i].propName.isRequired,
+                                                            "rowId": tableInfo[i].rowId
+                                                            }]
+                                                        })
+                                                isExisting = true;
+                                            }
                                         }
+                                        
                                     })
                                     if (isExisting == false) {
                                         mappingDetails.mappingInfo[len++] = {
                                             "field": tableInfo[i].tableName,
-                                            "values": [{
+                                            "values":[{ 
+                                                "fields":[{
                                                 "userFieldName": tableInfo[i].columnName,
                                                 "transformations": tableInfo[i].transformations,
                                                 "field": tableInfo[i].propName.field,
@@ -1074,7 +1101,9 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                                                 "index": tableInfo[i].propName.index,
                                                 "instance": tableInfo[i].propName.instance,
                                                 "isRequired": tableInfo[i].propName.isRequired,
-                                                "rowId": tableInfo[i].rowId
+                                                "rowId": tableInfo[i].rowId,
+                                                
+                                                }]
                                             }]
                                         };
                                     }
