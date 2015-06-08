@@ -5,7 +5,8 @@ module.exports = {
     },
     host: {
         ModuleLinkup:'modulus-linkup-45480.onmodulus.net',
-        getSchema:'/getProductSchema'
+        getSchema:'/getProductSchema',
+        isProductSchema: true
     },
     database: {
         db: 'mongodb://127.0.0.1/csvGenerator'
