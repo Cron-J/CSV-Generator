@@ -195,8 +195,8 @@
                      <span >{{row.propName.field}}</span>
                      
                   </td>
-                  <td><span ng-show="!edit">{{row.aIndex}}</span>
-                     <span ng-show="edit">{{$index+1}}</span>
+                  <td><!-- <span ng-show="!edit">{{row.aIndex}}</span> -->
+                     <span >{{$index+1}}</span>
                   </td>
                   <td>
                      <button class="btn btn-default btn-xs" ng-click="removeRow(row.propName.field, row.columnName, row.tableName, $index)"><span class="glyphicon glyphicon-remove"></span> Remove</button>

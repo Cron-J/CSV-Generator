@@ -371,7 +371,7 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                         for (var k = $scope.tableData.length; k > 0; k--) {
                             if (i == k - 2) {
                                 $scope.tableData[i] = angular.copy(dummy);
-                                $scope.tableData[i].columnName = $scope.selectedColumn;
+                                $scope.tableData[i].columnName = '"'+$scope.selectedColumn +'"';
                                 $scope.tableData[i].tableName = $scope.pickedTable;
                                 // if($scope.selectedDefaultVal != null){
                                 //   $scope.tableData[i].columnName = $scope.selectedDefaultVal.name;
@@ -379,7 +379,7 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                                 //   $scope.selectedDefaultVal = null;
                                 //   defaultBtn();
                                 // }
-                                $scope.tableData[i].quotes = true;
+                                //$scope.tableData[i].quotes = true;
                                 if ($scope.tableData[i].tableName == $scope.pickedTable) {
                                     $scope.tableData[i].aIndex++;
                                 }
