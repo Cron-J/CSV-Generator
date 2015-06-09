@@ -32,7 +32,7 @@
       <div class="col-md-3">
          <select class="mapping-select" id="columns1" name="columns" size="20" >
             <!-- removed from here -->
-            <option  ng-repeat="col in columnShowList" ng-class="{mapped: col.isSelect}" ng-click="selectColumn(col.colName)">{{col.colName}}</option>
+            <option  ng-repeat="col in columnShowList" title="{{col.colName}} :  {{uploadedDataDump.rowOne[$index]}}, {{uploadedDataDump.rowTwo[$index]}}" ng-class="{mapped: col.isSelect}" ng-click="selectColumn(col.colName)">{{col.colName}}</option>
          </select>
       </div>
       <div class="col-md-2">

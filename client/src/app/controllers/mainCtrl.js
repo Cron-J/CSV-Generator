@@ -364,15 +364,20 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                             "aIndex": 0,
                             "quotes": false,
                             "rowId": 0,
-                            "ma": true
+                            "ma": true,
+
                         };
                         var i = $scope.tableData.length++;
                         var j = $scope.tableData.length++;
                         for (var k = $scope.tableData.length; k > 0; k--) {
                             if (i == k - 2) {
                                 $scope.tableData[i] = angular.copy(dummy);
-                                $scope.tableData[i].columnName = '"'+$scope.selectedColumn +'"';
+                                //$scope.tableData[i].columnName = $scope.selectedColumn ;
+                                $scope.tableData[i].columnName = "defaultValue";
+                                $scope.tableData[i].defaultVal = $scope.selectedColumn;
+
                                 $scope.tableData[i].tableName = $scope.pickedTable;
+                                $scope.tableData[i].quotes = true;
                                 // if($scope.selectedDefaultVal != null){
                                 //   $scope.tableData[i].columnName = $scope.selectedDefaultVal.name;
                                 //   $scope.tableData[i].defaultVal = $scope.selectedDefaultVal.value;
