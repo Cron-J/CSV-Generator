@@ -12,6 +12,10 @@ var mapinfo = {
         type: String
     },
 
+    columnNumber:{
+        type: Number
+    },
+
     /** 
       transformations. transformation applied on fields.
     */
@@ -38,6 +42,10 @@ var mapinfo = {
          
             userFieldName: {
                 type: String
+            },
+
+            columnNumber:{
+                type: Number
             },
 
             transformations: {
