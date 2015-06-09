@@ -89,7 +89,33 @@ exports.getTestMappingData = {
                 });
 
                 //end_parsed will be emitted once parsing finished 
-                csvConverter.on("end_parsed", function(jsonObj) {
+                csvConverter.on("end_parsed", function(CsvData) {
+                    var jsonObj;
+                    if(!mappings[0].delimeter.includeHeader){
+                        jsonObj = [];
+                        var count = 0;
+                        var tempJsonObj = {};
+                        for (var key in CsvData[0]){
+                            var keyName = "Column "+ count++;
+                            tempJsonObj[keyName] = key;
+                        }
+                        jsonObj.push(tempJsonObj);
+                        for (var i = 0; i < CsvData.length; i++) {
+                            
+                            tempJsonObj = {};
+                            count = 0;
+                            for (var key in CsvData[i]){
+                                var keyName = "Column "+ count++;
+                                tempJsonObj[keyName] = CsvData[i][key];
+                            }
+                            jsonObj.push(tempJsonObj);
+                        }
+                    }
+                    else{
+                        jsonObj = CsvData;
+                    }                 
+                    
+                    console.log(jsonObj);
                     var finalJson = [];
                     for (var i = 0; i < jsonObj.length; i++) {
                         var temp = {};
@@ -98,6 +124,7 @@ exports.getTestMappingData = {
                         if(Config.host.isProductSchema){
                             temp[mappings[0].mappingInfo[0].field] = Transformation.getTransformation(mappings[0].mappingInfo[0].transformations, "1");
                         }
+
                         for (var key in jsonObj[i]){                       
                             for (var j = 0; j < mappings[0].mappingInfo.length; j++) {
                                 if(mappings[0].mappingInfo[j].userFieldName == undefined){
