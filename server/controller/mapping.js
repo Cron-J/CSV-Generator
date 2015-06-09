@@ -93,10 +93,12 @@ exports.getTestMappingData = {
                     var finalJson = [];
                     for (var i = 0; i < jsonObj.length; i++) {
                         var temp = {};
+
+                        //this condition is only if it's product schema and can be toggled/turned off from config/config
                         if(Config.host.isProductSchema){
                             temp[mappings[0].mappingInfo[0].field] = Transformation.getTransformation(mappings[0].mappingInfo[0].transformations, "1");
                         }
-                        for (var key in jsonObj[i]){                            
+                        for (var key in jsonObj[i]){                       
                             for (var j = 0; j < mappings[0].mappingInfo.length; j++) {
                                 if(mappings[0].mappingInfo[j].userFieldName == undefined){
                                     if(temp[mappings[0].mappingInfo[j].field] == undefined) temp[mappings[0].mappingInfo[j].field] = [];
@@ -144,138 +146,138 @@ exports.getTestMappingData = {
     }
 };
 
-exports.getMappingData = {
-    handler: function(request, reply) {
-        Mapping.getMappedData(request.params.tenantId, request.params.mappingId, function(err, mappings) {
-            if (!err) {
-                var upload_path = 'upload/' + mappings[0].fileName;
-                var fileStream = fs.createReadStream(upload_path);
-                //new converter instance 
-                var csvConverter = new Converter({
-                    constructResult: true
-                });
+// exports.getMappingData = {
+//     handler: function(request, reply) {
+//         Mapping.getMappedData(request.params.tenantId, request.params.mappingId, function(err, mappings) {
+//             if (!err) {
+//                 var upload_path = 'upload/' + mappings[0].fileName;
+//                 var fileStream = fs.createReadStream(upload_path);
+//                 //new converter instance 
+//                 var csvConverter = new Converter({
+//                     constructResult: true
+//                 });
 
-                //end_parsed will be emitted once parsing finished 
-                csvConverter.on("end_parsed", function(jsonObj) {
-                    var convertedJson = [],
-                        key = 0,
-                        check;
-                    for (var g = 0; g < jsonObj.length; g++) {
-                        for (var i = 0; i < mappings[0].mappingInfo.length; i++) {
-                            var obj = {};
-                            if (!convertedJson[key])
-                                convertedJson[key] = {};
+//                 //end_parsed will be emitted once parsing finished 
+//                 csvConverter.on("end_parsed", function(jsonObj) {
+//                     var convertedJson = [],
+//                         key = 0,
+//                         check;
+//                     for (var g = 0; g < jsonObj.length; g++) {
+//                         for (var i = 0; i < mappings[0].mappingInfo.length; i++) {
+//                             var obj = {};
+//                             if (!convertedJson[key])
+//                                 convertedJson[key] = {};
 
-                            if (mappings[0].mappingInfo[i].userFieldName) {
-                                if(mappings[0].mappingInfo[i].defaultValue != undefined) {
-                                    convertedJson[key][mappings[0].mappingInfo[i].userFieldName] = 
-                                    mappings[0].mappingInfo[i].defaultValue;
-                                } else {
-                                    convertedJson[key][mappings[0].mappingInfo[i].userFieldName] =
-                                    changeFormat(jsonObj[g][mappings[0].mappingInfo[i].userFieldName], mappings[0].delimeter);
-                                }
-                            } else {
-                                for (var j = 0; j < mappings[0].mappingInfo[i].values.length; j++) {
-                                    switch (mappings[0].mappingInfo[i].field) {
-                                        case "attributeValues":
-                                            if (!convertedJson[key].attributeValues)
-                                                convertedJson[key].attributeValues = [];
-                                            check = checkAlDuplicate(mappings[0].mappingInfo[i].values[j].userFieldName, convertedJson[key].attributeValues);
-                                            if (check != false) {
-                                                if(mappings[0].mappingInfo[i].values[j].defaultValue) {
-                                                    obj[mappings[0].mappingInfo[i].values[j].userFieldName] =
-                                                            mappings[0].mappingInfo[i].values[j].defaultValue;
-                                                    convertedJson[key].attributeValues.push(obj);
-                                                } else {
-                                                    convertedJson[key].attributeValues.push({
-                                                        "attributeId": mappings[0].mappingInfo[i].values[j].userFieldName,
-                                                        "attributeValue":changeFormat(jsonObj[g][mappings[0].mappingInfo[i].values[j].userFieldName], mappings[0].delimeter)
-                                                    });
-                                                }
-                                            }
-                                            break;
+//                             if (mappings[0].mappingInfo[i].userFieldName) {
+//                                 if(mappings[0].mappingInfo[i].defaultValue != undefined) {
+//                                     convertedJson[key][mappings[0].mappingInfo[i].userFieldName] = 
+//                                     mappings[0].mappingInfo[i].defaultValue;
+//                                 } else {
+//                                     convertedJson[key][mappings[0].mappingInfo[i].userFieldName] =
+//                                     changeFormat(jsonObj[g][mappings[0].mappingInfo[i].userFieldName], mappings[0].delimeter);
+//                                 }
+//                             } else {
+//                                 for (var j = 0; j < mappings[0].mappingInfo[i].values.length; j++) {
+//                                     switch (mappings[0].mappingInfo[i].field) {
+//                                         case "attributeValues":
+//                                             if (!convertedJson[key].attributeValues)
+//                                                 convertedJson[key].attributeValues = [];
+//                                             check = checkAlDuplicate(mappings[0].mappingInfo[i].values[j].userFieldName, convertedJson[key].attributeValues);
+//                                             if (check != false) {
+//                                                 if(mappings[0].mappingInfo[i].values[j].defaultValue) {
+//                                                     obj[mappings[0].mappingInfo[i].values[j].userFieldName] =
+//                                                             mappings[0].mappingInfo[i].values[j].defaultValue;
+//                                                     convertedJson[key].attributeValues.push(obj);
+//                                                 } else {
+//                                                     convertedJson[key].attributeValues.push({
+//                                                         "attributeId": mappings[0].mappingInfo[i].values[j].userFieldName,
+//                                                         "attributeValue":changeFormat(jsonObj[g][mappings[0].mappingInfo[i].values[j].userFieldName], mappings[0].delimeter)
+//                                                     });
+//                                                 }
+//                                             }
+//                                             break;
 
-                                        case "prices":
-                                            if (!convertedJson[key].prices)
-                                                convertedJson[key].prices = [];
-                                            check = checkPDuplicate(mappings[0].mappingInfo[i].values[j].userFieldName.split('_')[0], convertedJson[key].prices);
-                                            if (check != false) {
-                                                if(mappings[0].mappingInfo[i].values[j].userFieldName == "gross_price" ||
-                                                    mappings[0].mappingInfo[i].values[j].userFieldName == "retail_price" || 
-                                                    mappings[0].mappingInfo[i].values[j].userFieldName == "grossprice" || 
-                                                    mappings[0].mappingInfo[i].values[j].userFieldName == "retailprice") {
-                                                        convertedJson[key].prices.push({
-                                                         "pricetype": mappings[0].mappingInfo[i].values[j].userFieldName.split('_')[0],
-                                                         "price": jsonObj[g][mappings[0].mappingInfo[i].values[j].userFieldName]
-                                                        });
-                                                } 
-                                                else { 
-                                                    if(mappings[0].mappingInfo[i].values[j].defaultValue) {
-                                                         obj[mappings[0].mappingInfo[i].values[j].userFieldName] = mappings[0].mappingInfo[i].values[j].defaultValue
-                                                    } else {
-                                                        obj[mappings[0].mappingInfo[i].values[j].userFieldName] =
-                                                            changeFormat(jsonObj[g][mappings[0].mappingInfo[i].values[j].userFieldName], mappings[0].delimeter);
-                                                    } 
-                                                    convertedJson[key].prices.push(obj);
-                                                }     
-                                            }
-                                            break;
+//                                         case "prices":
+//                                             if (!convertedJson[key].prices)
+//                                                 convertedJson[key].prices = [];
+//                                             check = checkPDuplicate(mappings[0].mappingInfo[i].values[j].userFieldName.split('_')[0], convertedJson[key].prices);
+//                                             if (check != false) {
+//                                                 if(mappings[0].mappingInfo[i].values[j].userFieldName == "gross_price" ||
+//                                                     mappings[0].mappingInfo[i].values[j].userFieldName == "retail_price" || 
+//                                                     mappings[0].mappingInfo[i].values[j].userFieldName == "grossprice" || 
+//                                                     mappings[0].mappingInfo[i].values[j].userFieldName == "retailprice") {
+//                                                         convertedJson[key].prices.push({
+//                                                          "pricetype": mappings[0].mappingInfo[i].values[j].userFieldName.split('_')[0],
+//                                                          "price": jsonObj[g][mappings[0].mappingInfo[i].values[j].userFieldName]
+//                                                         });
+//                                                 } 
+//                                                 else { 
+//                                                     if(mappings[0].mappingInfo[i].values[j].defaultValue) {
+//                                                          obj[mappings[0].mappingInfo[i].values[j].userFieldName] = mappings[0].mappingInfo[i].values[j].defaultValue
+//                                                     } else {
+//                                                         obj[mappings[0].mappingInfo[i].values[j].userFieldName] =
+//                                                             changeFormat(jsonObj[g][mappings[0].mappingInfo[i].values[j].userFieldName], mappings[0].delimeter);
+//                                                     } 
+//                                                     convertedJson[key].prices.push(obj);
+//                                                 }     
+//                                             }
+//                                             break;
 
-                                        case "productRelations":
-                                            if (!convertedJson[key].productRelations)
-                                                convertedJson[key].productRelations = [];
-                                            if(mappings[0].mappingInfo[i].values[j].defaultValue) {
-                                                obj[mappings[0].mappingInfo[i].values[j].userFieldName] =
-                                                mappings[0].mappingInfo[i].values[j].defaultValue;
-                                            } else {
-                                                obj[mappings[0].mappingInfo[i].values[j].userFieldName] =
-                                                changeFormat(jsonObj[g][mappings[0].mappingInfo[i].values[j].userFieldName], mappings[0].delimeter);
-                                            }
-                                            convertedJson[key].productRelations.push(obj);
-                                            break;
+//                                         case "productRelations":
+//                                             if (!convertedJson[key].productRelations)
+//                                                 convertedJson[key].productRelations = [];
+//                                             if(mappings[0].mappingInfo[i].values[j].defaultValue) {
+//                                                 obj[mappings[0].mappingInfo[i].values[j].userFieldName] =
+//                                                 mappings[0].mappingInfo[i].values[j].defaultValue;
+//                                             } else {
+//                                                 obj[mappings[0].mappingInfo[i].values[j].userFieldName] =
+//                                                 changeFormat(jsonObj[g][mappings[0].mappingInfo[i].values[j].userFieldName], mappings[0].delimeter);
+//                                             }
+//                                             convertedJson[key].productRelations.push(obj);
+//                                             break;
 
-                                        case "contractedProducts":
-                                            if (!convertedJson[key].contractedProducts)
-                                                convertedJson[key].contractedProducts = [];
+//                                         case "contractedProducts":
+//                                             if (!convertedJson[key].contractedProducts)
+//                                                 convertedJson[key].contractedProducts = [];
 
-                                            if(mappings[0].mappingInfo[i].values[j].defaultValue){
-                                                obj[mappings[0].mappingInfo[i].values[j].userFieldName] =
-                                                mappings[0].mappingInfo[i].values[j].defaultValue;
-                                            }else{
-                                                obj[mappings[0].mappingInfo[i].values[j].userFieldName] =
-                                                changeFormat(jsonObj[g][mappings[0].mappingInfo[i].values[j].userFieldName], mappings[0].delimeter);
-                                            }
-                                            convertedJson[key].contractedProducts.push(obj);
-                                            break;
+//                                             if(mappings[0].mappingInfo[i].values[j].defaultValue){
+//                                                 obj[mappings[0].mappingInfo[i].values[j].userFieldName] =
+//                                                 mappings[0].mappingInfo[i].values[j].defaultValue;
+//                                             }else{
+//                                                 obj[mappings[0].mappingInfo[i].values[j].userFieldName] =
+//                                                 changeFormat(jsonObj[g][mappings[0].mappingInfo[i].values[j].userFieldName], mappings[0].delimeter);
+//                                             }
+//                                             convertedJson[key].contractedProducts.push(obj);
+//                                             break;
 
-                                        case "classificationGroupAssociations":
-                                            if (!convertedJson[key].classificationGroupAssociations)
-                                                convertedJson[key].classificationGroupAssociations = [];
-                                            if(mappings[0].mappingInfo[i].values[j].defaultValue) {
-                                                obj[mappings[0].mappingInfo[i].values[j].userFieldName] =
-                                                mappings[0].mappingInfo[i].values[j].defaultValue;
-                                            } else {
-                                                obj[mappings[0].mappingInfo[i].values[j].userFieldName] =
-                                                    changeFormat(jsonObj[g][mappings[0].mappingInfo[i].values[j].userFieldName], mappings[0].delimeter);
-                                            }
-                                            convertedJson[key].classificationGroupAssociations.push(obj);
-                                            break;
+//                                         case "classificationGroupAssociations":
+//                                             if (!convertedJson[key].classificationGroupAssociations)
+//                                                 convertedJson[key].classificationGroupAssociations = [];
+//                                             if(mappings[0].mappingInfo[i].values[j].defaultValue) {
+//                                                 obj[mappings[0].mappingInfo[i].values[j].userFieldName] =
+//                                                 mappings[0].mappingInfo[i].values[j].defaultValue;
+//                                             } else {
+//                                                 obj[mappings[0].mappingInfo[i].values[j].userFieldName] =
+//                                                     changeFormat(jsonObj[g][mappings[0].mappingInfo[i].values[j].userFieldName], mappings[0].delimeter);
+//                                             }
+//                                             convertedJson[key].classificationGroupAssociations.push(obj);
+//                                             break;
 
-                                    }
-                                }
-                            }
-                        };
-                        key++;
-                    };
-                     reply(convertedJson);
-                });
-                fileStream.pipe(csvConverter);
-            } else {
-                reply(Boom.forbidden(err));
-            }
-        });
-    }
-}
+//                                     }
+//                                 }
+//                             }
+//                         };
+//                         key++;
+//                     };
+//                      reply(convertedJson);
+//                 });
+//                 fileStream.pipe(csvConverter);
+//             } else {
+//                 reply(Boom.forbidden(err));
+//             }
+//         });
+//     }
+// }
 
 
 //format change
