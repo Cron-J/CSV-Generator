@@ -183,6 +183,10 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
 
             $scope.addToList = function() {
                 if ($scope.passingList) {
+                    if($scope.passingList.length > 0 && $scope.passingList[0].table !=  $scope.pickedTable){
+                        growl.error('Please select column properly');
+                        return;
+                    }
                     $scope.passingList.length++;
                     for (var i = 0; i < $scope.passingList.length; i++) {
                         $scope.passingList[i] = {};
