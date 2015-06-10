@@ -8,27 +8,6 @@ var Joi = require('joi'),
     Transformation = require('../controller/transformation');
 
 
-exports.getSchema = {
-    handler: function (request, reply) {
-        //Transformation.getTransformation();
-        var options = {
-            host: Config.host.ModuleLinkup,
-            path: Config.host.getSchema,
-            method: 'GET'
-        };
-        var req = http.request(options, function(res) {
-          return reply(res);
-        });
-
-        req.on('error', function(e) {
-          console.log('problem with request: ' + e.message);
-        });
-        
-        req.end();
-
-    }
-};
-
 exports.createMapping = {
     handler: function(request, reply) {
         Mapping.createMapping(request.payload, function(err, mapping) {

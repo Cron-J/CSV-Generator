@@ -3,7 +3,14 @@ var Joi = require('joi'),
     Boom = require('boom'),
     Mapping = require('../model/mapping').Mapping,
     Converter = require("csvtojson").core.Converter,
+    hostFromConfig = require('../config/config').host,
     fs = require('fs');
+
+exports.getHostFromConfig = {
+    handler: function(request, reply) {
+        return reply(hostFromConfig.ModuleLinkup);
+    }
+};
 
 exports.uploadFile = {
     validate: {

@@ -5,7 +5,6 @@ module.exports = {
     },
     host: {
         ModuleLinkup:'modulus-linkup-45480.onmodulus.net',
-        getSchema:'/getProductSchema',
         isProductSchema: true
     },
     database: {
