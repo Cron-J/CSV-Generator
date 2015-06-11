@@ -1,21 +1,29 @@
 'use strict';
-app.service('MapperService',['$http',function($http){
-
-	this.getMappingList = function(tenantId){
+app.factory('MapperService',['$http',function($http){
+	var mapper = {};
+	mapper.getMappingList = function(tenantId){
 		return $http.get('/getMappingList/'+ tenantId)
 	}
 
-	this.getMappingCSV = function(tenantId, mappingId){
+	mapper.getMappingCSV = function(tenantId, mappingId){
 		return $http.get('/getMappingCSV/'+ tenantId + '/' + mappingId)
 	}
 
-	this.getMappingData = function(tenantId, mappingId){
+	mapper.getMappingData = function(tenantId, mappingId){
 		return $http.get('/getMapping/'+ tenantId + '/' + mappingId)
 	}
 	
-	this.getPropertyList = function(){
-		return $http.get('/getAttributes')
+	mapper.getPropertyList = function(url){
+		url = 'http://'+url+'/getProductSchema';
+		return $http.get(url)
 	}
+
+	mapper.getConfigData = function(){
+		return $http.get('/getConfig')
+	}
+
+	return mapper;
+
 	
 
 }])

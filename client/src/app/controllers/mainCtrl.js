@@ -16,6 +16,12 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                 $scope.resultXls = {};
                 defaultBtn();
                 defaultFilePreviewSettings(); // load default setting for file preview
+                MapperService.getConfigData()
+                    .then(function(data){
+                        $scope.apiUrl = data.data;
+                    }).catch(function(data){
+                        growl.error('Something went wrong in configuring app.')
+                    })
             }
 
             $scope.$on('redirectToMappingEditor', function (event, data){
@@ -110,7 +116,7 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
 
             var getPropertyList = function() {
 
-                MapperService.getPropertyList()
+                MapperService.getPropertyList($scope.apiUrl)
                     .then(function(data) {
                         if (data.data) {
                             $scope.property = {};
@@ -853,12 +859,17 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
             var getMappingJson = function(tenantId, mappingId) {
                 $http.get('/getTestMappingData/' + tenantId + '/' + mappingId)
                     .success(function(data) {
-                        $scope.mappedJson = data;
+                        $scope.mappedJson = data.slice(0,5);
+                        $scope.downloadedData = data;
+                        //window.open("data:" + $scope.downloadUrl);
+                        // window.location.assign("data:" + $scope.downloadUrl)
                     })
                     .error(function() {
                         growl.error("Unable to get mapping list");
                     });
             }
+
+
 
             //Steps involved
             $scope.firstStep = function() {
@@ -897,7 +908,32 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                 $location.path("#/");
             }
 
-            $scope.thirdStep = function(info, form) {
+            $scope.thirdStep = function(info, form){
+                var modalInstance = $modal.open({
+                      animation: true,
+                      templateUrl: 'isPopupContent.html',
+                      controller: 'isAutoMapCtrl',
+                      size: 'sm',
+                      resolve: {
+                        
+                      }
+                    });
+
+                    modalInstance.result.then(function (isautomap) {
+                      $scope.isAutomap = isautomap;
+                      $scope.loadThirdStep(info, form);
+                    }, function () {
+                      $log.info('Modal dismissed at: ' + new Date());
+                      $scope.isAutomap = false;
+                      $scope.loadThirdStep(info, form);
+                    });
+                  
+
+                  
+                
+            }
+            $scope.loadThirdStep = function(info, form) {
+                
                 $scope.submit = true;
                 if(form.$valid){
                      $scope.badge.step = "three";
@@ -913,8 +949,12 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                 $scope.fileViewFormats = info;
                 // if(!$scope.setting.isBackToSecondStep && $scope.isMapSaved != true){
                     mapTenantId();
-                    if($scope.fileStyle.includeHeader)
-                        mapSynonyms();
+                    if($scope.isAutomap){
+                        
+                        if($scope.fileStyle.includeHeader)
+                            mapSynonyms();
+                    }
+                    
                 // }
                 $scope.setting.isBackToSecondStep = false;
                 $scope.submit = false;
@@ -1464,4 +1504,15 @@ app.controller('confirmationModalInstanceCtrl', function($scope,
     $scope.cancel = function() {
         $modalInstance.dismiss('cancel');
     };
+});
+
+
+app.controller('isAutoMapCtrl', function ($scope, $modalInstance) {
+  $scope.ok = function () {
+    $modalInstance.close(true);
+  };
+
+  $scope.cancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
 });
