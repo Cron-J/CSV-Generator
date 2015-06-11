@@ -187,6 +187,7 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                 $scope.selectedTable = tname;
                 
                 $scope.selectedTableList = list;
+                $scope.passingList = list;
                 $scope.pickedTable = tname;
             }
 
