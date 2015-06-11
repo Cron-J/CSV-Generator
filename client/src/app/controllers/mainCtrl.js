@@ -9,6 +9,7 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
             $scope.badge = {}
             $scope.clear = {};
             $scope.setting = {isBackToSecondStep : false};
+            
 
             /*object instanciation and load first tab */
             _scope.init = function() {
@@ -868,16 +869,23 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
 
             //getMappedJson
             var getMappingJson = function(tenantId, mappingId) {
+                $scope.mappedJson=false;
                 $http.get('/getTestMappingData/' + tenantId + '/' + mappingId)
                     .success(function(data) {
                         $scope.mappedJson = data.slice(0,5);
                         $scope.downloadedData = data;
+                        
                         //window.open("data:" + $scope.downloadUrl);
                         // window.location.assign("data:" + $scope.downloadUrl)
                     })
                     .error(function() {
                         growl.error("Unable to get mapping list");
                     });
+            }
+
+            $scope.importJson = function(){
+                var blob = new Blob([JSON.stringify($scope.downloadedData)], {type: "text/json;charset=utf-8"});
+                saveAs(blob, $scope.mapInf.mappingName + ".json");
             }
 
 
@@ -1240,6 +1248,7 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                             for(var i=0; i<$scope.mappingList.length;i++){
                                 if ($scope.mappingList[i].mappingName == $scope.map.name) {
                                     $scope.selectedMapping = $scope.mappingList[i];
+
                                     //$scope.edit = false;
                                 }
                             }
@@ -1268,6 +1277,7 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
             $scope.fourthStep = function(selectedMapping) {
                 $scope.badge.step = "four";
                 getMappingJson(1, selectedMapping._id);
+                $scope.mapInf = selectedMapping;
             }
 
             _scope.init();
