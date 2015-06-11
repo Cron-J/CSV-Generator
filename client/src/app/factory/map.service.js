@@ -22,6 +22,11 @@ app.factory('MapperService',['$http',function($http){
 		return $http.get('/getConfig')
 	}
 
+	mapper.getSynonyms = function(url){
+		url = 'http://'+url+'/getSynonyms';
+		return $http.get(url)
+	}
+
 	return mapper;
 
 	

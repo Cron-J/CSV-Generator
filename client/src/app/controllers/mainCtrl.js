@@ -19,9 +19,20 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                 MapperService.getConfigData()
                     .then(function(data){
                         $scope.apiUrl = data.data;
+                        getSynonyms();
                     }).catch(function(data){
-                        growl.error('Something went wrong in configuring app.')
+                        growl.error('Something went wrong in configuring app.');
                     })
+                    
+                
+            }
+            function getSynonyms (){
+                 MapperService.getSynonyms($scope.apiUrl)
+                        .then(function(data){
+                            $scope.synonyms = data.data;
+                        }).catch(function(data){
+                            growl.error('Something went wrong in fetching synonyms data.')
+                        })
             }
 
             $scope.$on('redirectToMappingEditor', function (event, data){
@@ -124,9 +135,9 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                             $scope.property[$scope.modelName] = [];
                             
                             $scope.attributeList = data.data;
-                            angular.forEach($scope.attributeList.synonyms, function(synonym, key){
-                                synonym.synonyms.push(synonym.field)
-                            })
+                            // angular.forEach($scope.attributeList.synonyms, function(synonym, key){
+                            //     synonym.synonyms.push(synonym.field)
+                            // })
                             $scope.attributeList
                             angular.extend($scope.attributeList, {
                                 automap: true
@@ -483,13 +494,13 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
 
                 for(var key in $scope.property) {
                     angular.forEach($scope.property[key], function(property,propKey){
-                        angular.forEach($scope.attributeList.synonyms, function(synonyms,synkey){
-                            if(property.field === synonyms.field){
+                        angular.forEach($scope.synonyms, function(synonyms,synkey){
+                            if(property.field === synonyms.originalWord){
                                 angular.forEach(synonyms.synonyms, function(synValue){
                                     angular.forEach($scope.columnShowList, function(column){
                                         if(synValue == column.colName){
                                             $scope.selectedColumn = synValue;
-                                            var orgProp = getPropertyObjByPropField(synonyms.field, key);
+                                            var orgProp = getPropertyObjByPropField(synonyms.originalWord, key);
                                             $scope.selectedProperty = orgProp.prop;
                                             if(!$scope.property[orgProp.cat + 1] && orgProp.cat != $scope.modelName){
                                                 // $scope.pickedTable = orgProp.cat;
