@@ -896,13 +896,11 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
             //getMappedJson
             var getMappingJson = function(tenantId, mappingId) {
                 $scope.mappedJson=false;
-                $http.get('/getTestMappingData/' + tenantId + '/' + mappingId)
+                $http.get('/getMappingDataForPreview/' + tenantId + '/' + mappingId)
                     .success(function(data) {
                         $scope.mappedJson = data.slice(0,5);
-                        $scope.downloadedData = data;
+                        //$scope.downloadedData = data;
                         
-                        //window.open("data:" + $scope.downloadUrl);
-                        // window.location.assign("data:" + $scope.downloadUrl)
                     })
                     .error(function() {
                         growl.error("Unable to get mapping list");
@@ -910,8 +908,17 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
             }
 
             $scope.importJson = function(){
-                var blob = new Blob([JSON.stringify($scope.downloadedData)], {type: "text/json;charset=utf-8"});
-                saveAs(blob, $scope.mapInf.mappingName + ".json");
+                $http.get('/getMappingData/1' + '/' + $scope.mapInf._id)
+                    .success(function(data) {
+                        $scope.downloadedData = data;
+                        var blob = new Blob([JSON.stringify($scope.downloadedData)], {type: "text/json;charset=utf-8"});
+                        saveAs(blob, $scope.mapInf.mappingName + ".json");  
+                    })
+                    .error(function() {
+                        growl.error("Unable to get mapping list");
+                    });
+
+                
             }
 
 

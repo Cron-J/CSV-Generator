@@ -56,7 +56,103 @@ exports.getMappingForEdit = {
     }
 };
 
-exports.getTestMappingData = {
+exports.getMappingDataForPreview = {
+    handler: function(request, reply) {
+        Mapping.getMappedData(request.params.tenantId, request.params.mappingId, function(err, mappings) {
+            if (!err) {
+                var upload_path = 'upload/' + mappings[0].fileName;
+                var fileStream = fs.createReadStream(upload_path);
+                //new converter instance 
+                var csvConverter = new Converter({
+                    constructResult: true
+                });
+
+                //end_parsed will be emitted once parsing finished 
+                csvConverter.on("end_parsed", function(CsvData) {
+                    var jsonObj;
+                    if(!mappings[0].delimeter.includeHeader){
+                        jsonObj = [];
+                        var count = 0;
+                        var tempJsonObj = {};
+                        for (var key in CsvData[0]){
+                            var keyName = "Column "+ count++;
+                            tempJsonObj[keyName] = key;
+                        }
+                        jsonObj.push(tempJsonObj);
+                        for (var i = 0; i < CsvData.length; i++) {
+                            
+                            tempJsonObj = {};
+                            count = 0;
+                            for (var key in CsvData[i]){
+                                var keyName = "Column "+ count++;
+                                tempJsonObj[keyName] = CsvData[i][key];
+                            }
+                            jsonObj.push(tempJsonObj);
+                        }
+                    }
+                    else{
+                        jsonObj = CsvData;
+                    }                 
+                    
+                    var finalJson = [];
+                    var range = jsonObj.length > 4 ? 4 : jsonObj.length;
+                    for (var i = 0; i < range; i++) {
+                        var temp = {};
+
+                        //this condition is only if it's product schema and can be toggled/turned off from config/config
+                        if(Config.host.isProductSchema){
+                            temp[mappings[0].mappingInfo[0].field] = Transformation.getTransformation(mappings[0].mappingInfo[0].transformations, "1");
+                        }
+
+                        for (var key in jsonObj[i]){                       
+                            for (var j = 0; j < mappings[0].mappingInfo.length; j++) {
+                                if(mappings[0].mappingInfo[j].userFieldName == undefined){
+                                    if(temp[mappings[0].mappingInfo[j].field] == undefined) temp[mappings[0].mappingInfo[j].field] = [];
+                                    for (var k = 0; k < mappings[0].mappingInfo[j].values.length; k++){
+                                        for (var l = 0; l < mappings[0].mappingInfo[j].values[k].fields.length; l++){
+                                            if(mappings[0].mappingInfo[j].values[k].fields[l].userFieldName == 'defaultValue'){
+                                                if(temp[mappings[0].mappingInfo[j].field][k] == undefined) {
+                                                    temp[mappings[0].mappingInfo[j].field][k] = {};
+                                                }
+                                                var field = mappings[0].mappingInfo[j].values[k].fields[l].field;
+                                                temp[mappings[0].mappingInfo[j].field][k][field] = Transformation.getTransformation(mappings[0].mappingInfo[j].values[k].fields[l].transformations, mappings[0].mappingInfo[j].values[k].fields[l].defaultValue);
+                                            }
+                                            else{
+                                                if(key == mappings[0].mappingInfo[j].values[k].fields[l].userFieldName){
+                                                    if(temp[mappings[0].mappingInfo[j].field][k] == undefined) {
+                                                        temp[mappings[0].mappingInfo[j].field][k] = {};
+                                                    }
+                                                    var field = mappings[0].mappingInfo[j].values[k].fields[l].field;
+                                                    temp[mappings[0].mappingInfo[j].field][k][field] = Transformation.getTransformation(mappings[0].mappingInfo[j].values[k].fields[l].transformations,jsonObj[i][key]);                                         
+                                                }
+                                                else if(mappings[0].mappingInfo[j].defaultValue != null){
+                                                    temp[mappings[0].mappingInfo[j].field] = Transformation.getTransformation(mappings[0].mappingInfo[j].fields[l].transformations, mappings[0].mappingInfo[j].fields[l].defaultValue);    
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                else if(key == mappings[0].mappingInfo[j].userFieldName){                                    
+                                    temp[mappings[0].mappingInfo[j].field] = Transformation.getTransformation(mappings[0].mappingInfo[j].transformations, jsonObj[i][key]);
+                                }
+                                else if(mappings[0].mappingInfo[j].defaultValue != null){
+                                    temp[mappings[0].mappingInfo[j].field] = Transformation.getTransformation(mappings[0].mappingInfo[j].transformations, mappings[0].mappingInfo[j].defaultValue);
+                                }
+                            }
+                        }
+                        finalJson.push(temp);                  
+                    }
+                    reply(finalJson);
+                });
+                fileStream.pipe(csvConverter);
+            } else {
+                reply(Boom.forbidden(err));
+            }
+        });
+    }
+};
+
+exports.getMappingData = {
     handler: function(request, reply) {
         Mapping.getMappedData(request.params.tenantId, request.params.mappingId, function(err, mappings) {
             if (!err) {
