@@ -152,6 +152,7 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                                 
                             })
                             $scope.orgProperty = angular.copy($scope.property);
+                            getRequiredField(angular.copy($scope.orgProperty));
                             getTableData($scope.modelName);
                             $scope.tableLists = {};
                             angular.forEach($scope.orgProperty, function(value, key) {
@@ -162,6 +163,18 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                     .catch(function() {
                         growl.error("Unable to get attributes");
                     });
+            }
+
+            function getRequiredField (data){
+                $scope.requiredField ={}
+                for(var key in data){
+                    $scope.requiredField[key] = [];
+                    angular.forEach(data[key], function(prop,propkey){
+                        if(prop.isRequired){
+                            $scope.requiredField[key].push(prop.field);
+                        }
+                    })
+                }
             }
 
             var getTableData = function(table) {
@@ -211,6 +224,13 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                         $scope.passingList[i] = {};
                         $scope.passingList[i].table = $scope.pickedTable;
                         $scope.passingList[i].rowId = i + 1;
+                        $scope.passingList[i].reqField = [];
+                        $scope.passingList[i].reqFieldVal = [];
+                        for(var key in $scope.requiredField){
+                            if(key == $scope.passingList[i].table)
+                                $scope.passingList[i].reqField = $scope.requiredField[key]
+                        }
+                        
                     }
                     var newTable = $scope.pickedTable + $scope.passingList.length;
                     var obj = {};
