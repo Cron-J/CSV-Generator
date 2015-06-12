@@ -632,7 +632,8 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                             var d = new Date(list[i]);
                             if (d != "Invalid Date") {
                                if($scope.fileStyle.dateFormat == guessDateFormat(angular.copy($scope.unformatedData), ["dd-MM-yyyy", "MM/dd/yyyy"], $scope.fileStyle.delimeterFormat)[0]){
-                                    list[i] = $filter('date')(new Date(list[i]), 'mediumDate')
+                                    //list[i] = $filter('date')(new Date(list[i]), 'mediumDate')
+                                    list[i] = $filter('date')(new Date(list[i]), 'MM/dd/yyyy')
                                }
                                else{
                                     var date = d.getDate();
@@ -724,10 +725,12 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                 
                 $scope.fileStyle.delimeterFormat = guessDelimiters(angular.copy($scope.unformatedData), [',', ';', '|'])[0];
                 $scope.fileStyle.dateFormat = guessDateFormat(angular.copy($scope.unformatedData), ["dd-MM-yyyy", "MM/dd/yyyy"], $scope.fileStyle.delimeterFormat)[0];
-                $scope.fileStyle.numberFormat = "#,###.##";
-                $scope.changeFormat();
-                //$scope.fileStyle.numberFormat = guessNumberFormat(angular.copy($scope.unformatedData), ["#,###.##","#.###,##","#.##","#,##"], $scope.fileStyle.delimeterFormat)[0];
-                        
+                //$scope.fileStyle.numberFormat = "#,###.##";
+                //$scope.changeFormat();
+                $scope.fileStyle.numberFormat = guessNumberFormat(angular.copy($scope.unformatedData), ["#,###.##","#.###,##","#.##","#,##"], $scope.fileStyle.delimeterFormat)[0];
+                if(!$scope.fileStyle.numberFormat){
+                    $scope.fileStyle.numberFormat = "#,###.##";
+                 }       
             }
 
             $scope.startRead = function(files) {
@@ -748,8 +751,10 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                         $scope.unformatedData = angular.copy(data);
                         $scope.fileStyle.delimeterFormat = guessDelimiters(angular.copy($scope.unformatedData), [',', ';', '|'])[0];
                         $scope.fileStyle.dateFormat = guessDateFormat(angular.copy($scope.unformatedData), ["dd-MM-yyyy", "MM/dd/yyyy"], $scope.fileStyle.delimeterFormat)[0];
-                        //$scope.fileStyle.numberFormat = guessNumberFormat(angular.copy($scope.unformatedData), ["#,###.##","#.###,##","#.##","#,##"], $scope.fileStyle.delimeterFormat)[0];
-                        
+                        $scope.fileStyle.numberFormat = guessNumberFormat(angular.copy($scope.unformatedData), ["#,###.##","#.###,##","#.##","#,##"], $scope.fileStyle.delimeterFormat)[0];
+                        if(!$scope.fileStyle.numberFormat){
+                            $scope.fileStyle.numberFormat = "#,###.##";
+                        }
                         $scope.secondStep();
                     })
                     .error(function(data) {
