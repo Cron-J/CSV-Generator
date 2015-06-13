@@ -219,20 +219,32 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                         growl.error('Please select column properly');
                         return;
                     }
-                    $scope.passingList.length++;
-                    for (var i = 0; i < $scope.passingList.length; i++) {
-                        $scope.passingList[i] = {};
-                        $scope.passingList[i].table = $scope.pickedTable;
-                        $scope.passingList[i].rowId = i + 1;
-                        $scope.passingList[i].reqField = [];
-                        $scope.passingList[i].reqFieldVal = [];
-                        for(var key in $scope.requiredField){
-                            if(key == $scope.passingList[i].table)
-                                $scope.passingList[i].reqField = $scope.requiredField[key]
-                        }
+                    // $scope.passingList.length++;
+                    // for (var i = 0; i < $scope.passingList.length; i++) {
+                    //     $scope.passingList[i] = {};
+                    //     $scope.passingList[i].table = $scope.pickedTable;
+                    //     $scope.passingList[i].rowId = i + 1;
+                    //     $scope.passingList[i].reqField = [];
+                    //     $scope.passingList[i].reqFieldVal = [];
+                    //     for(var key in $scope.requiredField){
+                    //         if(key == $scope.passingList[i].table)
+                    //             $scope.passingList[i].reqField = $scope.requiredField[key]
+                    //     }
                         
-                    }
-                    var newTable = $scope.pickedTable + $scope.passingList.length;
+                    // }
+                    var length = $scope.passingList.length;
+                    $scope.passingList[length] = {}
+                    $scope.passingList[length].table = $scope.pickedTable;
+                        $scope.passingList[length].rowId = length + 1;
+                        $scope.passingList[length].reqField = [];
+                        $scope.passingList[length].reqFieldVal = [];
+                        for(var key in $scope.requiredField){
+                            if(key == $scope.passingList[length].table)
+                                $scope.passingList[length].reqField = $scope.requiredField[key];
+                        }
+
+                    $scope.automapRowId = $scope.passingList.length;
+                    var newTable = $scope.pickedTable + (length+1);
                     var obj = {};
                     obj[newTable] = angular.copy($scope.orgProperty[$scope.pickedTable]);
                     obj[newTable].xtra=true;
@@ -363,6 +375,13 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                             $scope.tableData[i].aIndex++;
                         }
                     }
+
+                    //tableLists[key]
+
+                    /*storing required  field value to passingList variable for the purpose of showing required field value in sub Table */
+                    setRequiredVal($scope.tableData[i]);
+                    /*end*/
+
                     mappedColumns($scope.selectedColumn);
                     mappedPropColumns($scope.selectedTable,undefined,$scope.rowId);
                     $scope.defaultVal.value = '';
@@ -384,6 +403,44 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                 // }
                 
                 $("option:selected").not("#SelectId option:selected").removeAttr("selected");
+            }
+
+            /*storing required  field value to passingList variable for the purpose of showing required field value in sub Table */
+            function setRequiredVal(tableData) {
+                for(var key in $scope.tableLists){
+                        if(tableData.tableName == key){
+                            angular.forEach($scope.tableLists[key], function(subTab,subTableKey){
+                                if(tableData.rowId == subTab.rowId && subTab.reqField.indexOf(tableData.propName.field)>=0){
+                                    if(tableData.defaultVal){
+                                        subTab.reqFieldVal.push(tableData.defaultVal)
+                                    }
+                                    else{
+                                        subTab.reqFieldVal.push(tableData.columnName)
+                                    }
+                                }
+                            })
+                        }
+                    }
+            }   
+            /*end*/
+
+            /*Remove required field vaue when mapped value removed*/
+
+            function removeRequiredVal (tableData) {
+                for(var key in $scope.tableLists){
+                    if(tableData.tableName == key){
+                        angular.forEach($scope.tableLists[key], function(subTab,subTableKey){
+                                if(tableData.rowId == subTab.rowId){
+                                    if(tableData.defaultVal){
+                                        subTab.reqFieldVal.splice(subTab.reqFieldVal.indexOf(tableData.defaultVal),1);
+                                    }
+                                    else{
+                                        subTab.reqFieldVal.splice(subTab.reqFieldVal.indexOf(tableData.columnName),1);
+                                    }
+                                }
+                            })
+                    }
+                }
             }
 
             $scope.mapAttribute = function() {
@@ -421,6 +478,8 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
 
                                 $scope.tableData[i].tableName = $scope.pickedTable;
                                 $scope.tableData[i].quotes = true;
+                                //$scope.tableData[i].rowId = $scope.automapRowId;
+                                
                                 // if($scope.selectedDefaultVal != null){
                                 //   $scope.tableData[i].columnName = $scope.selectedDefaultVal.name;
                                 //   $scope.tableData[i].defaultVal = $scope.selectedDefaultVal.value;
@@ -448,6 +507,8 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                                         }
                                     }
                                 }
+                                setRequiredVal($scope.tableData[i]);
+                                
                             }
                             if (j == k - 1) {
                                 $scope.tableData[j] = angular.copy(dummy);
@@ -473,7 +534,9 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                                 if ($scope.tableData[j].tableName == $scope.pickedTable) {
                                     $scope.tableData[j].aIndex = $scope.tableData[j].aIndex + 2;
                                 }
+                                
                             }
+                            
                         }
 
                         mappedColumns($scope.selectedColumn);
@@ -582,9 +645,11 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
 
 
             $scope.removeRow = function(propName, colName, tname, index) {
+                removeRequiredVal($scope.tableData[index]);
                 $scope.tableData.splice(index, 1);
                 mappedColumns(colName, true);
                 mappedPropColumns(tname, propName);
+
             }
 
             var mappedColumns = function(col, remove) {
@@ -1091,6 +1156,7 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$http', 'growl', '$location
                                         mapper.quotes = true;
                                     //$scope.saveIndex(duptableData.length,'edit');
                                     duptableData.push(mapper);
+                                    setRequiredVal(mapper)
                                 });
 
                                 })

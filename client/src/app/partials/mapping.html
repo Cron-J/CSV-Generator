@@ -57,7 +57,7 @@
             
             <optgroup ng-if="key != modelName"  style="font-style: normal;" ng-repeat="(key, value) in orgProperty" label="{{key}}">
                <option value="{{pa.table}}" id="com.jcatalog.product[key]:{{$index}}" ng-repeat="pa in tableLists[key] track by $index" ng-click="selectTable(key,$index, tableLists[key])">
-                  {{pa.table}}({{$index+1}})
+                  {{pa.reqFieldVal.toString() || pa.table}}
                </option>
             </optgroup>
 
@@ -182,8 +182,10 @@
                   <td>
 
                      <span >
-                     <span ng-show="row.tableName != attributeList.modelName.toLowerCase()">{{attributeList.modelName.toLowerCase()}}.</span>{{row.tableName}}
-                     <span ng-show="row.rowId > 0">({{row.rowId}})</span>.{{row.propName.field}}
+                     <span ng-show="row.tableName == attributeList.modelName.toLowerCase()">{{attributeList.modelName.toLowerCase()}}</span>
+                     <span ng-show="row.tableName != attributeList.modelName.toLowerCase()">{{attributeList.modelName.toLowerCase()}}.</span>
+                     <span ng-repeat="tab in tableLists[row.tableName]" ng-if="tab.rowId ==row.rowId">{{tab.reqFieldVal.toString() ||tab.table || 'product'}}</span>
+                     <span ng-show="row.rowId > 0"></span>.{{row.propName.field}}
                      </span>
 
                      <!-- <span ng-show="edit">
