@@ -56,7 +56,7 @@
             </option>
             
             <optgroup ng-if="key != modelName"  style="font-style: normal;" ng-repeat="(key, value) in orgProperty" label="{{key}}">
-               <option value="{{pa.table}}" id="com.jcatalog.product[key]:{{$index}}" ng-repeat="pa in tableLists[key] track by $index" ng-click="selectTable(key,$index, tableLists[key])">
+               <option value="{{pa.table}}" id="com.jcatalog.product[key]:{{$index}}" ng-repeat="pa in tableLists[key] track by $index" ng-click="selectTable(key,$index, tableLists[key])" title="{{pa.reqFieldVal.toString() || pa.table}}">
                   {{pa.reqFieldVal.toString() || pa.table}}
                </option>
             </optgroup>
