@@ -14,7 +14,7 @@ app.factory('MapperService',['$http',function($http){
 	}
 	
 	mapper.getPropertyList = function(url){
-		url = 'http://'+url+'/getProductSchema';
+		url = 'http://localhost:8080/getProductSchema';
 		return $http.get(url)
 	}
 

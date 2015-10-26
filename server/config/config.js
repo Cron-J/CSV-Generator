@@ -8,7 +8,7 @@ module.exports = {
         isProductSchema: true
     },
     database: {
-        //db: 'mongodb://127.0.0.1/csvGenerator'
-        db: 'mongodb://gaurav:cronj123@proximus.modulusmongo.net:27017/oxUhed6y'
+        db: 'mongodb://127.0.0.1/csvGenerator'
+        //db: 'mongodb://gaurav:cronj123@proximus.modulusmongo.net:27017/oxUhed6y'
      }
 };

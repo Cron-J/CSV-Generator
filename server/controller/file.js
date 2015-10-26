@@ -20,6 +20,7 @@ exports.uploadFile = {
         }
     },
     handler: function(request, reply) {
+        console.log('============uploaded file=========',request.payload.file);
         var data = request.payload.file;
         if (data.length === undefined) {
             reply(Boom.forbidden('Please Upload the file'));
